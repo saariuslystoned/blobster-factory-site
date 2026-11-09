@@ -3,12 +3,11 @@
   "created_at": "2026-11-09T17:21:08+00:00",
   "current_focus": {
     "cadence": "frontier-batch",
-    "confirmed": true,
-    "confirmed_at": "2026-11-09T17:51:25+00:00",
-    "domain": "Grill 1: Repo home, canonical domain, public routes/surfaces, and Stitch DESIGN.md direction",
-    "started_at": "2026-11-09T17:21:08+00:00",
-    "status": "confirmed",
-    "summary": "Standalone blobster-factory-site repo with read-only ../blobster-factory/templates sync, blobsterfactory.com canonical + blobster.dev short alias, 4 public routes (/, /templates/[slug], /pipeline with progressive Smith+Sculptor emdash-motion-studio animation, /submit + /_emdash/admin/review), ClawHub-aligned catalog + collapsible EmDash blocks + 3-way Add-to-OpenClaw UX, and Vellum/Obsidian + knot/tide/beacon Stitch DESIGN.md."
+    "confirmed": false,
+    "domain": "Grill 2 (Round 2): Stitch Homepage Tiebreaker Hybrid + Mode B Multiplane /pipeline Stage",
+    "started_at": "2026-11-09T18:33:57+00:00",
+    "status": "grilling",
+    "summary": "Verify and lock R2 Homepage Hybrid (C4 Dual-Chamber + C2 Calibration Hero + Slim C3 Rail + Dialed Header/Footer, centered 390px mobile) and Mode B Multiplane Occlusion depth-plate animation strictly on /pipeline hero."
   },
   "decisions": [
     {
@@ -47,10 +46,38 @@
           "review_source_identity": null,
           "to": "locked",
           "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T18:05:47+00:00",
+          "choice": "Standalone sibling repository at /Users/bobbybones/Developer/repos/saariuslystoned/blobster-factory-site with its own git history, isolated .grilltrack/ledger.json, and a read-only sync script reading ../blobster-factory/templates.",
+          "from": "locked",
+          "implementation_ref": null,
+          "note": "bounded implementation recorded",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "implemented",
+          "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T18:05:47+00:00",
+          "choice": "Standalone sibling repository at /Users/bobbybones/Developer/repos/saariuslystoned/blobster-factory-site with its own git history, isolated .grilltrack/ledger.json, and a read-only sync script reading ../blobster-factory/templates.",
+          "from": "implemented",
+          "implementation_ref": "git:d6174e3",
+          "note": "verification recorded in cumulative context",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "verified",
+          "verification_ref": null
         }
       ],
       "id": "g1-repo-home",
-      "implementation_ref": null,
+      "implementation_ref": "git:d6174e3",
       "question": "Initialize the EmDash + Astro project in a standalone /Users/bobbybones/Developer/repos/saariuslystoned/blobster-factory-site repo with a read-only sync script pulling live packages and avatars from ../blobster-factory/templates?",
       "rationale": "Avoids colliding with the active uncommitted blobster-factory session, gives GrillTrack immutable git SHA review identities immediately, and keeps Astro/Cloudflare Worker dependencies separate from the MIT template repo.",
       "repair_required": false,
@@ -61,10 +88,10 @@
       "review_source_identity": null,
       "revisit_when": null,
       "scope": "durable",
-      "status": "locked",
+      "status": "verified",
       "superseded_by": null,
-      "updated_at": "2026-11-09T17:22:01+00:00",
-      "verification_ref": null
+      "updated_at": "2026-11-09T18:05:47+00:00",
+      "verification_ref": "verify:site+typecheck+tests@d6174e3"
     },
     {
       "baseline_ref": null,
@@ -104,10 +131,38 @@
           "review_source_identity": null,
           "to": "locked",
           "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T18:05:47+00:00",
+          "choice": "Both blobsterfactory.com and blobster.dev purchased on Cloudflare Personal account; use https://blobsterfactory.com as canonical site URL and https://blobster.dev for short redirects and CLI tarball URLs.",
+          "from": "locked",
+          "implementation_ref": null,
+          "note": "bounded implementation recorded",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "implemented",
+          "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T18:05:47+00:00",
+          "choice": "Both blobsterfactory.com and blobster.dev purchased on Cloudflare Personal account; use https://blobsterfactory.com as canonical site URL and https://blobster.dev for short redirects and CLI tarball URLs.",
+          "from": "implemented",
+          "implementation_ref": "git:d6174e3",
+          "note": "verification recorded in cumulative context",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "verified",
+          "verification_ref": null
         }
       ],
       "id": "g1-domain",
-      "implementation_ref": null,
+      "implementation_ref": "git:d6174e3",
       "question": "Which available canonical domain should we configure (and register in Cloudflare Personal account) since blobster.com is taken?",
       "rationale": "Ryan purchased both domains on Cloudflare Registrar; pairing canonical blobsterfactory.com with short blobster.dev makes CLI curl/install commands ultra-short while matching the repo brand.",
       "repair_required": false,
@@ -118,10 +173,10 @@
       "review_source_identity": null,
       "revisit_when": null,
       "scope": "durable",
-      "status": "locked",
+      "status": "verified",
       "superseded_by": null,
-      "updated_at": "2026-11-09T17:31:54+00:00",
-      "verification_ref": null
+      "updated_at": "2026-11-09T18:05:47+00:00",
+      "verification_ref": "verify:site+typecheck+tests@d6174e3"
     },
     {
       "baseline_ref": null,
@@ -161,10 +216,38 @@
           "review_source_identity": null,
           "to": "locked",
           "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T18:05:47+00:00",
+          "choice": "Four public routes (/, /templates/[slug], /pipeline, /submit) + private /_emdash/admin/review Block Kit moderation queue: ClawHub-aligned catalog cards (@ownerHandle, Official/Community + scanStatus badges, OpenClaw category chips), 24/64/256px avatar stage, EmDash collapsible <details> blocks (and Block Kit accordions in admin), 3-way Add-to-OpenClaw bar (Copy Agent Prompt, blobster.dev CLI 1-liner, ClawHub coordinate + .tgz Ephemera receipt), and progressive Smith+Sculptor forging animation on /pipeline via emdash-motion-studio.",
+          "from": "locked",
+          "implementation_ref": null,
+          "note": "bounded implementation recorded",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "implemented",
+          "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T18:05:47+00:00",
+          "choice": "Four public routes (/, /templates/[slug], /pipeline, /submit) + private /_emdash/admin/review Block Kit moderation queue: ClawHub-aligned catalog cards (@ownerHandle, Official/Community + scanStatus badges, OpenClaw category chips), 24/64/256px avatar stage, EmDash collapsible <details> blocks (and Block Kit accordions in admin), 3-way Add-to-OpenClaw bar (Copy Agent Prompt, blobster.dev CLI 1-liner, ClawHub coordinate + .tgz Ephemera receipt), and progressive Smith+Sculptor forging animation on /pipeline via emdash-motion-studio.",
+          "from": "implemented",
+          "implementation_ref": "git:d6174e3",
+          "note": "verification recorded in cumulative context",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "verified",
+          "verification_ref": null
         }
       ],
       "id": "g1-routes-surfaces",
-      "implementation_ref": null,
+      "implementation_ref": "git:d6174e3",
       "question": "Lock the four v1 public routes (/, /templates/[slug], /pipeline, /submit + /_emdash/admin/review) and interactive showcase surfaces?",
       "rationale": "Incorporates Ryan's confirmation on Grill 1 plus progressive Smith+Sculptor forging animation on /pipeline.",
       "repair_required": false,
@@ -175,10 +258,10 @@
       "review_source_identity": null,
       "revisit_when": null,
       "scope": "durable",
-      "status": "locked",
+      "status": "verified",
       "superseded_by": null,
-      "updated_at": "2026-11-09T17:51:25+00:00",
-      "verification_ref": null
+      "updated_at": "2026-11-09T18:05:47+00:00",
+      "verification_ref": "verify:site+typecheck+tests@d6174e3"
     },
     {
       "baseline_ref": null,
@@ -263,10 +346,38 @@
           "review_source_identity": null,
           "to": "locked",
           "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T18:05:47+00:00",
+          "choice": "Dual-mode Vellum (#f3f0e8) / Obsidian (#0b0d11) workbench (light-dark() in tokens.css @layer base), 24px blueprint grid + 12px Bayer dither wash, OpenClaw knot (#e5243b default) / tide (#5ab6d8) / beacon (#ffc233) presets, Instrument Serif + Geist + JetBrains Mono.",
+          "from": "locked",
+          "implementation_ref": null,
+          "note": "bounded implementation recorded",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "implemented",
+          "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T18:05:48+00:00",
+          "choice": "Dual-mode Vellum (#f3f0e8) / Obsidian (#0b0d11) workbench (light-dark() in tokens.css @layer base), 24px blueprint grid + 12px Bayer dither wash, OpenClaw knot (#e5243b default) / tide (#5ab6d8) / beacon (#ffc233) presets, Instrument Serif + Geist + JetBrains Mono.",
+          "from": "implemented",
+          "implementation_ref": "git:d6174e3",
+          "note": "verification recorded in cumulative context",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "verified",
+          "verification_ref": null
         }
       ],
       "id": "g1-stitch-design-direction",
-      "implementation_ref": null,
+      "implementation_ref": "git:d6174e3",
       "question": "Lock the .stitch/DESIGN.md visual direction (Vellum Workbench light / Obsidian Telemetry Bench dark + knot/tide/beacon OpenClaw theme presets + anti-slop rules)?",
       "rationale": "Fuses Ryan's Reverse Engineer Lab + DinkusKit tactile craft directly with OpenClaw's real Knot/Tide/Beacon UI themes and Blobster Factory's front-door banners.",
       "repair_required": false,
@@ -277,9 +388,199 @@
       "review_source_identity": null,
       "revisit_when": null,
       "scope": "durable",
+      "status": "verified",
+      "superseded_by": null,
+      "updated_at": "2026-11-09T18:05:48+00:00",
+      "verification_ref": "verify:site+typecheck+tests@d6174e3"
+    },
+    {
+      "baseline_ref": "stitch:projects/5620316938785958966/screens/8428245693658487849",
+      "candidate_refs": [
+        "stitch:3c36fedf412144bd897d7d7a6dc3d944",
+        "stitch:d6e8b870ec264eb6831e040219806d14",
+        "stitch:47a863f7d641479182dcb7bd9f63ad85",
+        "stitch:0371dc9429bb4725a3371327f4b50991",
+        "stitch:62ad9cb5d032485999aee2463b4e85fe",
+        "stitch:14010156567637161529",
+        "stitch:11637266979287648165"
+      ],
+      "choice": "Locked R2 \u00b7 Homepage Hybrid (stitch:11637266979287648165): C4 Dual-Chamber Obsidian/Vellum + C2 Calibration Stage Hero + Slim C3 Left Filter Rail + GitHub/Discord Header Icons + Foundry Pigment/Dither Footer (verified centered 390px mobile).",
+      "context_ref": null,
+      "created_at": "2026-11-09T18:33:57+00:00",
+      "deferred_reason": null,
+      "delivery_ref": null,
+      "dependencies": [
+        "g1-stitch-design-direction"
+      ],
+      "domain": "Grill 2: Homepage Stitch Layout (Round 1) + Smith & Sculptor Claw Animation Stage (Round 0)",
+      "gate_evaluation": {
+        "confidence": 0.99,
+        "decision_type": "durable",
+        "declared_scope": "durable",
+        "model": "explicit-user-lock",
+        "overlock_risk": "none",
+        "passed": true,
+        "provider": "owner-explicit",
+        "reason": "Owner explicitly approved website R2 design (\"I'm on board with the website. It looks great. Good work.\").",
+        "recommended_scope": "durable",
+        "scope_faithful_probability": 0.99
+      },
+      "history": [
+        {
+          "at": "2026-11-09T19:22:36+00:00",
+          "choice": "Locked R2 \u00b7 Homepage Hybrid (stitch:11637266979287648165): C4 Dual-Chamber Obsidian/Vellum + C2 Calibration Stage Hero + Slim C3 Left Filter Rail + GitHub/Discord Header Icons + Foundry Pigment/Dither Footer (verified centered 390px mobile).",
+          "from": "proposed",
+          "implementation_ref": null,
+          "note": "user locked R2 Homepage Hybrid",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "locked",
+          "verification_ref": null
+        }
+      ],
+      "id": "g2-home-layout",
+      "implementation_ref": null,
+      "question": "Which of the 5 Round 1 Google Stitch homepage layout candidates should anchor / (or name top 2 for a tiebreaker hybrid)?",
+      "rationale": "Locks homepage layout composition on Stitch project 5620316938785958966 before translating into Astro/EmDash.",
+      "repair_required": false,
+      "review_classifications": [],
+      "review_history": [],
+      "review_ref": null,
+      "review_result": null,
+      "review_source_identity": null,
+      "revisit_when": null,
+      "scope": "durable",
       "status": "locked",
       "superseded_by": null,
-      "updated_at": "2026-11-09T17:51:39+00:00",
+      "updated_at": "2026-11-09T19:22:36+00:00",
+      "verification_ref": null
+    },
+    {
+      "baseline_ref": ".grilltrack/work/g2-motion-multiplane/pipeline-multiplane.html",
+      "candidate_refs": [
+        "plane0-workshop-bg.png",
+        "claw-stage-1-forged.png",
+        "claw-stage-2-glazed.png",
+        "claw-stage-3-finished.png",
+        "plane2-foreground-mask.png"
+      ],
+      "choice": "Overhead chain hoist and cast-iron hook multiplane stage (.grilltrack/work/g2-motion-multiplane/pipeline-multiplane.html) mounted strictly on /pipeline hero.",
+      "context_ref": null,
+      "created_at": "2026-11-09T18:33:57+00:00",
+      "deferred_reason": null,
+      "delivery_ref": null,
+      "dependencies": [
+        "g1-routes-surfaces"
+      ],
+      "domain": "Grill 2: Homepage Stitch Layout (Round 1) + Smith & Sculptor Claw Animation Stage (Round 0)",
+      "gate_evaluation": {
+        "confidence": 0.75,
+        "decision_type": "slice",
+        "declared_scope": "durable",
+        "model": "jev-1.13.0",
+        "overlock_risk": "bundled_extra_invariants",
+        "overridden": true,
+        "override_reason": "Multi-turn visual artifact review: owner requested chain+hook refinement in turn 9 and explicitly locked the presented MP4/GIF artifact in turn 10 ('lock it looks great').",
+        "passed": false,
+        "provider": "jev",
+        "reason": "Gatekeeper (jev:jev-1.13.0) rejected locking as scope='durable': detected decision_type='slice' and overlock_risk='bundled_extra_invariants' (confidence=0.75). Re-propose with `--scope slice` (or strip unapproved clauses), or pass `--force-lock --override-reason <why>`.",
+        "recommended_scope": "slice",
+        "scope_faithful_probability": 0.53
+      },
+      "history": [
+        {
+          "at": "2026-11-09T20:05:42+00:00",
+          "choice": "Proposed Mode B Multiplane Occlusion Stage (emdash-motion-studio multiplane.js + 3 despilled 3D-vinyl depth plates) placed strictly on /pipeline hero only (per owner lock: \"just pipeline\").",
+          "from": "proposed",
+          "implementation_ref": null,
+          "note": "user accepted the scoped decision",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "locked",
+          "verification_ref": null
+        }
+      ],
+      "id": "g2-motion-framework",
+      "implementation_ref": null,
+      "question": "Which of the 5 bespoke Smith + Sculptor Claw-forging animation stage compositions (01 Shared Turntable, 02 3-Bay Blueprint, 03 Gantry & Chroma Arch, 04 Live CLAW.md Compiler, 05 3D Vinyl Softbox) and placement (/pipeline hero vs / + /pipeline) should we lock for Piece 1?",
+      "rationale": "Owner requested chain + hook carry refinement in prior turn and explicitly locked the updated end-to-end multiplane motion ('lock it looks great').",
+      "repair_required": false,
+      "review_classifications": [],
+      "review_history": [],
+      "review_ref": null,
+      "review_result": null,
+      "review_source_identity": null,
+      "revisit_when": null,
+      "scope": "durable",
+      "status": "locked",
+      "superseded_by": null,
+      "updated_at": "2026-11-09T20:05:42+00:00",
+      "verification_ref": null
+    },
+    {
+      "baseline_ref": null,
+      "candidate_refs": [
+        "/pipeline hero only",
+        "/ + /pipeline"
+      ],
+      "choice": "Strictly /pipeline hero only (\"just pipeline\"); keep / homepage focused on the C2 Calibration Stage specimen bench and verified catalog.",
+      "context_ref": null,
+      "created_at": "2026-11-09T19:10:02+00:00",
+      "deferred_reason": null,
+      "delivery_ref": null,
+      "dependencies": [
+        "g1-routes-surfaces"
+      ],
+      "domain": "Grill 2 (Round 2): Stitch Homepage Tiebreaker Hybrid + Mode B Multiplane /pipeline Stage",
+      "gate_evaluation": {
+        "confidence": 0.99,
+        "decision_type": "durable",
+        "declared_scope": "durable",
+        "model": "explicit-user-lock",
+        "overlock_risk": "none",
+        "passed": true,
+        "provider": "owner-explicit",
+        "reason": "Owner explicitly answered \"just pipeline\".",
+        "recommended_scope": "durable",
+        "scope_faithful_probability": 0.99
+      },
+      "history": [
+        {
+          "at": "2026-11-09T19:10:02+00:00",
+          "choice": "Strictly /pipeline hero only (\"just pipeline\").",
+          "from": "proposed",
+          "implementation_ref": null,
+          "note": "user locked placement to /pipeline only",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "locked",
+          "verification_ref": null
+        }
+      ],
+      "id": "g2-motion-placement",
+      "implementation_ref": null,
+      "question": "Should the Smith + Sculptor Claw-crafting multiplane animation live on /pipeline hero only, or both / and /pipeline?",
+      "rationale": "Owner explicitly locked placement with \"just pipeline\".",
+      "repair_required": false,
+      "review_classifications": [],
+      "review_history": [],
+      "review_ref": null,
+      "review_result": null,
+      "review_source_identity": null,
+      "revisit_when": null,
+      "scope": "durable",
+      "status": "locked",
+      "superseded_by": null,
+      "updated_at": "2026-11-09T19:10:02+00:00",
       "verification_ref": null
     }
   ],
@@ -294,5 +595,5 @@
   "status": "active",
   "title": "Blobster Factory Website (EmDash + Stitch)",
   "track_id": "gt-20261109172108-8ae778",
-  "updated_at": "2026-11-09T17:51:39+00:00"
+  "updated_at": "2026-11-09T20:05:42+00:00"
 }

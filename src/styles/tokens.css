@@ -2,25 +2,46 @@
   :root {
     color-scheme: light dark;
 
-    /* Core dual-mode Vellum Workbench (light) <-> Obsidian Telemetry Bench (dark) */
+    /* Dual-mode Vellum Workbench (light) <-> Obsidian Telemetry Bench (dark) */
     --color-canvas: light-dark(#f3f0e8, #0b0d11);
     --color-surface: light-dark(#faf8f3, #12161d);
-    --color-surface-inset: light-dark(#eae5d7, #08090c);
+    --color-surface-inset: light-dark(#ebe6d8, #08090c);
     --color-ink: light-dark(#161513, #eef1f6);
-    --color-muted: light-dark(#5d584f, #8e98a8);
-    --color-border: light-dark(#d8d1c2, #252c38);
-    --color-border-strong: light-dark(#161513, #434f63);
-    --color-shadow: light-dark(#161513, #040507);
+    --color-muted: light-dark(#5c574e, #8e98a8);
+    --color-border: light-dark(#d7d0c0, #252c38);
+    --color-border-strong: light-dark(#181715, #434f63);
+    --color-shadow: light-dark(#d7d0c0, #040507);
+
+    /* Dedicated Obsidian Chamber tokens (Header, Calibration Stage, Multiplane Stage, Colophon Footer) */
+    --obs-bg: #0b0d11;
+    --obs-surface: #11151c;
+    --obs-inset: #07090d;
+    --obs-border: #232a36;
+    --obs-border-strong: #3c4759;
+    --obs-ink: #eef1f6;
+    --obs-muted: #8b95a6;
+    --obs-grid: rgba(238, 241, 246, 0.055);
+    --obs-clean: #4ade80;
 
     /* OpenClaw default preset: Knot (crimson + steel silver) */
     --color-accent: light-dark(#d91e36, #e5243b);
-    --color-accent-ink: light-dark(#ffffff, #ffffff);
-    --color-accent-soft: light-dark(rgba(217, 30, 54, 0.1), rgba(229, 36, 59, 0.16));
-    --color-secondary: light-dark(#0284c7, #5ab6d8);
+    --color-accent-ink: #ffffff;
+    --color-accent-soft: light-dark(rgba(217, 30, 54, 0.09), rgba(229, 36, 59, 0.16));
+    --obs-accent: #e5243b;
+    --obs-accent-ink: #ffffff;
+
+    --color-secondary: light-dark(#0369a1, #5ab6d8);
+    --color-secondary-soft: light-dark(rgba(2, 132, 199, 0.08), rgba(90, 182, 216, 0.14));
     --color-forge: light-dark(#b45309, #ffc233);
     --color-clean: light-dark(#15803d, #4ade80);
+    --color-clean-soft: light-dark(rgba(21, 128, 61, 0.07), rgba(74, 222, 128, 0.1));
     --color-warn: light-dark(#b45309, #fbbf24);
     --color-danger: light-dark(#b91c1c, #f87171);
+
+    /* Foundry Footer Pigment Drift Wash */
+    --pigment-1: #9f1c2e;
+    --pigment-2: #1b4d6e;
+    --pigment-3: #d97724;
 
     /* Typography roles */
     --font-display: 'Instrument Serif', Georgia, serif;
@@ -28,11 +49,11 @@
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
     /* Tactile blueprint & 12px Bayer dither motif */
-    --grid-line: light-dark(rgba(22, 21, 19, 0.06), rgba(238, 241, 246, 0.055));
-    --fx-dot-fill: light-dark(rgba(22, 21, 19, 0.16), rgba(238, 241, 246, 0.16));
+    --grid-line: light-dark(rgba(22, 21, 19, 0.055), rgba(238, 241, 246, 0.055));
+    --fx-dot-fill: light-dark(#0b0d11, rgba(238, 241, 246, 0.2));
     --radius-sharp: 2px;
     --radius-card: 4px;
-    --max-width: 1240px;
+    --max-width: 1260px;
   }
 
   :root[data-theme='light'] {
@@ -48,6 +69,11 @@
     --color-accent: light-dark(#0369a1, #5ab6d8);
     --color-accent-ink: light-dark(#ffffff, #081018);
     --color-accent-soft: light-dark(rgba(3, 105, 161, 0.1), rgba(90, 182, 216, 0.16));
+    --obs-accent: #5ab6d8;
+    --obs-accent-ink: #081018;
+    --pigment-1: #165b7d;
+    --pigment-2: #243b6b;
+    --pigment-3: #0e7490;
   }
 
   /* OpenClaw Preset: Beacon (high-contrast AAA amber) */
@@ -55,5 +81,10 @@
     --color-accent: light-dark(#b45309, #ffc233);
     --color-accent-ink: light-dark(#ffffff, #140e00);
     --color-accent-soft: light-dark(rgba(180, 83, 9, 0.12), rgba(255, 194, 51, 0.16));
+    --obs-accent: #ffc233;
+    --obs-accent-ink: #140e00;
+    --pigment-1: #b45309;
+    --pigment-2: #7c2d12;
+    --pigment-3: #eab308;
   }
 }

@@ -1,0 +1,16 @@
+{
+  "projectId": "5620316938785958966",
+  "groups": [
+    {
+      "id": "b10b57e4f0014a118000000000000001",
+      "name": "R1 \u00b7 Homepage Layout (5 Candidates)",
+      "y": 2500
+    },
+    {
+      "id": "b10b57e4f0024a118000000000000002",
+      "name": "R2 \u00b7 Homepage Tiebreaker Hybrid",
+      "y": 4480
+    }
+  ],
+  "instanceCount": 12
+}

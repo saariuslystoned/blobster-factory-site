@@ -1,0 +1,22 @@
+{
+  "version": "1.0",
+  "stitch": {
+    "projectId": "5620316938785958966",
+    "referenceScreen": {
+      "id": "11637266979287648165",
+      "route": "/",
+      "title": "R2 · Homepage Hybrid (C4 Dual-Chamber + C2 Hero + Slim Rail)",
+      "deviceType": "DESKTOP",
+      "extractedAt": "2026-11-09T19:08:26.962Z"
+    },
+    "referenceScreens": [
+      {
+        "id": "11637266979287648165",
+        "route": "/",
+        "title": "R2 · Homepage Hybrid (C4 Dual-Chamber + C2 Hero + Slim Rail)",
+        "deviceType": "DESKTOP",
+        "extractedAt": "2026-11-09T19:08:26.962Z"
+      }
+    ]
+  }
+}

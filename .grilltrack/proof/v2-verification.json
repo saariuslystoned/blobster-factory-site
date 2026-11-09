@@ -1,0 +1,99 @@
+{
+  "verifiedAt": "2026-11-09T20:21:19.758Z",
+  "origin": "http://127.0.0.1:4331",
+  "desktop": {
+    "/": {
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 2166,
+      "brokenImgs": [],
+      "hooks": {
+        "emdashCards": 5,
+        "themeToggle": 1,
+        "presetSelect": 1,
+        "avatarStage": 1,
+        "copyPrompt": 5
+      }
+    },
+    "/templates/blobster-smith": {
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 2401,
+      "brokenImgs": [],
+      "hooks": {
+        "emdashRoot": 1,
+        "avatarStage": 1,
+        "copyPrompt": 1,
+        "copyCli": 2,
+        "copyClawhub": 1,
+        "disclosures": 4
+      }
+    },
+    "/pipeline": {
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 2859,
+      "brokenImgs": [],
+      "hooks": {
+        "motionSlot": 1,
+        "qaSheet": 1,
+        "hasSetMotionTime": true
+      }
+    },
+    "/submit": {
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 1855,
+      "brokenImgs": [],
+      "hooks": {
+        "submitForm": 1
+      }
+    }
+  },
+  "mobile": {
+    "/": {
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "bodyScrollWidth": 390,
+      "scrollHeight": 4545,
+      "firstSectionLeft": 0,
+      "firstSectionWidth": 390
+    },
+    "/templates/blobster-smith": {
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "bodyScrollWidth": 390,
+      "scrollHeight": 3621,
+      "firstSectionLeft": 0,
+      "firstSectionWidth": 390
+    },
+    "/pipeline": {
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "bodyScrollWidth": 390,
+      "scrollHeight": 3769,
+      "firstSectionLeft": 0,
+      "firstSectionWidth": 390
+    },
+    "/submit": {
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "bodyScrollWidth": 390,
+      "scrollHeight": 2668,
+      "firstSectionLeft": 0,
+      "firstSectionWidth": 390
+    }
+  },
+  "interactions": {
+    "heroSpecimenSwitch": "/templates/blobster-sculptor/hero-512.png",
+    "instantSearchSculptorCount": 1,
+    "themeAndPreset": {
+      "theme": "dark",
+      "preset": "tide"
+    },
+    "qaBadSheetMetric": "4.85% FAIL (> 1.50% max)"
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": []
+}

@@ -8,3 +8,5 @@ uploads/
 .env.*
 .DS_Store
 .stitch/capture/
+.stitch/canvas-backup-*.json
+.stitch/stitch-manifest.json

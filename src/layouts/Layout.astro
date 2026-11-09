@@ -19,6 +19,7 @@ const {
 const origin = canonicalOrigin();
 const canonicalUrl = new URL(Astro.url.pathname, origin).toString();
 const path = Astro.url.pathname;
+const isCatalogRoute = path === '/' || path.startsWith('/templates');
 ---
 
 <!doctype html>
@@ -28,12 +29,17 @@ const path = Astro.url.pathname;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/templates/blobster-smith/blobster.svg" />
     <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={new URL('/brand/banner-dark.webp', origin).toString()} />
     {noindex && <meta name="robots" content="noindex,follow" />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <script is:inline>
@@ -56,25 +62,66 @@ const path = Astro.url.pathname;
     <header class="site-header">
       <div class="container header-inner">
         <a class="brand" href="/">
-          <span class="brand-mark">[b/f]</span>
+          <span class="brand-avatar">
+            <img src="/templates/blobster-smith/blobster.svg" alt="" width="22" height="22" />
+          </span>
           <span>Blobster Factory</span>
-          <span class="brand-sub">OPENCLAW FOCUS WEEK</span>
+          <span class="brand-pill">Focus Week</span>
         </a>
-        <nav class="nav-links" aria-label="Primary">
-          <a href="/" aria-current={path === '/' ? 'page' : undefined}>Catalog</a>
-          <a href="/pipeline" aria-current={path.startsWith('/pipeline') ? 'page' : undefined}>Forge Pipeline</a>
-          <a href="/submit" aria-current={path.startsWith('/submit') ? 'page' : undefined}>Submit Template</a>
-          <a href="https://github.com/saariuslystoned/blobster-factory" target="_blank" rel="noopener">GitHub ↗</a>
-        </nav>
-        <div class="theme-controls" aria-label="OpenClaw UI theme controls">
-          <div class="preset-group" data-preset-select role="group" aria-label="OpenClaw theme preset">
-            <button type="button" class="preset-btn" data-preset-btn="knot" aria-pressed="true">Knot</button>
-            <button type="button" class="preset-btn" data-preset-btn="tide" aria-pressed="false">Tide</button>
-            <button type="button" class="preset-btn" data-preset-btn="beacon" aria-pressed="false">Beacon</button>
-          </div>
-          <button type="button" class="mode-btn" data-theme-toggle aria-label="Toggle light or dark mode">
-            ◐ Mode
-          </button>
+
+        <div class="header-right">
+          <nav class="primary-nav" aria-label="Main navigation">
+            <a href="/" aria-current={isCatalogRoute ? 'page' : undefined}>Catalog</a>
+            <a href="/pipeline" aria-current={path.startsWith('/pipeline') ? 'page' : undefined}>Forge Pipeline</a>
+            <a href="/submit" aria-current={path.startsWith('/submit') ? 'page' : undefined}>Submit Template</a>
+          </nav>
+
+          <span class="header-divider" aria-hidden="true"></span>
+
+          <ul class="social-links">
+            <li>
+              <a
+                class="icon-btn"
+                href="https://github.com/saariuslystoned/blobster-factory"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="GitHub Repository"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                </svg>
+                <span class="visually-hidden">GitHub repository</span>
+              </a>
+            </li>
+            <li>
+              <a
+                class="icon-btn"
+                href="https://community.openclaw.ai/c/build-showcase/5"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="OpenClaw Build & Showcase"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286z" />
+                </svg>
+                <span class="visually-hidden">OpenClaw Community</span>
+              </a>
+            </li>
+            <li>
+              <button
+                class="icon-btn theme-switch"
+                type="button"
+                data-theme-toggle
+                aria-label="Toggle light or dark workbench theme"
+                title="Switch color theme"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                </svg>
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
     </header>
@@ -83,14 +130,134 @@ const path = Astro.url.pathname;
       <slot />
     </main>
 
-    <div class="fx-strip" aria-hidden="true"></div>
-    <footer class="site-footer">
+    <div class="bayer-dither-strip" aria-hidden="true"></div>
+
+    <footer class="foundry-footer">
+      <svg class="footer-pigment-wash" viewBox="0 0 1440 420" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <filter id="foundry-pigment-bleed" x="-10%" y="-15%" width="120%" height="130%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.011 0.021" numOctaves="3" seed="17" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="34" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+          <linearGradient id="obsidian-feather" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0b0d11" stop-opacity="0.92" />
+            <stop offset="55%" stop-color="#0b0d11" stop-opacity="0.48" />
+            <stop offset="100%" stop-color="#0b0d11" stop-opacity="0.78" />
+          </linearGradient>
+        </defs>
+        <g filter="url(#foundry-pigment-bleed)">
+          <ellipse cx="260" cy="340" rx="420" ry="180" fill="var(--pigment-1)" opacity="0.68" />
+          <ellipse cx="780" cy="360" rx="460" ry="175" fill="var(--pigment-2)" opacity="0.65" />
+          <ellipse cx="1240" cy="330" rx="360" ry="165" fill="var(--pigment-3)" opacity="0.54" />
+        </g>
+        <rect width="1440" height="420" fill="url(#obsidian-feather)" />
+      </svg>
+
       <div class="container footer-inner">
-        <div>
-          <strong class="mono">[b/f] blobsterfactory.com · blobster.dev</strong> — Built on EmDash CMS &amp; Astro for OpenClaw Agent Templates.
+        <div class="footer-masthead">
+          <div>
+            <p class="footer-wordmark">Blobster Factory</p>
+            <p class="footer-tagline">
+              Open-source agent template workshop, 24px-to-512px shell compiler, and moderated EmDash catalog for OpenClaw.
+            </p>
+          </div>
+          <button
+            type="button"
+            class="footer-cli-box"
+            data-footer-cli="curl -fsSL https://blobster.dev/t/blobster-smith.tgz | tar -xz"
+            data-copy-cli="curl -fsSL https://blobster.dev/t/blobster-smith.tgz | tar -xz"
+            aria-label="Copy curl tarball extraction command"
+          >
+            <span class="prompt-dollar">$</span>
+            <code data-footer-cli-label>curl -fsSL https://blobster.dev/t/blobster-smith.tgz | tar -xz</code>
+          </button>
         </div>
-        <div class="mono">
-          Script-free packages · ClawHub preflight aligned · MIT Templates
+
+        <nav class="footer-columns" aria-label="Footer directory">
+          <div class="footer-col">
+            <h3>Workshop</h3>
+            <ul>
+              <li><a href="/">Verified Template Catalog</a></li>
+              <li><a href="/pipeline">Smith &amp; Sculptor Pipeline</a></li>
+              <li><a href="/submit">Submit Community Pack</a></li>
+              <li><a href="/_emdash/admin/review">Moderator Review Queue</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Starter Templates</h3>
+            <ul>
+              <li>
+                <a href="/templates/blobster-smith">
+                  <img class="footer-mini-icon" src="/templates/blobster-smith/blobster.svg" alt="" width="18" height="18" />
+                  <span>Blobster Smith</span>
+                </a>
+              </li>
+              <li>
+                <a href="/templates/blobster-sculptor">
+                  <img class="footer-mini-icon" src="/templates/blobster-sculptor/blobster.svg" alt="" width="18" height="18" />
+                  <span>Blobster Sculptor</span>
+                </a>
+              </li>
+              <li>
+                <a href="/templates/openclaw-release-coordinator">
+                  <img class="footer-mini-icon" src="/templates/openclaw-release-coordinator/cutout-256.png" alt="" width="18" height="18" />
+                  <span>Release Coordinator</span>
+                </a>
+              </li>
+              <li>
+                <a href="/templates/openclaw-workflow-operator">
+                  <img class="footer-mini-icon" src="/templates/openclaw-workflow-operator/cutout-256.png" alt="" width="18" height="18" />
+                  <span>Workflow Operator</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Specifications</h3>
+            <ul>
+              <li><a href="https://blobsterfactory.com">blobsterfactory.com (Storefront)</a></li>
+              <li><a href="https://blobster.dev">blobster.dev (Tarball Edge Host)</a></li>
+              <li><a href="/pipeline#spec">Script-Free CLAW.md Contract</a></li>
+              <li><a href="/pipeline#shells">5-Layer 24px SVG &amp; RGBA Spec</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Community</h3>
+            <ul>
+              <li><a href="https://github.com/saariuslystoned/blobster-factory" target="_blank" rel="noopener noreferrer">GitHub · MIT Source</a></li>
+              <li><a href="https://community.openclaw.ai/c/build-showcase/5" target="_blank" rel="noopener noreferrer">OpenClaw Build &amp; Showcase</a></li>
+              <li><a href="https://emdashcms.com" target="_blank" rel="noopener noreferrer">Built with EmDash + Astro</a></li>
+            </ul>
+          </div>
+        </nav>
+
+        <div class="footer-colophon">
+          <div>&copy; 2026 Blobster Factory · MIT License · Zero executable install scripts.</div>
+
+          <div class="footer-dock">
+            <div class="dock-group" role="group" aria-label="Color theme">
+              <span class="dock-label">Theme</span>
+              <button class="dock-pill" type="button" data-theme-mode="light" aria-pressed="false">Light</button>
+              <button class="dock-pill" type="button" data-theme-mode="dark" aria-pressed="false">Dark</button>
+              <button class="dock-pill" type="button" data-theme-mode="system" aria-pressed="true">System</button>
+            </div>
+
+            <div class="dock-group" data-preset-select role="group" aria-label="OpenClaw accent preset">
+              <span class="dock-label">Preset</span>
+              <button class="dock-pill" type="button" data-preset-btn="knot" aria-pressed="true">
+                <span class="swatch-dot" style="background:#e5243b"></span>Knot
+              </button>
+              <button class="dock-pill" type="button" data-preset-btn="tide" aria-pressed="false">
+                <span class="swatch-dot" style="background:#5ab6d8"></span>Tide
+              </button>
+              <button class="dock-pill" type="button" data-preset-btn="beacon" aria-pressed="false">
+                <span class="swatch-dot" style="background:#ffc233"></span>Beacon
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
@@ -99,12 +266,36 @@ const path = Astro.url.pathname;
       (function () {
         var root = document.documentElement;
         var presetBtns = document.querySelectorAll('[data-preset-btn]');
-        function syncPresets() {
-          var current = root.getAttribute('data-preset') || 'knot';
+        var themeModeBtns = document.querySelectorAll('[data-theme-mode]');
+        var modeToggleBtn = document.querySelector('[data-theme-toggle]');
+
+        function syncThemeControls() {
+          var currentPreset = root.getAttribute('data-preset') || 'knot';
           presetBtns.forEach(function (btn) {
-            btn.setAttribute('aria-pressed', String(btn.getAttribute('data-preset-btn') === current));
+            btn.setAttribute('aria-pressed', String(btn.getAttribute('data-preset-btn') === currentPreset));
+          });
+
+          var currentTheme = root.getAttribute('data-theme') || 'system';
+          themeModeBtns.forEach(function (btn) {
+            btn.setAttribute('aria-pressed', String(btn.getAttribute('data-theme-mode') === currentTheme));
           });
         }
+
+        function applyThemeMode(mode) {
+          if (mode === 'light' || mode === 'dark') {
+            root.setAttribute('data-theme', mode);
+            try {
+              localStorage.setItem('bf-theme', mode);
+            } catch (_e) {}
+          } else {
+            root.removeAttribute('data-theme');
+            try {
+              localStorage.removeItem('bf-theme');
+            } catch (_e) {}
+          }
+          syncThemeControls();
+        }
+
         presetBtns.forEach(function (btn) {
           btn.addEventListener('click', function () {
             var next = btn.getAttribute('data-preset-btn') || 'knot';
@@ -112,23 +303,43 @@ const path = Astro.url.pathname;
             try {
               localStorage.setItem('bf-preset', next);
             } catch (_e) {}
-            syncPresets();
+            syncThemeControls();
           });
         });
-        var modeBtn = document.querySelector('[data-theme-toggle]');
-        if (modeBtn) {
-          modeBtn.addEventListener('click', function () {
+
+        themeModeBtns.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            applyThemeMode(btn.getAttribute('data-theme-mode') || 'system');
+          });
+        });
+
+        if (modeToggleBtn) {
+          modeToggleBtn.addEventListener('click', function () {
             var cur = root.getAttribute('data-theme');
             var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
             var isDark = cur ? cur === 'dark' : prefersDark;
-            var next = isDark ? 'light' : 'dark';
-            root.setAttribute('data-theme', next);
-            try {
-              localStorage.setItem('bf-theme', next);
-            } catch (_e) {}
+            applyThemeMode(isDark ? 'light' : 'dark');
           });
         }
-        syncPresets();
+
+        var footerCliBtn = document.querySelector('[data-footer-cli]');
+        var footerCliLabel = document.querySelector('[data-footer-cli-label]');
+        if (footerCliBtn && footerCliLabel) {
+          footerCliBtn.addEventListener('click', function () {
+            var cmd = footerCliBtn.getAttribute('data-footer-cli') || '';
+            if (navigator.clipboard && cmd) {
+              navigator.clipboard.writeText(cmd).then(function () {
+                var prev = footerCliLabel.textContent;
+                footerCliLabel.textContent = '✓ Copied curl 1-liner to clipboard';
+                setTimeout(function () {
+                  footerCliLabel.textContent = prev;
+                }, 1600);
+              });
+            }
+          });
+        }
+
+        syncThemeControls();
       })();
     </script>
   </body>
