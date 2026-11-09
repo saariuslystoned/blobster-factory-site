@@ -20,7 +20,7 @@ const origin = canonicalOrigin();
 ---
 
 <Layout
-  title={tpl ? `${tpl.title} (${tpl.coordinate}) — Blobster Factory` : 'Template Not Found — Blobster Factory'}
+  title={tpl ? `${tpl.title} — Blobster Factory` : 'Template Not Found — Blobster Factory'}
   description={tpl ? tpl.summary : 'Requested OpenClaw template could not be found.'}
 >
   {!tpl ? (
@@ -29,19 +29,19 @@ const origin = canonicalOrigin();
         <div class="stage-box">
           <h1>Template not found</h1>
           <p style="color:var(--color-muted);">There is no published template at this coordinate.</p>
-          <a class="btn" href="/">← Back to Catalog</a>
+          <a class="btn" href="/">← All Templates</a>
         </div>
       </div>
     </section>
   ) : (
     <article data-content-source="emdash">
-      <!-- CHAMBER 01: OBSIDIAN SPECIMEN MASTHEAD & AVATAR CUTOUT STAGE -->
+      <!-- CHAMBER 01: OBSIDIAN TEMPLATE HEADER & CHARACTER PREVIEW -->
       <div class="chamber-obsidian">
         <section class="route-masthead-section">
           <div class="container">
             <div style="margin-bottom:14px;">
-              <a class="mono" style="font-size:11.5px;color:var(--obs-muted);" href="/#catalog">
-                ← Back to Verified Templates Catalog
+              <a style="font-size:13px;color:var(--obs-muted);" href="/#catalog">
+                ← All Templates
               </a>
             </div>
 
@@ -52,14 +52,12 @@ const origin = canonicalOrigin();
                     {tpl.channel}
                   </span>
                   <span class="badge">{tpl.category}</span>
-                  <span class="badge badge-clean">ClawHub scan: {tpl.scan_status}</span>
-                  <span class="badge">v{tpl.version}</span>
                 </div>
 
                 <h1 class="obs-route-title">{tpl.title}</h1>
 
                 <div class="mono" style="font-size:12.5px;color:var(--obs-muted);margin-bottom:14px;word-break:break-word;">
-                  {tpl.coordinate.startsWith('@') ? tpl.coordinate : `@${tpl.owner_handle}/${tpl.slug}`} · publisher @{tpl.owner_handle} · {tpl.avatar_tier}
+                  {tpl.coordinate.startsWith('@') ? tpl.coordinate : `@${tpl.owner_handle}/${tpl.slug}`}
                 </div>
 
                 <p class="obs-lede" style="margin-bottom:20px;">{tpl.summary}</p>
@@ -67,41 +65,36 @@ const origin = canonicalOrigin();
                 <div style="display:flex;gap:10px;flex-wrap:wrap;">
                   {tpl.tarball_url && (
                     <a class="btn-obs btn-obs-primary" href={tpl.tarball_url} download>
-                      ↓ Download {tpl.slug}.tgz ({Math.round(Number(tpl.tarball_bytes || '0') / 1024)} KB)
+                      ↓ Download {tpl.slug}.tgz
                     </a>
                   )}
                   {tpl.links[0] && (
                     <a class="btn-obs" href={tpl.links[0]} target="_blank" rel="noopener noreferrer">
-                      Inspect Source ↗
+                      View Source ↗
                     </a>
                   )}
                 </div>
               </div>
 
-              <aside class="blueprint-well stage-card" data-avatar-stage aria-label="Template multi-scale avatar cutout audit">
-                <div class="stage-topbar">
-                  <span>AVATAR CUTOUT AUDIT</span>
-                  <span>{tpl.coordinate}</span>
-                </div>
-
+              <aside class="blueprint-well stage-card" data-avatar-stage aria-label="Template character preview">
                 <div class="scale-strip">
                   <div class="scale-cell" data-scale-box>
                     <div style="flex:1;display:flex;align-items:center;justify-content:center;">
-                      <img src={tpl.avatar_svg_url} alt={`${tpl.title} at 24px`} width="24" height="24" />
+                      <img src={tpl.avatar_svg_url} alt={`${tpl.title} sidebar icon`} width="24" height="24" />
                     </div>
-                    <span class="scale-label">24×24</span>
+                    <span class="scale-label">Sidebar</span>
                   </div>
                   <div class="scale-cell" data-scale-box>
                     <div style="flex:1;display:flex;align-items:center;justify-content:center;">
-                      <img src={tpl.cutout_url} alt={`${tpl.title} at 64px`} width="64" height="64" />
+                      <img src={tpl.cutout_url} alt={`${tpl.title} card avatar`} width="64" height="64" />
                     </div>
-                    <span class="scale-label">64×64</span>
+                    <span class="scale-label">Card</span>
                   </div>
                   <div class="scale-cell" data-scale-box>
                     <div style="flex:1;display:flex;align-items:center;justify-content:center;">
-                      <img data-detail-hero src={tpl.hero_url} alt={`${tpl.title} hero`} width="108" height="108" />
+                      <img data-detail-hero src={tpl.hero_url} alt={`${tpl.title} character render`} width="108" height="108" />
                     </div>
-                    <span class="scale-label" data-detail-cap>HERO</span>
+                    <span class="scale-label" data-detail-cap>Character</span>
                   </div>
                 </div>
 
@@ -113,7 +106,7 @@ const origin = canonicalOrigin();
                           type="button"
                           class="deck-chip"
                           data-hero-src={tpl.hero_url}
-                          data-hero-label="512px VINYL"
+                          data-hero-label="Character"
                           aria-pressed="true"
                         >
                           Vinyl
@@ -122,67 +115,56 @@ const origin = canonicalOrigin();
                           type="button"
                           class="deck-chip"
                           data-hero-src={tpl.idle_gif_url}
-                          data-hero-label="IDLE GIF"
+                          data-hero-label="Idle"
                           aria-pressed="false"
                         >
-                          Idle GIF
+                          Idle
                         </button>
                         <button
                           type="button"
                           class="deck-chip"
                           data-hero-src={tpl.wave_gif_url}
-                          data-hero-label="WAVE GIF"
+                          data-hero-label="Wave"
                           aria-pressed="false"
                         >
-                          Wave GIF
+                          Wave
                         </button>
                       </>
                     )}
                   </div>
                   <button type="button" class="deck-chip" data-detail-surface aria-pressed="false">
-                    Light Mat
+                    Light Surface
                   </button>
                 </div>
               </aside>
             </div>
           </div>
         </section>
-
-        <div class="preflight-strip">
-          <div class="preflight-badges">
-            <span class="pf-tag pf-tag-clean">✓ [SCRIPT-FREE · ZERO LIFECYCLE HOOKS]</span>
-            <span class="pf-tag">SCHEDULE: {tpl.cron_summary}</span>
-          </div>
-          <div>SHA-256: {tpl.tarball_sha256 ? tpl.tarball_sha256.slice(0, 16) + '…' : 'CLAWHUB-VERIFIED'}</div>
-        </div>
       </div>
 
       <!-- 12px BAYER ORDERED DITHER TRANSITION -->
       <div class="bayer-dither-strip" aria-hidden="true"></div>
 
-      <!-- CHAMBER 02: 3-WAY ADD-TO-OPENCLAW BAR & COLLAPSIBLE MANIFEST INSPECTOR -->
+      <!-- CHAMBER 02: INSTALL BAR & TEMPLATE FILES -->
       <section class="chamber-workbench">
         <div class="container">
-          <section class="add-gateway-panel" aria-label="Add template to OpenClaw gateway">
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
-              <div>
-                <div class="eyebrow"><span class="dot"></span> ADD TO YOUR OPENCLAW GATEWAY</div>
-                <div style="font-size:13.5px;color:var(--color-muted);margin-top:3px;">
-                  Paste the prompt into an active OpenClaw chat, run the verified 1-line CLI command, or copy the ClawHub coordinate.
-                </div>
+          <section class="add-gateway-panel" aria-label="Add template to OpenClaw">
+            <div style="margin-bottom:12px;">
+              <h2 style="font-size:1.5rem;margin:0;">Add to OpenClaw</h2>
+              <div style="font-size:13.5px;color:var(--color-muted);margin-top:3px;">
+                Paste the prompt into an active OpenClaw chat, extract from the terminal, or copy the package coordinate.
               </div>
-              <span class="badge badge-clean">[SCRIPT-FREE · INSPECT FIRST]</span>
             </div>
 
             <div class="gateway-tabs" role="tablist">
               <button type="button" class="chip-btn" data-tab-btn="prompt" aria-pressed="true">
-                1. Copy OpenClaw Agent Prompt
+                Agent Prompt
               </button>
               <button type="button" class="chip-btn" data-tab-btn="cli" aria-pressed="false">
-                2. Terminal CLI (blobster.dev)
+                Terminal CLI
               </button>
               <button type="button" class="chip-btn" data-tab-btn="clawhub" aria-pressed="false">
-                3. ClawHub Coordinate &amp; SHA-256
+                Coordinate
               </button>
             </div>
 
@@ -190,7 +172,7 @@ const origin = canonicalOrigin();
               <div class="code-strip" id="pane-prompt-code">{agentPrompt}</div>
               <div style="margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
                 <button type="button" class="btn btn-primary" data-copy-prompt={agentPrompt}>
-                  ⧉ Copy Prompt for OpenClaw Chat
+                  ⧉ Copy Prompt
                 </button>
               </div>
             </div>
@@ -199,13 +181,13 @@ const origin = canonicalOrigin();
               <div class="code-strip">{cliCommand}</div>
               <div style="margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
                 <button type="button" class="btn btn-primary" data-copy-cli={cliCommand}>
-                  ⧉ Copy Verified CLI Command
+                  ⧉ Copy CLI Command
                 </button>
               </div>
             </div>
 
             <div data-tab-pane="clawhub" hidden>
-              <div class="code-strip">{`Coordinate: ${tpl.coordinate}@${tpl.version}\nGateway UI: Settings -> Labs -> Templates -> Pages -> Templates\nSHA-256:    ${tpl.tarball_sha256 || 'verified-on-clawhub'}\nOrigin:     ${origin}/templates/${tpl.slug}`}</div>
+              <div class="code-strip">{`Coordinate: ${tpl.coordinate}@${tpl.version}\nURL:        ${origin}/templates/${tpl.slug}`}</div>
               <div style="margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
                 <button type="button" class="btn btn-primary" data-copy-clawhub={tpl.coordinate}>
                   ⧉ Copy {tpl.coordinate}
@@ -214,20 +196,17 @@ const origin = canonicalOrigin();
             </div>
 
             <div class="receipt-banner" data-receipt-banner>
-              <span data-receipt-text>[COPIED TO CLIPBOARD · SHA-256 VERIFIED]</span>
-              <span>[INSPECTED · CLEAN]</span>
+              <span data-receipt-text>Copied to clipboard</span>
             </div>
           </section>
 
-          <section class="emdash-disclosure-stack" aria-label="Template workspace files, skills, and sandbox profile">
-            <div class="eyebrow" style="margin-bottom:4px;">
-              <span class="dot"></span> COLLAPSIBLE MANIFEST &amp; TRUST INSPECTOR
-            </div>
+          <section class="emdash-disclosure-stack" aria-label="Included template files">
+            <h2 style="font-size:1.45rem;margin:0 0 4px;">Included Files</h2>
 
             <details class="emdash-collapse" open>
               <summary>
                 <span>Workspace Manifest · <code>CLAW.md</code> &amp; <code>profiles/openclaw.yml</code></span>
-                <span class="collapse-meta">schemaVersion: 1 · workspaceOnly: true ▾</span>
+                <span class="collapse-meta">View ▾</span>
               </summary>
               <div class="collapse-body">
                 <pre><code>{tpl.claw_md}</code></pre>
@@ -238,8 +217,8 @@ const origin = canonicalOrigin();
             {tpl.soul_md && (
               <details class="emdash-collapse">
                 <summary>
-                  <span>Persona &amp; Operating Boundaries · <code>SOUL.md</code> &amp; <code>AGENTS.md</code></span>
-                  <span class="collapse-meta">Bootstrap identity files ▾</span>
+                  <span>Persona &amp; Instructions · <code>SOUL.md</code> &amp; <code>AGENTS.md</code></span>
+                  <span class="collapse-meta">View ▾</span>
                 </summary>
                 <div class="collapse-body">
                   <pre><code>{tpl.soul_md}</code></pre>
@@ -252,7 +231,7 @@ const origin = canonicalOrigin();
               <details class="emdash-collapse">
                 <summary>
                   <span>Bundled Skill · <code>{tpl.skill_name || 'SKILL.md'}</code></span>
-                  <span class="collapse-meta">Scoped agent skill ▾</span>
+                  <span class="collapse-meta">View ▾</span>
                 </summary>
                 <div class="collapse-body">
                   <pre><code>{tpl.skill_md}</code></pre>
@@ -263,24 +242,14 @@ const origin = canonicalOrigin();
             {tpl.design_json && (
               <details class="emdash-collapse">
                 <summary>
-                  <span>5-Layer 24px Vector Rig · <code>blobster-design.json</code></span>
-                  <span class="collapse-meta">viewBox="-12 -18 144 144" · &lt;20 shapes ▾</span>
+                  <span>Blobster Design Layers · <code>blobster-design.json</code></span>
+                  <span class="collapse-meta">View ▾</span>
                 </summary>
                 <div class="collapse-body">
                   <pre><code>{tpl.design_json}</code></pre>
                 </div>
               </details>
             )}
-
-            <details class="emdash-collapse">
-              <summary>
-                <span>Automations &amp; ClawHub Security Preflight</span>
-                <span class="collapse-meta">{tpl.cron_summary} ▾</span>
-              </summary>
-              <div class="collapse-body">
-                <pre><code>{`Schedule: ${tpl.cron_summary}\nPackage lifecycle scripts: NONE (enforced)\nSymlinks / path escapes:   NONE (enforced)\nClawHub scan state:        ${tpl.scan_status}`}</code></pre>
-              </div>
-            </details>
           </section>
         </div>
       </section>
@@ -319,16 +288,16 @@ const origin = canonicalOrigin();
           }
         });
       }
-      bindCopy('data-copy-prompt', 'OpenClaw Agent Prompt');
-      bindCopy('data-copy-cli', 'Verified blobster.dev CLI 1-liner');
-      bindCopy('data-copy-clawhub', 'ClawHub package coordinate');
+      bindCopy('data-copy-prompt', 'Agent prompt');
+      bindCopy('data-copy-cli', 'CLI command');
+      bindCopy('data-copy-clawhub', 'Coordinate');
 
       var heroImg = document.querySelector('[data-detail-hero]');
       var heroCap = document.querySelector('[data-detail-cap]');
       document.querySelectorAll('[data-hero-src]').forEach(function (btn) {
         btn.addEventListener('click', function () {
           if (heroImg) heroImg.setAttribute('src', btn.getAttribute('data-hero-src') || '');
-          if (heroCap) heroCap.textContent = btn.getAttribute('data-hero-label') || 'HERO';
+          if (heroCap) heroCap.textContent = btn.getAttribute('data-hero-label') || 'Character';
           document.querySelectorAll('[data-hero-src]').forEach(function (b) {
             b.setAttribute('aria-pressed', String(b === btn));
           });

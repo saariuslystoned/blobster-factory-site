@@ -4,104 +4,95 @@ import { TEMPLATE_CATEGORIES } from '../lib/validation';
 ---
 
 <Layout
-  title="Submit Community Agent Template — Blobster Factory"
-  description="Submit a script-free OpenClaw Agent Template and Blobster pack to the moderated Blobster Factory review queue."
+  title="Submit a Template — Blobster Factory"
+  description="Share an open-source OpenClaw agent template with the Blobster Factory catalog."
 >
-  <!-- CHAMBER 01: OBSIDIAN MODERATION QUEUE MASTHEAD -->
+  <!-- CHAMBER 01: OBSIDIAN MASTHEAD -->
   <div class="chamber-obsidian">
     <section class="route-masthead-section">
       <div class="container" style="max-width:880px;">
         <div class="eyebrow-tech">
-          <span class="dot"></span> ROUTE 04 · MODERATED CLAWHUB-ALIGNED QUEUE
+          <span class="dot"></span> Community
         </div>
         <h1 class="obs-route-title">
           Submit a <em>Blobster Template.</em>
         </h1>
         <p class="obs-lede">
-          Public submissions never publish directly. Every submission enters the private EmDash moderation queue (<code>/_emdash/admin/review</code>) to verify zero <code>package.json</code> lifecycle scripts, explicit sandbox boundaries, and crisp <code>24px</code> Blobster legibility.
+          Share an OpenClaw agent template with the community. Every submission is reviewed before appearing in the catalog.
         </p>
       </div>
     </section>
-
-    <div class="preflight-strip">
-      <div class="preflight-badges">
-        <span class="pf-tag pf-tag-clean">✓ MODERATED BEFORE PUBLISH</span>
-        <span class="pf-tag">HTTPS PUBLIC LINKS ONLY</span>
-        <span class="pf-tag">ZERO LIFECYCLE SCRIPTS</span>
-      </div>
-      <div>ADMIN QUEUE: /_EMDASH/ADMIN/REVIEW</div>
-    </div>
   </div>
 
   <!-- 12px BAYER ORDERED DITHER TRANSITION -->
   <div class="bayer-dither-strip" aria-hidden="true"></div>
 
-  <!-- CHAMBER 02: SUBMISSION WORKBENCH FORM -->
+  <!-- CHAMBER 02: SUBMISSION FORM -->
   <section class="chamber-workbench">
     <div class="container" style="max-width:880px;">
       <form class="stage-box" data-template-submit-form novalidate>
         <div class="form-grid">
           <div class="field">
-            <label for="f-title">Template Display Name</label>
+            <label for="f-title">Template Name</label>
             <input id="f-title" name="title" type="text" required maxlength="80" placeholder="e.g. Incident Scribe" />
           </div>
           <div class="field">
-            <label for="f-coord">Scoped Coordinate (@handle/slug)</label>
+            <label for="f-coord">Coordinate (@handle/slug)</label>
             <input id="f-coord" name="coordinate" type="text" required placeholder="@handle/incident-scribe" />
           </div>
         </div>
 
         <div class="form-grid">
           <div class="field">
-            <label for="f-owner">Publisher Handle (no @)</label>
+            <label for="f-owner">GitHub / Publisher Handle</label>
             <input id="f-owner" name="owner_handle" type="text" required placeholder="handle" />
           </div>
           <div class="field">
-            <label for="f-version">Version (SemVer)</label>
+            <label for="f-version">Version</label>
             <input id="f-version" name="version" type="text" required value="0.1.0" />
           </div>
         </div>
 
         <div class="form-grid">
           <div class="field">
-            <label for="f-cat">OpenClaw Category</label>
+            <label for="f-cat">Category</label>
             <select id="f-cat" name="category">
               {TEMPLATE_CATEGORIES.map((c) => <option value={c}>{c}</option>)}
             </select>
           </div>
           <div class="field">
-            <label for="f-tier">Blobster Visual Pack Tier</label>
+            <label for="f-tier">Avatar Pack</label>
             <select id="f-tier" name="avatar_tier">
               <option value="Tier 1 Fast Pack (SVG + 512px Vinyl + 2 GIFs)">
-                Tier 1 Fast Pack (SVG + 512px Vinyl + 2 GIFs)
+                Standard Pack (SVG + Character Render + GIFs)
               </option>
               <option value="Tier 2 Full Pet Rig (73-frame Sprite + Manifest)">
-                Tier 2 Full Pet Rig (73-frame Sprite + Manifest)
+                Animated Companion Sprite Pack
               </option>
-              <option value="24px Vector Blobster SVG Only">24px Vector Blobster SVG Only</option>
+              <option value="24px Vector Blobster SVG Only">Vector Icon Only</option>
             </select>
           </div>
         </div>
 
         <div class="field">
-          <label for="f-summary">Agent Summary &amp; Explicit Authority Boundary</label>
+          <label for="f-summary">Summary</label>
           <textarea
             id="f-summary"
             name="summary"
             required
             maxlength="400"
-            placeholder="What bounded job does this template perform, and what actions stay human-gated?"
+            placeholder="What job does this agent perform, and what stays human-approved?"
             style="min-height:78px;font-family:var(--font-sans);"
           ></textarea>
         </div>
 
         <div class="field">
-          <label for="f-claw">CLAW.md Frontmatter &amp; Excerpt</label>
+          <label for="f-claw">CLAW.md</label>
           <textarea
             id="f-claw"
             name="claw_md"
             required
-            placeholder={`---\nschemaVersion: 1\nname: Incident Scribe\n---\n\nProduces bounded post-incident timelines without paging or closing tickets.`}
+            placeholder={`---\nschemaVersion: 1\nname: Incident Scribe\n---\n\nProduces post-incident timelines without paging or closing tickets.`}
           ></textarea>
         </div>
 
@@ -118,17 +109,17 @@ import { TEMPLATE_CATEGORIES } from '../lib/validation';
 
         <div class="form-grid">
           <div class="field">
-            <label for="f-skill">Primary Bundled Skill Name (Optional)</label>
+            <label for="f-skill">Bundled Skill Name (Optional)</label>
             <input id="f-skill" name="skill_name" type="text" maxlength="80" placeholder="incident-timeline-ledger" />
           </div>
           <div class="field">
-            <label for="f-cron">Cron / Automation Schedule</label>
-            <input id="f-cron" name="cron_summary" type="text" maxlength="160" value="On-demand · No scheduled cron jobs" />
+            <label for="f-cron">Schedule</label>
+            <input id="f-cron" name="cron_summary" type="text" maxlength="160" value="On-demand" />
           </div>
         </div>
 
         <div class="field">
-          <label for="f-links">Public HTTPS GitHub / ClawHub Links (one per line)</label>
+          <label for="f-links">Public GitHub / Repository Links (one per line)</label>
           <textarea
             id="f-links"
             name="links"
@@ -146,11 +137,11 @@ import { TEMPLATE_CATEGORIES } from '../lib/validation';
         <div style="margin:14px 0 18px;display:flex;gap:10px;align-items:flex-start;">
           <input id="f-confirm" name="script_free_confirm" type="checkbox" required style="margin-top:4px;" />
           <label for="f-confirm" style="font-size:13.5px;">
-            I confirm this template's <code>package.json</code> contains zero lifecycle scripts, zero symlinks or parent-path escapes, and no embedded credentials.
+            This template contains no install scripts, symlinks, or embedded credentials.
           </label>
         </div>
 
-        <button type="submit" class="btn btn-primary" data-submit-btn>Submit to Moderation Queue →</button>
+        <button type="submit" class="btn btn-primary" data-submit-btn>Submit Template →</button>
         <div class="receipt-banner" data-submit-status style="margin-top:14px;"></div>
       </form>
     </div>
@@ -205,7 +196,7 @@ import { TEMPLATE_CATEGORIES } from '../lib/validation';
             if (res && res.ok) {
               statusEl.style.borderColor = 'var(--color-clean)';
               statusEl.style.color = 'var(--color-clean)';
-              statusEl.textContent = '✓ Queued for review · Reference ID: ' + res.reference;
+              statusEl.textContent = '✓ Submitted for review · Reference: ' + res.reference;
               form.reset();
             } else {
               statusEl.style.borderColor = 'var(--color-danger)';

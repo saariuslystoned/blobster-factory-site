@@ -32,8 +32,6 @@ const railCategories = [
   count: all.filter((tpl) => tpl.category === item.key).length,
 }));
 
-const padCount = (n: number) => String(n).padStart(2, '0');
-
 const origin = canonicalOrigin();
 const structured = {
   '@context': 'https://schema.org',
@@ -53,29 +51,18 @@ const structured = {
 ---
 
 <Layout noindex={Boolean(q || cat || ch)} structured={structured}>
-  <!-- CHAMBER 01: OBSIDIAN C2 BLUEPRINT CALIBRATION STAGE -->
+  <!-- CHAMBER 01: OBSIDIAN HERO STAGE -->
   <div class="chamber-obsidian">
     <section class="stage-hero-section">
       <div class="container">
         <div
           class="drafting-workbench"
           data-avatar-stage
-          aria-label="Live 24px, 64px, and 512px Blobster calibration stage"
+          aria-label="Blobster character preview stage"
         >
-          <div class="calibration-bar">
-            <span>+ CALIBRATION STAGE // OPENCLAW DRAFTING SYSTEM NO. 02</span>
-            <span class="cal-ticks">|---|---|---|---|---|---|---|---|---|---|---|---|---|</span>
-            <span class="mono" data-stage-label>SPECIMEN: @saariuslystoned/blobster-smith</span>
-          </div>
-
           <div class="hero-manifesto-wrap">
-            <div class="cal-corner cal-tl">+ 00,00 [DATUM_A]</div>
-            <div class="cal-corner cal-tr">+ 12,40 [DATUM_B]</div>
-            <div class="cal-corner cal-bl">+ 00,56 [VECTOR_X]</div>
-            <div class="cal-corner cal-br">+ 12,56 [VECTOR_Y]</div>
-
             <div class="eyebrow-tech">
-              <span class="dot"></span> OPENCLAW FOCUS WEEK · AGENT TEMPLATES FOUNDRY
+              <span class="dot"></span> OpenClaw Agent Templates
             </div>
 
             <h1 class="hero-manifesto-title">
@@ -83,20 +70,19 @@ const structured = {
             </h1>
 
             <p class="hero-manifesto-sub">
-              Architectural workbench and moderated technical catalog for forging script-free <code>CLAW.md</code> brains, <code>24px</code> crisp sidebar vectors, and despilled 3D vinyl loops aligned with ClawHub verification.
+              Browse open-source agent templates with ready-to-run prompts, workspace guardrails, and custom Blobster artwork built for your sidebar, cards, and agent profile.
             </p>
 
             <div class="hero-cta-strip">
-              <a class="btn-obs btn-obs-primary" href="#catalog">Browse Verified Catalog ↓</a>
-              <a class="btn-obs" href="/pipeline">Inspect Forge Pipeline →</a>
-              <a class="btn-obs" href="/submit">Submit Agent Spec +</a>
+              <a class="btn-obs btn-obs-primary" href="#catalog">Browse Templates ↓</a>
+              <a class="btn-obs" href="/pipeline">Forge Pipeline →</a>
+              <a class="btn-obs" href="/submit">Submit a Template</a>
             </div>
           </div>
 
           <div class="specimen-deck">
             <div class="deck-topbar">
               <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-                <span style="color:var(--obs-muted);margin-right:4px;">SPECIMEN ACTIVE:</span>
                 <button class="deck-chip" type="button" data-pick-char="blobster-smith" aria-pressed="true">
                   Blobster Smith
                 </button>
@@ -105,79 +91,50 @@ const structured = {
                 </button>
               </div>
               <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-                <span style="color:var(--obs-muted);margin-right:4px;">RENDER VIEW:</span>
                 <button class="deck-chip" type="button" data-pick-mode="vinyl" aria-pressed="true">3D Vinyl</button>
-                <button class="deck-chip" type="button" data-pick-mode="idle" aria-pressed="false">Idle GIF</button>
-                <button class="deck-chip" type="button" data-pick-mode="wave" aria-pressed="false">Wave GIF</button>
-                <button class="deck-chip" type="button" data-pick-surface="toggle" aria-pressed="false">Light Mat</button>
+                <button class="deck-chip" type="button" data-pick-mode="idle" aria-pressed="false">Idle</button>
+                <button class="deck-chip" type="button" data-pick-mode="wave" aria-pressed="false">Wave</button>
+                <button class="deck-chip" type="button" data-pick-surface="toggle" aria-pressed="false">Light Surface</button>
               </div>
             </div>
 
             <div class="deck-specimen-grid">
               <div class="spec-box">
-                <div class="spec-fig">FIG. 01 — SIDEBAR VECTOR</div>
+                <div class="spec-fig">Sidebar</div>
                 <div class="spec-viewport" data-scale-box>
                   <img
                     data-stage-img
                     src="/templates/blobster-smith/blobster.svg"
-                    alt="Blobster 24px sidebar preview"
+                    alt="Blobster sidebar icon preview"
                     width="24"
                     height="24"
                   />
                 </div>
-                <div class="spec-meta">
-                  <span>SCALE: 1:1</span>
-                  <span>24×24px OPTIMIZED</span>
-                </div>
               </div>
 
               <div class="spec-box">
-                <div class="spec-fig">FIG. 02 — CATALOG CELL</div>
+                <div class="spec-fig">Catalog Card</div>
                 <div class="spec-viewport" data-scale-box>
                   <img
                     data-stage-img
                     src="/templates/blobster-smith/blobster.svg"
-                    alt="Blobster 64px catalog preview"
+                    alt="Blobster catalog card preview"
                     width="64"
                     height="64"
                   />
                 </div>
-                <div class="spec-meta">
-                  <span>SCALE: 1:1</span>
-                  <span>64×64px HUD ASSET</span>
-                </div>
               </div>
 
               <div class="spec-box">
-                <div class="spec-fig">FIG. 03 — HIGH-RES VINYL PROJECTION</div>
+                <div class="spec-fig" data-hero-caption>Character Render</div>
                 <div class="spec-viewport" data-scale-box>
                   <img
                     data-stage-hero
                     src="/templates/blobster-smith/hero-512.png"
-                    alt="Blobster 512px vinyl render"
+                    alt="Blobster character render"
                     width="116"
                     height="116"
                   />
-                </div>
-                <div class="spec-meta">
-                  <span data-hero-caption>512px 3D VINYL</span>
-                  <span>RGBA MATTE DESPILLED</span>
-                </div>
-              </div>
-
-              <div class="spec-telemetry-panel">
-                <div>
-                  <div class="tele-head">
-                    <span>CALIBRATION METRICS</span>
-                    <span class="pass-pill">PASS</span>
-                  </div>
-                  <div class="tele-row"><span>ALPHA CHROMA:</span><strong data-tele-spill>0.00% SPILL</strong></div>
-                  <div class="tele-row"><span>VECTOR SUB-PIXELS:</span><strong>GRID-ALIGNED</strong></div>
-                  <div class="tele-row"><span>ASSET FORMATS:</span><strong>SVG + PNG + GIF</strong></div>
-                  <div class="tele-row"><span>PACKAGE TARBALL:</span><strong data-tele-size>636 KB (.TGZ)</strong></div>
-                </div>
-                <div style="font-size:10px;color:var(--obs-muted);border-top:1px solid var(--obs-border);padding-top:8px;">
-                  Verified across OpenClaw sidebar, status dock &amp; agent sheet viewports.
                 </div>
               </div>
             </div>
@@ -185,31 +142,16 @@ const structured = {
         </div>
       </div>
     </section>
-
-    <div class="preflight-strip">
-      <div class="preflight-badges">
-        <span class="pf-tag pf-tag-clean">✓ [INSPECTED · CLEAN · SCRIPT-FREE PKG]</span>
-        <span class="pf-tag">SHA-256 PREFLIGHT VERIFIED</span>
-        <span class="pf-tag">CLAWHUB COMPLIANT</span>
-      </div>
-      <div>BLOBSTER.DEV · SHORT TARBALL EDGE: BLOBSTER.DEV/T/*.TGZ</div>
-    </div>
   </div>
 
   <!-- 12px BAYER ORDERED DITHER TRANSITION -->
   <div class="bayer-dither-strip" aria-hidden="true"></div>
 
-  <!-- CHAMBER 02: VELLUM / DUAL-MODE CATALOG BENCH + SLIM LEFT RAIL -->
+  <!-- CHAMBER 02: VELLUM / DUAL-MODE CATALOG + LEFT FILTER RAIL -->
   <section id="catalog" class="chamber-workbench">
     <div class="container">
       <div class="catalog-head">
-        <div>
-          <div class="eyebrow"><span class="dot"></span> CLAWHUB-ALIGNED TEMPLATE BENCH</div>
-          <h2 class="catalog-title">Verified OpenClaw Agent Templates</h2>
-        </div>
-        <div class="catalog-count-badge" data-catalog-count>
-          {padCount(filtered.length)} / {padCount(all.length)} verified packages · 1-click CLI &amp; prompt install
-        </div>
+        <h2 class="catalog-title">Templates</h2>
       </div>
 
       <div class="catalog-shell">
@@ -225,7 +167,7 @@ const structured = {
               name="q"
               value={q}
               maxlength="160"
-              placeholder="Search @owner or role…"
+              placeholder="Search templates…"
               data-rail-search
             />
           </form>
@@ -234,15 +176,15 @@ const structured = {
           <nav class="rail-nav" aria-label="Filter by collection">
             <a class="rail-item" href="/#catalog" data-active={String(!cat && !ch)}>
               <span>All Templates</span>
-              <span class="rail-count">{padCount(all.length)}</span>
+              <span class="rail-count">{all.length}</span>
             </a>
             <a class="rail-item" href="/?ch=Workshop#catalog" data-active={String(ch === 'Workshop')}>
-              <span>Workshop Packs</span>
-              <span class="rail-count">{padCount(workshopCount)}</span>
+              <span>Workshop</span>
+              <span class="rail-count">{workshopCount}</span>
             </a>
             <a class="rail-item" href="/?ch=Official#catalog" data-active={String(ch === 'Official')}>
-              <span>@openclaw Official</span>
-              <span class="rail-count">{padCount(officialCount)}</span>
+              <span>Official</span>
+              <span class="rail-count">{officialCount}</span>
             </a>
           </nav>
 
@@ -257,7 +199,7 @@ const structured = {
                 data-active={String(cat === item.key)}
               >
                 <span>{item.label}</span>
-                <span class="rail-count">{padCount(item.count)}</span>
+                <span class="rail-count">{item.count}</span>
               </a>
             ))}
           </nav>
@@ -293,13 +235,12 @@ const structured = {
                             {tpl.channel}
                           </span>
                           <span class="bench-badge">{tpl.category}</span>
-                          <span class="bench-badge badge-clean">scan: {tpl.scan_status}</span>
                         </div>
                         <h3 class="bench-title">
                           <a href={`/templates/${tpl.slug}`}>{tpl.title}</a>
                         </h3>
                         <div class="bench-coord">
-                          {tpl.coordinate.startsWith('@') ? tpl.coordinate : `@${tpl.owner_handle}/${tpl.slug}`} · v{tpl.version}
+                          {tpl.coordinate.startsWith('@') ? tpl.coordinate : `@${tpl.owner_handle}/${tpl.slug}`}
                         </div>
                       </div>
                     </div>
@@ -313,10 +254,10 @@ const structured = {
                       data-copy-prompt={promptText}
                       aria-label={`Copy OpenClaw install prompt for ${tpl.title}`}
                     >
-                      ⧉ Copy Agent Prompt
+                      ⧉ Copy Prompt
                     </button>
                     <a class="btn-vel btn-vel-strong" href={`/templates/${tpl.slug}`}>
-                      Inspect &amp; Add →
+                      View Template →
                     </a>
                   </div>
                 </article>
@@ -328,7 +269,7 @@ const structured = {
             <div class="stage-box" style="margin-top:16px;">
               <h3 style="margin:0 0 6px;">No matching templates</h3>
               <p style="margin:0 0 12px;color:var(--color-muted);">
-                Clear your active filter or submit a script-free OpenClaw template to the moderation queue.
+                Clear your active filter or submit a new OpenClaw template to the catalog.
               </p>
               <a class="btn" href="/#catalog">Reset filters</a>
             </div>
@@ -345,15 +286,12 @@ const structured = {
         var activeChar = 'blobster-smith';
         var activeMode = 'vinyl';
         var lightBg = false;
-        var labelEl = stage.querySelector('[data-stage-label]');
         var svgImgs = stage.querySelectorAll('[data-stage-img]');
         var heroImg = stage.querySelector('[data-stage-hero]');
         var heroCap = stage.querySelector('[data-hero-caption]');
-        var sizeEl = stage.querySelector('[data-tele-size]');
         var boxes = stage.querySelectorAll('[data-scale-box]');
 
         function renderStage() {
-          if (labelEl) labelEl.textContent = 'SPECIMEN: @saariuslystoned/' + activeChar;
           svgImgs.forEach(function (img) {
             img.setAttribute('src', '/templates/' + activeChar + '/blobster.svg');
           });
@@ -368,10 +306,7 @@ const structured = {
           }
           if (heroCap) {
             heroCap.textContent =
-              activeMode === 'idle' ? 'IDLE GIF89A' : activeMode === 'wave' ? 'WAVE GIF89A' : '512px 3D VINYL';
-          }
-          if (sizeEl) {
-            sizeEl.textContent = activeChar === 'blobster-sculptor' ? '583 KB (.TGZ)' : '636 KB (.TGZ)';
+              activeMode === 'idle' ? 'Idle Animation' : activeMode === 'wave' ? 'Wave Animation' : 'Character Render';
           }
           boxes.forEach(function (box) {
             if (lightBg) box.setAttribute('data-surface', 'light');
@@ -411,27 +346,18 @@ const structured = {
 
       var searchInput = document.querySelector('[data-rail-search]');
       var cards = document.querySelectorAll('[data-cards-grid] > [data-search-text]');
-      var countBadge = document.querySelector('[data-catalog-count]');
       if (searchInput && cards.length > 0) {
-        var total = cards.length;
         searchInput.addEventListener('input', function () {
           var term = (searchInput.value || '').trim().toLowerCase();
-          var shown = 0;
           cards.forEach(function (card) {
             var hay = card.getAttribute('data-search-text') || '';
             var match = !term || hay.indexOf(term) !== -1;
             if (match) {
               card.removeAttribute('hidden');
-              shown += 1;
             } else {
               card.setAttribute('hidden', '');
             }
           });
-          if (countBadge) {
-            var sPad = shown < 10 ? '0' + shown : String(shown);
-            var tPad = total < 10 ? '0' + total : String(total);
-            countBadge.textContent = sPad + ' / ' + tPad + ' verified packages · 1-click CLI & prompt install';
-          }
         });
       }
 
@@ -441,7 +367,7 @@ const structured = {
           if (navigator.clipboard && text) {
             navigator.clipboard.writeText(text).then(function () {
               var orig = btn.textContent;
-              btn.textContent = '✓ Prompt Copied';
+              btn.textContent = '✓ Copied';
               setTimeout(function () {
                 btn.textContent = orig;
               }, 1600);
