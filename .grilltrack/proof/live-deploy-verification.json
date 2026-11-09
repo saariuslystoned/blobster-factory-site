@@ -1,0 +1,144 @@
+{
+  "verifiedAt": "2026-11-09T21:29:39.199Z",
+  "canonicalOrigin": "https://blobster.dev",
+  "redirectOrigin": "https://blobsterfactory.com",
+  "revisionHeader": "df43081",
+  "cfRaySample": "a57fe9b13a120d63-ATL",
+  "tarballSha256": "124dc6c1b070662110d66eac14a7198d677037f6389741eb35ddad1ac02dc072",
+  "redirects": [
+    {
+      "url": "https://blobsterfactory.com/",
+      "status": 301,
+      "location": "https://blobster.dev/"
+    },
+    {
+      "url": "https://blobsterfactory.com/pipeline?ref=legacy",
+      "status": 301,
+      "location": "https://blobster.dev/pipeline?ref=legacy"
+    },
+    {
+      "url": "https://blobsterfactory.com/t/blobster-smith.tgz",
+      "status": 301,
+      "location": "https://blobster.dev/t/blobster-smith.tgz"
+    },
+    {
+      "url": "https://www.blobsterfactory.com/",
+      "status": 301,
+      "location": "https://blobster.dev/"
+    },
+    {
+      "url": "https://www.blobsterfactory.com/templates/blobster-smith",
+      "status": 301,
+      "location": "https://blobster.dev/templates/blobster-smith"
+    },
+    {
+      "url": "https://www.blobster.dev/",
+      "status": 301,
+      "location": "https://blobster.dev/"
+    },
+    {
+      "url": "https://www.blobster.dev/pipeline",
+      "status": 301,
+      "location": "https://blobster.dev/pipeline"
+    }
+  ],
+  "securityChecks": [
+    {
+      "method": "GET",
+      "path": "/_emdash/admin",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/_emdash/api/setup",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/_emdash/api/plugins/blobster-submissions/admin",
+      "status": 401
+    }
+  ],
+  "browserResults": [
+    {
+      "viewport": "1440x900",
+      "route": "/",
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "hudCount": 0,
+      "hasMotionSlot": false,
+      "emdashCardsCount": 5,
+      "canonical": "https://blobster.dev/"
+    },
+    {
+      "viewport": "1440x900",
+      "route": "/pipeline",
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "hudCount": 0,
+      "hasMotionSlot": true,
+      "emdashCardsCount": 0,
+      "canonical": "https://blobster.dev/pipeline"
+    },
+    {
+      "viewport": "1440x900",
+      "route": "/templates/blobster-smith",
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "hudCount": 0,
+      "hasMotionSlot": false,
+      "emdashCardsCount": 1,
+      "canonical": "https://blobster.dev/templates/blobster-smith"
+    },
+    {
+      "viewport": "1440x900",
+      "route": "/submit",
+      "scrollWidth": 1440,
+      "clientWidth": 1440,
+      "hudCount": 0,
+      "hasMotionSlot": false,
+      "emdashCardsCount": 0,
+      "canonical": "https://blobster.dev/submit"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/",
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hudCount": 0,
+      "hasMotionSlot": false,
+      "emdashCardsCount": 5,
+      "canonical": "https://blobster.dev/"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/pipeline",
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hudCount": 0,
+      "hasMotionSlot": true,
+      "emdashCardsCount": 0,
+      "canonical": "https://blobster.dev/pipeline"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/templates/blobster-smith",
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hudCount": 0,
+      "hasMotionSlot": false,
+      "emdashCardsCount": 1,
+      "canonical": "https://blobster.dev/templates/blobster-smith"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/submit",
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "hudCount": 0,
+      "hasMotionSlot": false,
+      "emdashCardsCount": 0,
+      "canonical": "https://blobster.dev/submit"
+    }
+  ]
+}

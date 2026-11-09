@@ -4,11 +4,11 @@
   "current_focus": {
     "cadence": "frontier-batch",
     "confirmed": true,
-    "confirmed_at": "2026-11-09T20:25:55+00:00",
-    "domain": "Grill 2 (Round 2): Stitch Homepage Tiebreaker Hybrid + Mode B Multiplane /pipeline Stage",
-    "started_at": "2026-11-09T18:33:57+00:00",
+    "confirmed_at": "2026-11-09T21:31:16+00:00",
+    "domain": "Grill 3: Production Deploy to blobster.dev, blobsterfactory.com 301 Redirect, and HUD-Free /pipeline Motion Artwork",
+    "started_at": "2026-11-09T21:31:15+00:00",
     "status": "confirmed",
-    "summary": "Owner approved R2 Dual-Chamber Obsidian & Vellum Hybrid storefront ('I am on board with the website. It looks great.') and explicitly locked the Overhead Chain Hoist & Cast-Iron Hook 3-Plane Multiplane Stage restricted to /pipeline ('just pipeline' + 'lock it looks great')."
+    "summary": "Owner directed live deployment to blobster.dev, 301 redirect from blobsterfactory.com to blobster.dev, and stripping all 1234 stage buttons and dev HUD machinery from /pipeline."
   },
   "decisions": [
     {
@@ -160,6 +160,20 @@
           "review_source_identity": null,
           "to": "verified",
           "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T21:31:15+00:00",
+          "choice": "Both blobsterfactory.com and blobster.dev purchased on Cloudflare Personal account; use https://blobsterfactory.com as canonical site URL and https://blobster.dev for short redirects and CLI tarball URLs.",
+          "from": "verified",
+          "implementation_ref": "git:d6174e3",
+          "note": "Owner flipped canonical domain from blobsterfactory.com to blobster.dev and made blobsterfactory.com 301 redirect to blobster.dev.",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "superseded",
+          "verification_ref": "verify:site+typecheck+tests@d6174e3"
         }
       ],
       "id": "g1-domain",
@@ -174,9 +188,9 @@
       "review_source_identity": null,
       "revisit_when": null,
       "scope": "durable",
-      "status": "verified",
-      "superseded_by": null,
-      "updated_at": "2026-11-09T18:05:47+00:00",
+      "status": "superseded",
+      "superseded_by": "g3-domain-canonical-blobster-dev",
+      "updated_at": "2026-11-09T21:31:15+00:00",
       "verification_ref": "verify:site+typecheck+tests@d6174e3"
     },
     {
@@ -667,6 +681,178 @@
       "superseded_by": null,
       "updated_at": "2026-11-09T20:25:55+00:00",
       "verification_ref": "verify:site+typecheck+tests+playwright@28adc88 (.grilltrack/proof/v2-verification.json)"
+    },
+    {
+      "baseline_ref": null,
+      "candidate_refs": [],
+      "choice": "Canonical EmDash storefront and tarball edge deployed on https://blobster.dev; stateless 301 redirect Worker on blobsterfactory.com, www.blobsterfactory.com, and www.blobster.dev preserving path and query.",
+      "context_ref": null,
+      "created_at": "2026-11-09T21:31:15+00:00",
+      "deferred_reason": null,
+      "delivery_ref": null,
+      "dependencies": [
+        "g1-repo-home"
+      ],
+      "domain": "Grill 3: Production Deploy to blobster.dev, blobsterfactory.com 301 Redirect, and HUD-Free /pipeline Motion Artwork",
+      "gate_evaluation": {
+        "confidence": 0.94,
+        "decision_type": "durable",
+        "declared_scope": "durable",
+        "model": "jev-1.13.0",
+        "overlock_risk": "bundled_extra_invariants",
+        "overridden": true,
+        "override_reason": "Direct explicit owner deployment and redirect directive.",
+        "passed": false,
+        "provider": "jev",
+        "reason": "Gatekeeper (jev:jev-1.13.0) rejected locking as scope='durable': detected decision_type='durable' and overlock_risk='bundled_extra_invariants' (confidence=0.94). Re-propose with `--scope durable` (or strip unapproved clauses), or pass `--force-lock --override-reason <why>`.",
+        "recommended_scope": "durable",
+        "scope_faithful_probability": 0.79
+      },
+      "history": [
+        {
+          "at": "2026-11-09T21:31:15+00:00",
+          "choice": "Canonical EmDash storefront and tarball edge deployed on https://blobster.dev; stateless 301 redirect Worker on blobsterfactory.com, www.blobsterfactory.com, and www.blobster.dev preserving path and query.",
+          "from": "proposed",
+          "implementation_ref": null,
+          "note": "user accepted the scoped decision",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "locked",
+          "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T21:31:16+00:00",
+          "choice": "Canonical EmDash storefront and tarball edge deployed on https://blobster.dev; stateless 301 redirect Worker on blobsterfactory.com, www.blobsterfactory.com, and www.blobster.dev preserving path and query.",
+          "from": "locked",
+          "implementation_ref": null,
+          "note": "bounded implementation recorded",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "implemented",
+          "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T21:31:16+00:00",
+          "choice": "Canonical EmDash storefront and tarball edge deployed on https://blobster.dev; stateless 301 redirect Worker on blobsterfactory.com, www.blobsterfactory.com, and www.blobster.dev preserving path and query.",
+          "from": "implemented",
+          "implementation_ref": "git:df43081",
+          "note": "verification recorded in cumulative context",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "verified",
+          "verification_ref": null
+        }
+      ],
+      "id": "g3-domain-canonical-blobster-dev",
+      "implementation_ref": "git:df43081",
+      "question": "Deploy canonical storefront to https://blobster.dev and 301 redirect blobsterfactory.com to https://blobster.dev?",
+      "rationale": "Owner explicitly flipped canonical production domain to blobster.dev with 301 redirects from blobsterfactory.com.",
+      "repair_required": false,
+      "review_classifications": [],
+      "review_history": [],
+      "review_ref": null,
+      "review_result": null,
+      "review_source_identity": null,
+      "revisit_when": null,
+      "scope": "durable",
+      "status": "verified",
+      "superseded_by": null,
+      "updated_at": "2026-11-09T21:31:16+00:00",
+      "verification_ref": "live:https://blobster.dev@df43081 (.grilltrack/proof/live-deploy-verification.json)"
+    },
+    {
+      "baseline_ref": null,
+      "candidate_refs": [],
+      "choice": "Pure HUD-free 3-plane multi-depth motion artwork on /pipeline hero with zero stage numbers, scrubbers, toggles, or telemetry chrome.",
+      "context_ref": null,
+      "created_at": "2026-11-09T21:31:15+00:00",
+      "deferred_reason": null,
+      "delivery_ref": null,
+      "dependencies": [
+        "g2-motion-framework"
+      ],
+      "domain": "Grill 3: Production Deploy to blobster.dev, blobsterfactory.com 301 Redirect, and HUD-Free /pipeline Motion Artwork",
+      "gate_evaluation": {
+        "confidence": 0.42,
+        "decision_type": "slice",
+        "declared_scope": "durable",
+        "model": "jev-1.13.0",
+        "overlock_risk": "clean",
+        "passed": true,
+        "provider": "jev",
+        "reason": "Gatekeeper (jev:jev-1.13.0) verified scope=durable (type=slice, risk=clean).",
+        "recommended_scope": "slice",
+        "scope_faithful_probability": 0.75
+      },
+      "history": [
+        {
+          "at": "2026-11-09T21:31:16+00:00",
+          "choice": "Pure HUD-free 3-plane multi-depth motion artwork on /pipeline hero with zero stage numbers, scrubbers, toggles, or telemetry chrome.",
+          "from": "proposed",
+          "implementation_ref": null,
+          "note": "user accepted the scoped decision",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "locked",
+          "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T21:31:16+00:00",
+          "choice": "Pure HUD-free 3-plane multi-depth motion artwork on /pipeline hero with zero stage numbers, scrubbers, toggles, or telemetry chrome.",
+          "from": "locked",
+          "implementation_ref": null,
+          "note": "bounded implementation recorded",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "implemented",
+          "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T21:31:16+00:00",
+          "choice": "Pure HUD-free 3-plane multi-depth motion artwork on /pipeline hero with zero stage numbers, scrubbers, toggles, or telemetry chrome.",
+          "from": "implemented",
+          "implementation_ref": "git:df43081",
+          "note": "verification recorded in cumulative context",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "verified",
+          "verification_ref": null
+        }
+      ],
+      "id": "g3-pipeline-hudless-stage",
+      "implementation_ref": "git:df43081",
+      "question": "Remove 01-04 stage buttons, scrubber, Play/Pause, 3D Layers toggle, and debug readouts from /pipeline?",
+      "rationale": "Owner explicitly requested removing the 1234s and development machinery so /pipeline displays only the multi-depth motion image.",
+      "repair_required": false,
+      "review_classifications": [],
+      "review_history": [],
+      "review_ref": null,
+      "review_result": null,
+      "review_source_identity": null,
+      "revisit_when": null,
+      "scope": "durable",
+      "status": "verified",
+      "superseded_by": null,
+      "updated_at": "2026-11-09T21:31:16+00:00",
+      "verification_ref": "live:https://blobster.dev/pipeline@df43081 (.grilltrack/proof/live-deploy-verification.json)"
     }
   ],
   "last_activation": {
@@ -680,5 +866,5 @@
   "status": "active",
   "title": "Blobster Factory Website (EmDash + Stitch)",
   "track_id": "gt-20261109172108-8ae778",
-  "updated_at": "2026-11-09T20:25:55+00:00"
+  "updated_at": "2026-11-09T21:31:16+00:00"
 }
