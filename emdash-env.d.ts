@@ -5,7 +5,48 @@
 
 import type { BylineSummary, ContentBylineCredit, TaxonomyTerm } from "emdash";
 
+export interface Template {
+  id: string;
+  slug: string | null;
+  status: string;
+  title?: string;
+  coordinate?: string;
+  owner_handle?: string;
+  pkg_version?: string;
+  channel?: "Workshop" | "Official" | "Community";
+  category?: "Engineering" | "Product" | "Operations" | "Research" | "Productivity" | "Personal" | "Governance" | "Other";
+  scan_status?: string;
+  avatar_tier?: string;
+  summary?: string;
+  avatar_svg_url?: string;
+  cutout_url?: string;
+  hero_url?: string;
+  idle_gif_url?: string;
+  wave_gif_url?: string;
+  tarball_url?: string;
+  tarball_sha256?: string;
+  tarball_bytes?: string;
+  claw_md?: string;
+  openclaw_yml?: string;
+  soul_md?: string;
+  agents_md?: string;
+  identity_md?: string;
+  tools_md?: string;
+  skill_name?: string;
+  skill_md?: string;
+  design_json?: string;
+  cron_summary?: string;
+  links?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
 declare module "emdash" {
   interface EmDashCollections {
+    templates: Template;
   }
 }
