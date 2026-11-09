@@ -1,0 +1,135 @@
+---
+import '../styles/site.css';
+import { canonicalOrigin, jsonLd } from '../lib/catalog';
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+  structured?: Record<string, unknown>;
+}
+
+const {
+  title = 'Blobster Factory — OpenClaw Agent Templates & 24px Blobster Packs',
+  description = 'Open-source workshop and moderated catalog for bespoke OpenClaw Agent Templates, CLAW.md brains, and 24px-to-512px Blobster packs.',
+  noindex = false,
+  structured,
+} = Astro.props;
+
+const origin = canonicalOrigin();
+const canonicalUrl = new URL(Astro.url.pathname, origin).toString();
+const path = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en" data-preset="knot">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex,follow" />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script is:inline>
+      (function () {
+        try {
+          var savedTheme = localStorage.getItem('bf-theme');
+          if (savedTheme === 'light' || savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+          }
+          var savedPreset = localStorage.getItem('bf-preset');
+          if (savedPreset === 'knot' || savedPreset === 'tide' || savedPreset === 'beacon') {
+            document.documentElement.setAttribute('data-preset', savedPreset);
+          }
+        } catch (_e) {}
+      })();
+    </script>
+    {structured && <script type="application/ld+json" set:html={jsonLd(structured)} />}
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="/">
+          <span class="brand-mark">[b/f]</span>
+          <span>Blobster Factory</span>
+          <span class="brand-sub">OPENCLAW FOCUS WEEK</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="/" aria-current={path === '/' ? 'page' : undefined}>Catalog</a>
+          <a href="/pipeline" aria-current={path.startsWith('/pipeline') ? 'page' : undefined}>Forge Pipeline</a>
+          <a href="/submit" aria-current={path.startsWith('/submit') ? 'page' : undefined}>Submit Template</a>
+          <a href="https://github.com/saariuslystoned/blobster-factory" target="_blank" rel="noopener">GitHub ↗</a>
+        </nav>
+        <div class="theme-controls" aria-label="OpenClaw UI theme controls">
+          <div class="preset-group" data-preset-select role="group" aria-label="OpenClaw theme preset">
+            <button type="button" class="preset-btn" data-preset-btn="knot" aria-pressed="true">Knot</button>
+            <button type="button" class="preset-btn" data-preset-btn="tide" aria-pressed="false">Tide</button>
+            <button type="button" class="preset-btn" data-preset-btn="beacon" aria-pressed="false">Beacon</button>
+          </div>
+          <button type="button" class="mode-btn" data-theme-toggle aria-label="Toggle light or dark mode">
+            ◐ Mode
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <div class="fx-strip" aria-hidden="true"></div>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div>
+          <strong class="mono">[b/f] blobsterfactory.com · blobster.dev</strong> — Built on EmDash CMS &amp; Astro for OpenClaw Agent Templates.
+        </div>
+        <div class="mono">
+          Script-free packages · ClawHub preflight aligned · MIT Templates
+        </div>
+      </div>
+    </footer>
+
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        var presetBtns = document.querySelectorAll('[data-preset-btn]');
+        function syncPresets() {
+          var current = root.getAttribute('data-preset') || 'knot';
+          presetBtns.forEach(function (btn) {
+            btn.setAttribute('aria-pressed', String(btn.getAttribute('data-preset-btn') === current));
+          });
+        }
+        presetBtns.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var next = btn.getAttribute('data-preset-btn') || 'knot';
+            root.setAttribute('data-preset', next);
+            try {
+              localStorage.setItem('bf-preset', next);
+            } catch (_e) {}
+            syncPresets();
+          });
+        });
+        var modeBtn = document.querySelector('[data-theme-toggle]');
+        if (modeBtn) {
+          modeBtn.addEventListener('click', function () {
+            var cur = root.getAttribute('data-theme');
+            var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var isDark = cur ? cur === 'dark' : prefersDark;
+            var next = isDark ? 'light' : 'dark';
+            root.setAttribute('data-theme', next);
+            try {
+              localStorage.setItem('bf-theme', next);
+            } catch (_e) {}
+          });
+        }
+        syncPresets();
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,271 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { publishedTemplates, buildAgentPrompt, canonicalOrigin } from '../lib/catalog';
+import { TEMPLATE_CATEGORIES } from '../lib/validation';
+
+const all = await publishedTemplates();
+const q = (Astro.url.searchParams.get('q') || '').slice(0, 160);
+const cat = Astro.url.searchParams.get('cat') || '';
+const ch = Astro.url.searchParams.get('ch') || '';
+
+const filtered = all.filter((tpl) => {
+  const matchesCat = !cat || tpl.category === cat;
+  const matchesCh = !ch || tpl.channel === ch;
+  const matchesQ =
+    !q ||
+    [tpl.title, tpl.coordinate, tpl.owner_handle, tpl.summary, tpl.category]
+      .join(' ')
+      .toLowerCase()
+      .includes(q.toLowerCase());
+  return matchesCat && matchesCh && matchesQ;
+});
+
+const origin = canonicalOrigin();
+const structured = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Blobster Factory — OpenClaw Agent Templates',
+  url: origin,
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: all.map((tpl, idx) => ({
+      '@type': 'ListItem',
+      position: idx + 1,
+      url: `${origin}/templates/${tpl.slug}`,
+      name: `${tpl.title} (${tpl.coordinate})`,
+    })),
+  },
+};
+---
+
+<Layout noindex={Boolean(q || cat || ch)} structured={structured}>
+  <div class="container">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">
+          <span class="dot"></span> OPENCLAW FOCUS WEEK · AGENT TEMPLATES FOUNDRY
+        </div>
+        <h1>
+          Every great OpenClaw agent deserves a <em>bespoke shell.</em>
+        </h1>
+        <p class="lede">
+          Official OpenClaw starter templates wear custom 256px Blobsters. Blobster Factory is the open-source workshop and moderated catalog for forging script-free <code>CLAW.md</code> brains, <code>24px</code>-crisp sidebar vectors, and despilled 3D vinyl loops.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#catalog">Browse Templates ↓</a>
+          <a class="btn" href="/pipeline">Inspect Forge Pipeline →</a>
+          <a class="btn" href="/submit">Submit Template +</a>
+        </div>
+      </div>
+
+      <aside class="blueprint-well stage-card" data-avatar-stage aria-label="Live 24px, 64px, and 256px Blobster inspection stage">
+        <div class="stage-topbar">
+          <span>SIDEBAR LEGIBILITY STAGE · 01</span>
+          <span data-stage-label>@saariuslystoned/blobster-smith</span>
+        </div>
+        <div class="scale-strip">
+          <div class="scale-cell" data-scale-box>
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+              <img data-stage-img src="/templates/blobster-smith/blobster.svg" alt="Blobster 24px sidebar preview" width="24" height="24" />
+            </div>
+            <span class="scale-label">24×24 SIDEBAR</span>
+          </div>
+          <div class="scale-cell" data-scale-box>
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+              <img data-stage-img src="/templates/blobster-smith/blobster.svg" alt="Blobster 64px card preview" width="64" height="64" />
+            </div>
+            <span class="scale-label">64×64 CATALOG</span>
+          </div>
+          <div class="scale-cell" data-scale-box>
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+              <img data-stage-hero src="/templates/blobster-smith/hero-512.png" alt="Blobster 120px hero vinyl preview" width="112" height="112" />
+            </div>
+            <span class="scale-label" data-hero-caption>512px 3D VINYL</span>
+          </div>
+        </div>
+        <div class="stage-controls">
+          <div>
+            <button type="button" class="chip-btn" data-pick-char="blobster-smith" aria-pressed="true">Smith</button>
+            <button type="button" class="chip-btn" data-pick-char="blobster-sculptor" aria-pressed="false">Sculptor</button>
+          </div>
+          <div>
+            <button type="button" class="chip-btn" data-pick-mode="vinyl" aria-pressed="true">3D Vinyl</button>
+            <button type="button" class="chip-btn" data-pick-mode="idle" aria-pressed="false">Idle GIF</button>
+            <button type="button" class="chip-btn" data-pick-mode="wave" aria-pressed="false">Wave GIF</button>
+            <button type="button" class="chip-btn" data-pick-surface="toggle" aria-pressed="false">Light Bg</button>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </div>
+
+  <div class="fx-strip" aria-hidden="true"></div>
+
+  <div class="container">
+    <section id="catalog" class="catalog-section">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow"><span class="dot"></span> CLAWHUB-ALIGNED TEMPLATE INDEX</div>
+          <h2>Verified OpenClaw Agent Templates</h2>
+        </div>
+        <div class="mono" style="font-size:12px;color:var(--color-muted);">
+          {String(filtered.length).padStart(2, '0')} / {String(all.length).padStart(2, '0')} templates · Paste prompt or CLI to install
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <div class="category-chips" role="navigation" aria-label="Filter templates by category">
+          <a class="cat-chip" href="/#catalog" data-active={String(!cat && !ch)}>All</a>
+          <a class="cat-chip" href="/?ch=Workshop#catalog" data-active={String(ch === 'Workshop')}>Workshop Packs</a>
+          <a class="cat-chip" href="/?ch=Official#catalog" data-active={String(ch === 'Official')}>@openclaw Official</a>
+          {TEMPLATE_CATEGORIES.slice(0, 4).map((c) => (
+            <a class="cat-chip" href={`/?cat=${encodeURIComponent(c)}#catalog`} data-active={String(cat === c)}>
+              {c}
+            </a>
+          ))}
+        </div>
+        <form class="search-box" method="get" action="/#catalog">
+          <label class="sr-only" for="tpl-q">Search templates</label>
+          <input id="tpl-q" type="search" name="q" value={q} placeholder="Search @owner, skill, or role…" maxlength="160" />
+          <button type="submit" class="btn">Filter</button>
+        </form>
+      </div>
+
+      <div class="template-grid">
+        {filtered.map((tpl) => {
+          const promptText = buildAgentPrompt(tpl);
+          return (
+            <article class="template-card" data-content-source="emdash">
+              <div>
+                <div class="card-header">
+                  <a class="card-avatar" href={`/templates/${tpl.slug}`} aria-label={`Inspect ${tpl.title}`}>
+                    <img src={tpl.avatar_svg_url} alt={`${tpl.title} Blobster icon`} width="48" height="48" loading="lazy" />
+                  </a>
+                  <div class="card-meta">
+                    <div class="badge-row">
+                      <span class={`badge ${tpl.channel === 'Workshop' ? 'badge-workshop' : 'badge-official'}`}>
+                        {tpl.channel}
+                      </span>
+                      <span class="badge">{tpl.category}</span>
+                      <span class="badge badge-clean">scan: {tpl.scan_status}</span>
+                    </div>
+                    <h3 class="card-title">
+                      <a href={`/templates/${tpl.slug}`}>{tpl.title}</a>
+                    </h3>
+                    <div class="card-coord">{tpl.coordinate} · v{tpl.version}</div>
+                  </div>
+                </div>
+                <p class="card-summary">{tpl.summary}</p>
+              </div>
+              <div class="card-actions">
+                <button
+                  type="button"
+                  class="chip-btn"
+                  data-quick-copy={promptText}
+                  aria-label={`Copy OpenClaw install prompt for ${tpl.title}`}
+                >
+                  ⎘ Copy Agent Prompt
+                </button>
+                <a class="btn" style="padding:5px 11px;font-size:11px;" href={`/templates/${tpl.slug}`}>
+                  Inspect &amp; Add →
+                </a>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+
+      {filtered.length === 0 && (
+        <div class="stage-box" style="margin-top:16px;">
+          <h3 style="margin:0 0 6px;">No matching templates</h3>
+          <p style="margin:0 0 12px;color:var(--color-muted);">Clear your filter or submit a new script-free OpenClaw template to the moderation queue.</p>
+          <a class="btn" href="/">Reset filters</a>
+        </div>
+      )}
+    </section>
+  </div>
+
+  <script is:inline>
+    (function () {
+      var stage = document.querySelector('[data-avatar-stage]');
+      if (stage) {
+        var activeChar = 'blobster-smith';
+        var activeMode = 'vinyl';
+        var lightBg = false;
+        var labelEl = stage.querySelector('[data-stage-label]');
+        var svgImgs = stage.querySelectorAll('[data-stage-img]');
+        var heroImg = stage.querySelector('[data-stage-hero]');
+        var heroCap = stage.querySelector('[data-hero-caption]');
+        var boxes = stage.querySelectorAll('[data-scale-box]');
+
+        function renderStage() {
+          if (labelEl) labelEl.textContent = '@saariuslystoned/' + activeChar;
+          svgImgs.forEach(function (img) {
+            img.setAttribute('src', '/templates/' + activeChar + '/blobster.svg');
+          });
+          if (heroImg) {
+            var src =
+              activeMode === 'idle'
+                ? '/templates/' + activeChar + '/blobster-idle.gif'
+                : activeMode === 'wave'
+                  ? '/templates/' + activeChar + '/blobster-wave.gif'
+                  : '/templates/' + activeChar + '/hero-512.png';
+            heroImg.setAttribute('src', src);
+          }
+          if (heroCap) {
+            heroCap.textContent =
+              activeMode === 'idle' ? 'IDLE GIF89A' : activeMode === 'wave' ? 'WAVE GIF89A' : '512px 3D VINYL';
+          }
+          boxes.forEach(function (box) {
+            if (lightBg) box.setAttribute('data-surface', 'light');
+            else box.removeAttribute('data-surface');
+          });
+        }
+
+        stage.querySelectorAll('[data-pick-char]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            activeChar = btn.getAttribute('data-pick-char') || 'blobster-smith';
+            stage.querySelectorAll('[data-pick-char]').forEach(function (b) {
+              b.setAttribute('aria-pressed', String(b === btn));
+            });
+            renderStage();
+          });
+        });
+
+        stage.querySelectorAll('[data-pick-mode]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            activeMode = btn.getAttribute('data-pick-mode') || 'vinyl';
+            stage.querySelectorAll('[data-pick-mode]').forEach(function (b) {
+              b.setAttribute('aria-pressed', String(b === btn));
+            });
+            renderStage();
+          });
+        });
+
+        var surfBtn = stage.querySelector('[data-pick-surface]');
+        if (surfBtn) {
+          surfBtn.addEventListener('click', function () {
+            lightBg = !lightBg;
+            surfBtn.setAttribute('aria-pressed', String(lightBg));
+            renderStage();
+          });
+        }
+      }
+
+      document.querySelectorAll('[data-quick-copy]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var text = btn.getAttribute('data-quick-copy') || '';
+          if (navigator.clipboard && text) {
+            navigator.clipboard.writeText(text).then(function () {
+              var orig = btn.textContent;
+              btn.textContent = '✓ Prompt Copied';
+              setTimeout(function () {
+                btn.textContent = orig;
+              }, 1600);
+            });
+          }
+        });
+      });
+    })();
+  </script>
+</Layout>

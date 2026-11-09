@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+catalog.db*
+uploads/
+.wrangler/
+.env
+.env.*
+.DS_Store
+.stitch/capture/

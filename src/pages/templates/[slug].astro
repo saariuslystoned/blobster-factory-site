@@ -1,0 +1,279 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import {
+  getPublishedTemplate,
+  buildAgentPrompt,
+  buildCliOneLiner,
+  canonicalOrigin,
+} from '../../lib/catalog';
+
+const slug = Astro.params.slug || '';
+const tpl = await getPublishedTemplate(slug);
+
+if (!tpl) {
+  Astro.response.status = 404;
+}
+
+const agentPrompt = tpl ? buildAgentPrompt(tpl) : '';
+const cliCommand = tpl ? buildCliOneLiner(tpl) : '';
+const origin = canonicalOrigin();
+---
+
+<Layout
+  title={tpl ? `${tpl.title} (${tpl.coordinate}) — Blobster Factory` : 'Template Not Found — Blobster Factory'}
+  description={tpl ? tpl.summary : 'Requested OpenClaw template could not be found.'}
+>
+  <div class="container" style="padding-top:32px;padding-bottom:48px;">
+    {!tpl ? (
+      <div class="stage-box">
+        <h1>Template not found</h1>
+        <p style="color:var(--color-muted);">There is no published template at this coordinate.</p>
+        <a class="btn" href="/">← Back to Catalog</a>
+      </div>
+    ) : (
+      <article data-content-source="emdash">
+        <div style="margin-bottom:16px;">
+          <a class="mono" style="font-size:12px;color:var(--color-muted);" href="/">← Back to Templates Catalog</a>
+        </div>
+
+        <div class="hero" style="padding-top:8px;padding-bottom:20px;">
+          <div>
+            <div class="badge-row" style="margin-bottom:10px;">
+              <span class={`badge ${tpl.channel === 'Workshop' ? 'badge-workshop' : 'badge-official'}`}>{tpl.channel}</span>
+              <span class="badge">{tpl.category}</span>
+              <span class="badge badge-clean">ClawHub scan: {tpl.scan_status}</span>
+              <span class="badge">v{tpl.version}</span>
+            </div>
+            <h1 style="font-size:clamp(2.2rem,4vw,3.3rem);margin:6px 0 10px;">{tpl.title}</h1>
+            <div class="mono" style="font-size:13px;color:var(--color-muted);margin-bottom:14px;">
+              {tpl.coordinate} · publisher @{tpl.owner_handle} · {tpl.avatar_tier}
+            </div>
+            <p class="lede" style="margin-bottom:16px;">{tpl.summary}</p>
+            <div class="hero-actions">
+              {tpl.tarball_url && (
+                <a class="btn btn-primary" href={tpl.tarball_url} download>
+                  ↓ Download {tpl.slug}.tgz ({Math.round(Number(tpl.tarball_bytes || '0') / 1024)} KB)
+                </a>
+              )}
+              {tpl.links[0] && (
+                <a class="btn" href={tpl.links[0]} target="_blank" rel="noopener">
+                  Inspect Source ↗
+                </a>
+              )}
+            </div>
+          </div>
+
+          <aside class="blueprint-well stage-card" data-avatar-stage>
+            <div class="stage-topbar">
+              <span>AVATAR CUTOUT AUDIT</span>
+              <span>{tpl.coordinate}</span>
+            </div>
+            <div class="scale-strip">
+              <div class="scale-cell" data-scale-box>
+                <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+                  <img src={tpl.avatar_svg_url} alt={`${tpl.title} at 24px`} width="24" height="24" />
+                </div>
+                <span class="scale-label">24×24</span>
+              </div>
+              <div class="scale-cell" data-scale-box>
+                <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+                  <img src={tpl.cutout_url} alt={`${tpl.title} at 64px`} width="64" height="64" />
+                </div>
+                <span class="scale-label">64×64</span>
+              </div>
+              <div class="scale-cell" data-scale-box>
+                <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+                  <img data-detail-hero src={tpl.hero_url} alt={`${tpl.title} hero`} width="112" height="112" />
+                </div>
+                <span class="scale-label" data-detail-cap>HERO</span>
+              </div>
+            </div>
+            <div class="stage-controls">
+              <div>
+                {tpl.idle_gif_url && (
+                  <>
+                    <button type="button" class="chip-btn" data-hero-src={tpl.hero_url} data-hero-label="512px VINYL" aria-pressed="true">Vinyl</button>
+                    <button type="button" class="chip-btn" data-hero-src={tpl.idle_gif_url} data-hero-label="IDLE GIF" aria-pressed="false">Idle GIF</button>
+                    <button type="button" class="chip-btn" data-hero-src={tpl.wave_gif_url} data-hero-label="WAVE GIF" aria-pressed="false">Wave GIF</button>
+                  </>
+                )}
+              </div>
+              <button type="button" class="chip-btn" data-detail-surface aria-pressed="false">Toggle Light/Dark</button>
+            </div>
+          </aside>
+        </div>
+
+        <!-- 3-Way Add-to-OpenClaw Bar -->
+        <section class="add-gateway-panel" aria-label="Add template to OpenClaw gateway">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;">
+            <div>
+              <div class="eyebrow"><span class="dot"></span> ADD TO YOUR OPENCLAW GATEWAY</div>
+              <div style="font-size:13.5px;color:var(--color-muted);margin-top:2px;">
+                Paste the prompt into an active OpenClaw chat, run the verified 1-line CLI command, or look up the ClawHub coordinate.
+              </div>
+            </div>
+            <span class="badge badge-clean">[SCRIPT-FREE · INSPECT FIRST]</span>
+          </div>
+
+          <div class="gateway-tabs" role="tablist">
+            <button type="button" class="chip-btn" data-tab-btn="prompt" aria-pressed="true">1. Copy OpenClaw Agent Prompt</button>
+            <button type="button" class="chip-btn" data-tab-btn="cli" aria-pressed="false">2. Terminal CLI (blobster.dev)</button>
+            <button type="button" class="chip-btn" data-tab-btn="clawhub" aria-pressed="false">3. ClawHub Coordinate &amp; SHA-256</button>
+          </div>
+
+          <div data-tab-pane="prompt">
+            <div class="code-strip" id="pane-prompt-code">{agentPrompt}</div>
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:center;">
+              <button type="button" class="btn btn-primary" data-copy-prompt={agentPrompt}>⎘ Copy Prompt for OpenClaw Chat</button>
+            </div>
+          </div>
+
+          <div data-tab-pane="cli" hidden>
+            <div class="code-strip">{cliCommand}</div>
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:center;">
+              <button type="button" class="btn btn-primary" data-copy-cli={cliCommand}>⎘ Copy Verified CLI Command</button>
+            </div>
+          </div>
+
+          <div data-tab-pane="clawhub" hidden>
+            <div class="code-strip">{`Coordinate: ${tpl.coordinate}@${tpl.version}\nGateway UI: Settings -> Labs -> Templates -> Pages -> Templates\nSHA-256:    ${tpl.tarball_sha256 || 'verified-on-clawhub'}\nOrigin:     ${origin}/templates/${tpl.slug}`}</div>
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:center;">
+              <button type="button" class="btn btn-primary" data-copy-clawhub={tpl.coordinate}>⎘ Copy {tpl.coordinate}</button>
+            </div>
+          </div>
+
+          <div class="receipt-banner" data-receipt-banner>
+            <span data-receipt-text>[COPIED TO CLIPBOARD · SHA-256 VERIFIED]</span>
+            <span>[INSPECTED · CLEAN]</span>
+          </div>
+        </section>
+
+        <!-- EmDash Collapsible <details> Disclosure Blocks -->
+        <section class="emdash-disclosure-stack" aria-label="Template workspace files, skills, and sandbox profile">
+          <div class="eyebrow" style="margin-bottom:4px;"><span class="dot"></span> COLLAPSIBLE MANIFEST &amp; TRUST INSPECTOR</div>
+
+          <details class="emdash-collapse" open>
+            <summary>
+              <span>Workspace Manifest · <code>CLAW.md</code> &amp; <code>profiles/openclaw.yml</code></span>
+              <span class="collapse-meta">schemaVersion: 1 · workspaceOnly: true ▾</span>
+            </summary>
+            <div class="collapse-body">
+              <pre><code>{tpl.claw_md}</code></pre>
+              {tpl.openclaw_yml && <pre><code>{`# profiles/openclaw.yml\n${tpl.openclaw_yml}`}</code></pre>}
+            </div>
+          </details>
+
+          {tpl.soul_md && (
+            <details class="emdash-collapse">
+              <summary>
+                <span>Persona &amp; Operating Boundaries · <code>SOUL.md</code> &amp; <code>AGENTS.md</code></span>
+                <span class="collapse-meta">Bootstrap identity files ▾</span>
+              </summary>
+              <div class="collapse-body">
+                <pre><code>{tpl.soul_md}</code></pre>
+                {tpl.agents_md && <pre><code>{tpl.agents_md}</code></pre>}
+              </div>
+            </details>
+          )}
+
+          {tpl.skill_md && (
+            <details class="emdash-collapse">
+              <summary>
+                <span>Bundled Skill · <code>{tpl.skill_name || 'SKILL.md'}</code></span>
+                <span class="collapse-meta">Scoped agent skill ▾</span>
+              </summary>
+              <div class="collapse-body">
+                <pre><code>{tpl.skill_md}</code></pre>
+              </div>
+            </details>
+          )}
+
+          {tpl.design_json && (
+            <details class="emdash-collapse">
+              <summary>
+                <span>5-Layer 24px Vector Rig · <code>blobster-design.json</code></span>
+                <span class="collapse-meta">viewBox="-12 -18 144 144" · &lt;20 shapes ▾</span>
+              </summary>
+              <div class="collapse-body">
+                <pre><code>{tpl.design_json}</code></pre>
+              </div>
+            </details>
+          )}
+
+          <details class="emdash-collapse">
+            <summary>
+              <span>Automations &amp; ClawHub Security Preflight</span>
+              <span class="collapse-meta">{tpl.cron_summary} ▾</span>
+            </summary>
+            <div class="collapse-body">
+              <pre><code>{`Schedule: ${tpl.cron_summary}\nPackage lifecycle scripts: NONE (enforced)\nSymlinks / path escapes:   NONE (enforced)\nClawHub scan state:        ${tpl.scan_status}`}</code></pre>
+            </div>
+          </details>
+        </section>
+      </article>
+    )}
+  </div>
+
+  <script is:inline>
+    (function () {
+      var tabs = document.querySelectorAll('[data-tab-btn]');
+      var panes = document.querySelectorAll('[data-tab-pane]');
+      tabs.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var target = btn.getAttribute('data-tab-btn');
+          tabs.forEach(function (b) {
+            b.setAttribute('aria-pressed', String(b === btn));
+          });
+          panes.forEach(function (p) {
+            if (p.getAttribute('data-tab-pane') === target) p.removeAttribute('hidden');
+            else p.setAttribute('hidden', '');
+          });
+        });
+      });
+
+      var banner = document.querySelector('[data-receipt-banner]');
+      var receiptText = document.querySelector('[data-receipt-text]');
+      function bindCopy(attr, label) {
+        var el = document.querySelector('[' + attr + ']');
+        if (!el) return;
+        el.addEventListener('click', function () {
+          var val = el.getAttribute(attr) || '';
+          if (navigator.clipboard && val) {
+            navigator.clipboard.writeText(val).then(function () {
+              if (receiptText) receiptText.textContent = '✓ ' + label + ' copied to clipboard';
+              if (banner) banner.setAttribute('data-visible', 'true');
+            });
+          }
+        });
+      }
+      bindCopy('data-copy-prompt', 'OpenClaw Agent Prompt');
+      bindCopy('data-copy-cli', 'Verified blobster.dev CLI 1-liner');
+      bindCopy('data-copy-clawhub', 'ClawHub package coordinate');
+
+      var heroImg = document.querySelector('[data-detail-hero]');
+      var heroCap = document.querySelector('[data-detail-cap]');
+      document.querySelectorAll('[data-hero-src]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (heroImg) heroImg.setAttribute('src', btn.getAttribute('data-hero-src') || '');
+          if (heroCap) heroCap.textContent = btn.getAttribute('data-hero-label') || 'HERO';
+          document.querySelectorAll('[data-hero-src]').forEach(function (b) {
+            b.setAttribute('aria-pressed', String(b === btn));
+          });
+        });
+      });
+
+      var surfToggle = document.querySelector('[data-detail-surface]');
+      if (surfToggle) {
+        var light = false;
+        surfToggle.addEventListener('click', function () {
+          light = !light;
+          surfToggle.setAttribute('aria-pressed', String(light));
+          document.querySelectorAll('[data-scale-box]').forEach(function (box) {
+            if (light) box.setAttribute('data-surface', 'light');
+            else box.removeAttribute('data-surface');
+          });
+        });
+      }
+    })();
+  </script>
+</Layout>

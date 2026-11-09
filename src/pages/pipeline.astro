@@ -1,0 +1,182 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Forge Pipeline & QA Spec Lab — Blobster Factory"
+  description="How Blobster Smith and Blobster Sculptor forge script-free CLAW.md brains, 24px vector rigs, and #FF00FF chroma-despilled OpenClaw visual packs."
+>
+  <div class="container" style="padding-top:36px;padding-bottom:52px;">
+    <div class="eyebrow"><span class="dot"></span> ROUTE 03 · COMPILER &amp; SPEC LAB</div>
+    <h1 style="font-size:clamp(2.3rem,4.2vw,3.5rem);margin:10px 0 12px;">
+      Inside the <em>Blobster Forge.</em>
+    </h1>
+    <p class="lede">
+      How raw prompts become a ClawHub-ready OpenClaw Agent Template: script-free <code>CLAW.md</code> brain, <code>&lt;20</code>-shape <code>24px</code> sidebar SVG, and <code>#FF00FF</code> despilled 3D vinyl loops.
+    </p>
+
+    <!-- Dedicated Progressive Motion Slot (Smith + Sculptor Forging a Claw) -->
+    <section
+      class="blueprint-well"
+      style="padding:20px;margin:24px 0;"
+      data-forge-motion-slot
+      aria-label="Smith and Sculptor Claw Forging Stage"
+    >
+      <div class="stage-topbar">
+        <span>FOUNDRY STAGE · SMITH × SCULPTOR</span>
+        <span>ANVIL FORGE → CYAN BRUSHWORK → INSPECTED CLAW</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:center;text-align:center;padding:12px 0;">
+        <div>
+          <img src="/templates/blobster-smith/hero-512.png" alt="Blobster Smith with forge hammer and tongs" width="128" height="128" />
+          <div class="mono" style="font-size:11.5px;margin-top:6px;">01 · SMITH HAMMERS THE SHELL</div>
+        </div>
+        <div>
+          <img src="/templates/blobster-sculptor/hero-512.png" alt="Blobster Sculptor with cyan brush and primer figurine" width="128" height="128" />
+          <div class="mono" style="font-size:11.5px;margin-top:6px;">02 · SCULPTOR PAINTS &amp; DESPILLS</div>
+        </div>
+        <div>
+          <img src="/templates/openclaw-release-coordinator/cutout-256.png" alt="Compiled OpenClaw template Blobster" width="112" height="112" />
+          <div class="mono" style="font-size:11.5px;margin-top:6px;color:var(--color-clean);">03 · [CLAW.MD · INSPECTED CLEAN]</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3-Stage Architecture -->
+    <section class="pipeline-grid" aria-label="Three-stage compiler pipeline">
+      <div class="stage-box">
+        <div class="eyebrow"><span class="dot"></span> STAGE 01</div>
+        <h2 style="font-size:1.65rem;margin:8px 0;">Brain &amp; Sandbox</h2>
+        <p style="color:var(--color-muted);font-size:14px;">
+          <code>package.json</code> ships zero lifecycle hooks. <code>CLAW.md</code> binds <code>schemaVersion: 1</code> metadata to <code>SOUL.md</code>, while <code>profiles/openclaw.yml</code> locks <code>workspaceOnly: true</code>, tool allowlists, and 5-field cron schedules.
+        </p>
+      </div>
+      <div class="stage-box">
+        <div class="eyebrow"><span class="dot"></span> STAGE 02</div>
+        <h2 style="font-size:1.65rem;margin:8px 0;">24px Sidebar Vector Rig</h2>
+        <p style="color:var(--color-muted);font-size:14px;">
+          Built on OpenClaw's exact <code>viewBox="-12 -18 144 144"</code> lobster silhouette (<code>BODY</code>, <code>LEFT</code>, <code>RIGHT</code>, eyes at <code>(45,32)</code> &amp; <code>(75,32)</code>) plus 5 custom gear layers capped under 20 shapes so <code>24×24</code> avatars never turn muddy.
+        </p>
+      </div>
+      <div class="stage-box">
+        <div class="eyebrow"><span class="dot"></span> STAGE 03</div>
+        <h2 style="font-size:1.65rem;margin:8px 0;">#FF00FF Chroma Compiler</h2>
+        <p style="color:var(--color-muted);font-size:14px;">
+          <code>compile_blobster_pack.py</code> despills a <code>2×2</code> <code>#FF00FF</code> sprite sheet into <code>&lt; 2 MiB</code> looping <code>GIF89a</code> files (<code>disposal=2</code>), rejecting magenta fringe above <code>1.5%</code> or border-frame clipping.
+        </p>
+      </div>
+    </section>
+
+    <!-- Interactive QA Contact Sheet -->
+    <section class="qa-contact-sheet" data-qa-sheet data-bad-sheet="false" aria-label="Interactive chroma-key QA contact sheet">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div>
+          <div class="eyebrow"><span class="dot"></span> LIVE QA CONTACT SHEET SIMULATOR</div>
+          <h2 style="font-size:1.75rem;margin-top:4px;">Test #FF00FF Fringe &amp; Frame Clipping</h2>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button type="button" class="chip-btn" data-qa-char="blobster-smith" aria-pressed="true">Smith</button>
+          <button type="button" class="chip-btn" data-qa-char="blobster-sculptor" aria-pressed="false">Sculptor</button>
+          <button type="button" class="chip-btn" data-qa-mode="clean" aria-pressed="true">Clean Cutout</button>
+          <button type="button" class="chip-btn" data-qa-mode="bad" aria-pressed="false">Simulate Bad Sheet</button>
+        </div>
+      </div>
+
+      <div class="qa-strips">
+        <div>
+          <div class="mono" style="font-size:11px;color:var(--color-muted);margin-bottom:6px;">DARK SURFACE (#0D1117) · 24px · 64px · 112px</div>
+          <div class="qa-swatch dark">
+            <img class="qa-cutout" data-qa-img src="/templates/blobster-smith/cutout-256.png" alt="Dark surface 24px cutout" width="24" height="24" />
+            <img class="qa-cutout" data-qa-img src="/templates/blobster-smith/cutout-256.png" alt="Dark surface 64px cutout" width="64" height="64" />
+            <img class="qa-cutout" data-qa-img src="/templates/blobster-smith/cutout-256.png" alt="Dark surface 112px cutout" width="112" height="112" />
+          </div>
+        </div>
+        <div>
+          <div class="mono" style="font-size:11px;color:var(--color-muted);margin-bottom:6px;">LIGHT SURFACE (#F8FAFC) · 24px · 64px · 112px</div>
+          <div class="qa-swatch light">
+            <img class="qa-cutout" data-qa-img src="/templates/blobster-smith/cutout-256.png" alt="Light surface 24px cutout" width="24" height="24" />
+            <img class="qa-cutout" data-qa-img src="/templates/blobster-smith/cutout-256.png" alt="Light surface 64px cutout" width="64" height="64" />
+            <img class="qa-cutout" data-qa-img src="/templates/blobster-smith/cutout-256.png" alt="Light surface 112px cutout" width="112" height="112" />
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-metrics">
+        <div class="qa-metric">
+          <div>#FF00FF FRINGE SPILL</div>
+          <strong data-metric-fringe style="color:var(--color-clean);">0.42% PASS (&lt; 1.50% max)</strong>
+        </div>
+        <div class="qa-metric">
+          <div>FRAME BORDER CLIPPING</div>
+          <strong data-metric-clip style="color:var(--color-clean);">0 border px PASS</strong>
+        </div>
+        <div class="qa-metric">
+          <div>24PX VECTOR SHAPES</div>
+          <strong style="color:var(--color-clean);">15 shapes PASS (&lt; 20 max)</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- Collapsible Tier 1 vs Tier 2 Spec -->
+    <div class="emdash-disclosure-stack">
+      <details class="emdash-collapse" open>
+        <summary>
+          <span>Visual Pack Tiers · Tier 1 (Fast Pack) vs. Tier 2 (73-Frame Pet Rig)</span>
+          <span class="collapse-meta">Compare asset budgets ▾</span>
+        </summary>
+        <div class="collapse-body">
+          <pre><code>{`Tier 1 — Fast Pack (Default for Focus Week Templates):
+  • blobster.svg          256x256 vector (<20 custom shapes, crisp at 24x24)
+  • cutout-256.png        Transparent 256x256 RGBA PNG for ClawHub & cards
+  • hero-512.png          Collectible 3D vinyl render (512x512 RGBA)
+  • blobster-idle.gif     Despilled GIF89a loop (< 2 MiB, disposal=2)
+  • blobster-wave.gif     Despilled GIF89a greeting loop (< 2 MiB, disposal=2)
+
+Tier 2 — Full Companion Pet Rig (Optional Graduation):
+  • sprite.png            1536x2288 sheet · 16 animation states · 73 frames
+  • sprite-manifest.json  Deterministic frame timing & state-machine table`}</code></pre>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <script is:inline>
+    (function () {
+      var sheet = document.querySelector('[data-qa-sheet]');
+      if (!sheet) return;
+      var imgs = sheet.querySelectorAll('[data-qa-img]');
+      var fringeEl = sheet.querySelector('[data-metric-fringe]');
+      var clipEl = sheet.querySelector('[data-metric-clip]');
+
+      sheet.querySelectorAll('[data-qa-char]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var slug = btn.getAttribute('data-qa-char') || 'blobster-smith';
+          imgs.forEach(function (img) {
+            img.setAttribute('src', '/templates/' + slug + '/cutout-256.png');
+          });
+          sheet.querySelectorAll('[data-qa-char]').forEach(function (b) {
+            b.setAttribute('aria-pressed', String(b === btn));
+          });
+        });
+      });
+
+      sheet.querySelectorAll('[data-qa-mode]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var isBad = btn.getAttribute('data-qa-mode') === 'bad';
+          sheet.setAttribute('data-bad-sheet', String(isBad));
+          sheet.querySelectorAll('[data-qa-mode]').forEach(function (b) {
+            b.setAttribute('aria-pressed', String(b === btn));
+          });
+          if (fringeEl) {
+            fringeEl.textContent = isBad ? '4.85% FAIL (> 1.50% max)' : '0.42% PASS (< 1.50% max)';
+            fringeEl.style.color = isBad ? 'var(--color-danger)' : 'var(--color-clean)';
+          }
+          if (clipEl) {
+            clipEl.textContent = isBad ? '19 border px FAIL (claw clipped)' : '0 border px PASS';
+            clipEl.style.color = isBad ? 'var(--color-danger)' : 'var(--color-clean)';
+          }
+        });
+      });
+    })();
+  </script>
+</Layout>

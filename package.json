@@ -1,0 +1,37 @@
+{
+  "name": "@saariuslystoned/blobster-factory-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync": "node scripts/sync-templates.mjs",
+    "dev": "astro dev --host 127.0.0.1 --port 4331",
+    "build": "astro build",
+    "start": "node dist/server/entry.mjs",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "verify:site": "node bin/verify-site.mjs",
+    "build:cloudflare": "CATALOG_TARGET=cloudflare astro build",
+    "deploy": "wrangler deploy --config dist/server/wrangler.json"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^14.4.3",
+    "@astrojs/node": "11.1.9",
+    "@astrojs/react": "7.1.2",
+    "@emdash-cms/cloudflare": "^1.4.0",
+    "astro": "7.4.4",
+    "emdash": "1.4.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "zod": "4.6.6"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "wrangler": "^4.156.0"
+  },
+  "overrides": {
+    "zod": "$zod"
+  }
+}
