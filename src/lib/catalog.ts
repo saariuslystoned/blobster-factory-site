@@ -147,7 +147,7 @@ export function buildCliOneLiner(tpl: TemplateRecord): string {
 
 export function canonicalOrigin(): string {
   const configured = process.env.CATALOG_ORIGIN;
-  if (!configured) return 'https://blobsterfactory.com';
+  if (!configured) return 'https://blobster.dev';
   const u = new URL(configured);
   if (u.protocol !== 'https:' || u.username || u.password || u.pathname !== '/' || u.search || u.hash) {
     throw new Error('CATALOG_ORIGIN must be an HTTPS origin');

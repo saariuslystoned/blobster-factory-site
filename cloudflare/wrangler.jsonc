@@ -1,0 +1,46 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "blobster-factory",
+  "main": "./worker.ts",
+  "account_id": "cddb32366789cab1bdf4c25584dc1920",
+  "compatibility_date": "2026-09-30",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    {
+      "pattern": "blobster.dev",
+      "custom_domain": true
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "vars": {
+    "CATALOG_ORIGIN": "https://blobster.dev",
+    "BLOBSTER_REVISION": "pending"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "blobster-factory-cms",
+      "database_id": "5fb0cae9-8153-4773-8313-9ebf506ac5ee"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "blobster-factory-media"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "SESSION",
+      "id": "2ab21a12a69049178446ba0916449a74"
+    }
+  ],
+  "triggers": {
+    "crons": ["* * * * *"]
+  }
+}

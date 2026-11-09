@@ -1,24 +1,17 @@
 ---
-/* Overhead 3D Chain Hoist & Cast-Iron Hook Multiplane Stage (locked strictly for /pipeline hero) */
+/* Ambient 3-Plane Overhead Chain Hoist & Cast-Iron Hook Multiplane Artwork (/pipeline hero) */
 ---
 
-<div class="mp-frame" id="mp-frame" data-explode="0">
-  <div class="mp-hud-top">
-    <div>
-      <p class="mp-eyebrow">FOUNDRY STAGE · SMITH × SCULPTOR · 3-PLANE DEPTH OCCLUSION</p>
-      <h2 class="mp-title" id="mp-title">Blobster Smith — Hammering Raw Molten Claw Spec</h2>
-    </div>
-    <div class="mp-metric">
-      <div class="mp-metric-val" id="mp-metric-val">01</div>
-      <div class="mp-metric-unit" id="mp-metric-unit">ANVIL FORGE</div>
-    </div>
-  </div>
-
+<div
+  class="mp-frame"
+  id="mp-frame"
+  role="img"
+  aria-label="Blobster Smith hammering a claw at the anvil while an overhead chain hoist and cast-iron hook carry it behind the foreground steel girder to Blobster Sculptor's cyan glazing wheel"
+>
   <div class="mp-stage-wrap" id="mp-stage-wrap">
     <div class="mp-shadowbox" id="mp-shadowbox">
       <!-- PLANE 01: Deep Workshop Diorama + Reactive Hearth & Cyan Glaze Blooms -->
       <div class="mp-plane mp-plane-bg" id="plane-bg-wrap">
-        <span class="mp-plane-tag">PLANE 01 · WORKSHOP DIORAMA + HEARTH GLOW</span>
         <svg viewBox="0 0 1344 768" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
           <defs>
             <radialGradient id="hearth-bloom" cx="50%" cy="50%" r="50%">
@@ -47,7 +40,6 @@
 
       <!-- PLANE 02: Midground Overhead Chain Hoist, Cast-Iron Hook, Smith, Claw & Sculptor -->
       <div class="mp-plane mp-plane-mid" id="plane-mid-wrap">
-        <span class="mp-plane-tag">PLANE 02 · OVERHEAD CHAIN HOIST, HOOK, SMITH, CLAW &amp; SCULPTOR</span>
         <svg viewBox="0 0 1344 768" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
           <defs>
             <clipPath id="behind-slate-bench">
@@ -121,7 +113,6 @@
 
       <!-- PLANE 03: Foreground Occlusion Mask (Riveted Steel Gantry, Center Girder, Sill Hammer & Cyan Jar) -->
       <div class="mp-plane mp-plane-fg" id="plane-fg-wrap" style="pointer-events:none">
-        <span class="mp-plane-tag">PLANE 03 · FOREGROUND STEEL GANTRY MASK (OCCLUDES HOIST, CHAIN &amp; CLAW)</span>
         <svg viewBox="0 0 1344 768" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
           <image
             href="/pipeline-plates/fg-healed.webp"
@@ -135,112 +126,28 @@
       </div>
     </div>
   </div>
-
-  <div class="mp-hud-bottom">
-    <div class="mp-scrubber-wrap" id="mp-scrubber" title="Click or drag to scrub pipeline timeline">
-      <div class="mp-track">
-        <div class="mp-track-fill" id="mp-fill" style="width:0%"></div>
-        <div class="mp-playhead" id="mp-playhead" style="left:0%"></div>
-      </div>
-    </div>
-
-    <div class="mp-stops" id="mp-stops">
-      <button class="mp-stop" type="button" data-at="0.08" data-idx="0">
-        <span class="mp-stop-name">01 · Smith Anvil Forge</span>
-        <span class="mp-stop-sub">HAMMERING IRON</span>
-      </button>
-      <button class="mp-stop" type="button" data-at="0.49" data-idx="1">
-        <span class="mp-stop-name">02 · Chain &amp; Hook Carry</span>
-        <span class="mp-stop-sub">BEHIND PLANE 03</span>
-      </button>
-      <button class="mp-stop" type="button" data-at="0.80" data-idx="2">
-        <span class="mp-stop-name">03 · Sculptor Cyan Glaze</span>
-        <span class="mp-stop-sub">BRUSHING SHELL</span>
-      </button>
-      <button class="mp-stop" type="button" data-at="0.93" data-idx="3">
-        <span class="mp-stop-name">04 · Sealed .tgz Relic</span>
-        <span class="mp-stop-sub">0.00% SPILL · CLEAN</span>
-      </button>
-    </div>
-
-    <div class="mp-toolbar">
-      <div class="mp-btns">
-        <button class="mp-btn" id="btn-play" type="button" aria-pressed="true">Pause</button>
-        <button class="mp-btn mp-btn-explode" id="btn-explode" type="button" aria-pressed="false">3D Layers View</button>
-      </div>
-      <div class="mp-readout" id="mp-readout">T=0.00 · COMPOSITED · STAGE 01</div>
-    </div>
-  </div>
 </div>
 
 <style>
   .mp-frame {
     position: relative;
     width: 100%;
-    background: var(--obs-surface);
+    background: var(--obs-inset);
     border: 1px solid var(--obs-border-strong);
     border-radius: 6px;
     box-shadow: 0 22px 58px rgba(0, 0, 0, 0.55);
     overflow: hidden;
   }
-  .mp-hud-top {
-    position: relative;
-    z-index: 6;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 16px 24px 13px;
-    border-bottom: 1px solid var(--obs-border);
-    background: linear-gradient(180deg, rgba(13, 17, 24, 0.98), rgba(13, 17, 24, 0.88));
-  }
-  .mp-eyebrow {
-    font: 600 11px/1.2 var(--font-mono);
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    color: var(--obs-muted);
-    margin: 0 0 4px;
-  }
-  .mp-title {
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: clamp(21px, 2.7vw, 32px);
-    line-height: 1.08;
-    letter-spacing: -0.015em;
-    margin: 0;
-    color: var(--obs-ink);
-  }
-  .mp-metric {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-    flex-shrink: 0;
-  }
-  .mp-metric-val {
-    font: 600 30px/1 var(--font-mono);
-    color: var(--obs-ink);
-    letter-spacing: -0.03em;
-  }
-  .mp-metric-unit {
-    font: 600 11px/1.2 var(--font-mono);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #5ab6d8;
-    margin-top: 4px;
-  }
   .mp-stage-wrap {
     position: relative;
     width: 100%;
-    perspective: 1600px;
     background: var(--obs-inset);
     overflow: hidden;
-    transition: padding 0.65s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .mp-shadowbox {
     position: relative;
     width: 100%;
     aspect-ratio: 1344 / 768;
-    transform-style: preserve-3d;
-    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .mp-plane {
     position: absolute;
@@ -248,213 +155,7 @@
     width: 100%;
     height: 100%;
     display: block;
-    border: 1px solid transparent;
-    border-radius: 6px;
-    transition:
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.7s ease,
-      background 0.7s ease,
-      border-color 0.7s ease;
     will-change: transform;
-  }
-  .mp-plane-tag {
-    position: absolute;
-    top: 12px;
-    left: 14px;
-    z-index: 8;
-    font: 600 11px/1.2 var(--font-mono);
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    padding: 5px 10px;
-    border-radius: 4px;
-    background: rgba(11, 14, 20, 0.92);
-    border: 1px solid rgba(90, 182, 216, 0.55);
-    color: var(--obs-ink);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.35s ease;
-  }
-  .mp-frame[data-explode='1'] .mp-stage-wrap {
-    padding: 42px 64px 48px;
-  }
-  .mp-frame[data-explode='1'] .mp-shadowbox {
-    transform: rotateX(12deg) rotateY(-27deg) rotateZ(1.5deg) scale(0.68);
-  }
-  .mp-frame[data-explode='1'] .mp-plane {
-    border-color: rgba(90, 182, 216, 0.55);
-    box-shadow: -24px 28px 48px rgba(0, 0, 0, 0.72);
-  }
-  .mp-frame[data-explode='1'] .mp-plane-bg {
-    transform: translateZ(-195px) translateX(-160px) translateY(-38px) !important;
-    background: rgba(11, 14, 20, 0.96);
-  }
-  .mp-frame[data-explode='1'] .mp-plane-mid {
-    transform: translateZ(0px) !important;
-    background: rgba(18, 24, 36, 0.34);
-  }
-  .mp-frame[data-explode='1'] .mp-plane-fg {
-    transform: translateZ(195px) translateX(160px) translateY(38px) !important;
-    background: rgba(18, 24, 36, 0.14);
-  }
-  .mp-frame[data-explode='1'] .mp-plane-tag {
-    opacity: 1;
-  }
-
-  .mp-hud-bottom {
-    position: relative;
-    z-index: 6;
-    padding: 13px 24px 16px;
-    border-top: 1px solid var(--obs-border);
-    background: #0b0e14;
-  }
-  .mp-scrubber-wrap {
-    padding: 6px 0 12px;
-    cursor: pointer;
-    touch-action: none;
-  }
-  .mp-track {
-    position: relative;
-    width: 100%;
-    height: 5px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.12);
-  }
-  .mp-track-fill {
-    height: 100%;
-    border-radius: 999px;
-    background: linear-gradient(90deg, var(--obs-accent), #ffc233 50%, #5ab6d8);
-  }
-  .mp-playhead {
-    position: absolute;
-    top: 50%;
-    width: 13px;
-    height: 13px;
-    border-radius: 50%;
-    background: #ffffff;
-    border: 2px solid var(--obs-accent);
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 10px rgba(229, 36, 59, 0.75);
-  }
-  .mp-stops {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px;
-  }
-  .mp-stop {
-    appearance: none;
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 4px;
-    padding: 9px 10px;
-    color: #9aa4b5;
-    cursor: pointer;
-    text-align: center;
-    min-width: 0;
-    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
-  }
-  .mp-stop:hover {
-    border-color: rgba(255, 255, 255, 0.22);
-    color: var(--obs-ink);
-  }
-  .mp-stop[data-state='active'] {
-    background: rgba(229, 36, 59, 0.12);
-    border-color: var(--obs-accent);
-    color: #ffffff;
-  }
-  .mp-stop-name {
-    display: block;
-    font: 600 12px/1.25 var(--font-sans);
-  }
-  .mp-stop-sub {
-    display: block;
-    margin-top: 3px;
-    font: 600 10.5px/1.2 var(--font-mono);
-    letter-spacing: 0.06em;
-    color: #6f7a8c;
-  }
-  .mp-stop[data-state='active'] .mp-stop-sub {
-    color: #ffc233;
-  }
-  .mp-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-top: 12px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-  }
-  .mp-btns {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .mp-btn {
-    appearance: none;
-    background: #141923;
-    color: var(--obs-ink);
-    border: 1px solid #2d384d;
-    border-radius: 999px;
-    padding: 6px 14px;
-    font: 600 11.5px/1.2 var(--font-mono);
-    letter-spacing: 0.03em;
-    cursor: pointer;
-  }
-  .mp-btn:hover {
-    border-color: var(--obs-ink);
-  }
-  .mp-btn[aria-pressed='true'].mp-btn-explode {
-    background: rgba(90, 182, 216, 0.18);
-    border-color: #5ab6d8;
-    color: #ffffff;
-  }
-  .mp-readout {
-    font: 600 11px/1.2 var(--font-mono);
-    letter-spacing: 0.06em;
-    color: var(--obs-muted);
-  }
-
-  @media (max-width: 720px) {
-    .mp-hud-top {
-      padding: 12px 14px 10px;
-    }
-    .mp-eyebrow {
-      font-size: 9.5px;
-    }
-    .mp-title {
-      font-size: 18px;
-    }
-    .mp-metric-val {
-      font-size: 22px;
-    }
-    .mp-metric-unit {
-      font-size: 10px;
-    }
-    .mp-hud-bottom {
-      padding: 10px 12px 14px;
-    }
-    .mp-stops {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 6px;
-    }
-    .mp-stop {
-      padding: 7px 8px;
-    }
-    .mp-stop-name {
-      font-size: 11px;
-    }
-    .mp-stop-sub {
-      font-size: 9.5px;
-    }
-    .mp-toolbar {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-    }
-    .mp-frame[data-explode='1'] .mp-stage-wrap {
-      padding: 18px 14px 22px;
-    }
   }
 </style>
 
@@ -526,17 +227,14 @@
       return pendTable[i0] * (1 - frac) + pendTable[i1] * frac;
     }
 
-    var params = new URLSearchParams(window.location.search);
     var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var st = {
-      t: params.has('t') ? clamp01(parseFloat(params.get('t')) || 0) : reducedMotion ? 0.08 : 0,
-      playing: !params.has('t') && params.get('autoplay') !== '0' && !reducedMotion,
-      explode: params.get('explode') === '1',
+      t: reducedMotion ? 0.49 : 0,
+      playing: !reducedMotion,
       duration: 11.5,
       pointerX: 0,
       pointerY: 0,
     };
-    frameEl.dataset.explode = st.explode ? '1' : '0';
 
     var planeBgWrap = document.getElementById('plane-bg-wrap');
     var planeMidWrap = document.getElementById('plane-mid-wrap');
@@ -565,21 +263,7 @@
     var gantryScanBeam = document.getElementById('gantry-scan-beam');
     var relicHalo = document.getElementById('relic-halo');
     var fxLayer = document.getElementById('fx-layer');
-
-    var titleEl = document.getElementById('mp-title');
-    var valEl = document.getElementById('mp-metric-val');
-    var unitEl = document.getElementById('mp-metric-unit');
-    var fillEl = document.getElementById('mp-fill');
-    var playheadEl = document.getElementById('mp-playhead');
-    var readoutEl = document.getElementById('mp-readout');
-    var stopBtns = Array.prototype.slice.call(frameEl.querySelectorAll('.mp-stop'));
-    var playBtn = document.getElementById('btn-play');
-    var explodeBtn = document.getElementById('btn-explode');
     var stageWrap = document.getElementById('mp-stage-wrap');
-
-    playBtn.textContent = st.playing ? 'Pause' : 'Play';
-    playBtn.setAttribute('aria-pressed', String(st.playing));
-    explodeBtn.setAttribute('aria-pressed', String(st.explode));
 
     stageWrap.addEventListener('pointermove', function (e) {
       var r = stageWrap.getBoundingClientRect();
@@ -610,17 +294,11 @@
       var t = ((st.t % 1) + 1) % 1;
 
       var camPan = Math.sin((t - 0.5) * Math.PI);
-      if (!st.explode) {
-        planeBgWrap.style.transform =
-          'translate3d(' + (-camPan * 10 - st.pointerX * 9).toFixed(2) + 'px, ' + (-st.pointerY * 5).toFixed(2) + 'px, 0)';
-        planeMidWrap.style.transform = 'translate3d(' + (-camPan * 2 + st.pointerX * 3).toFixed(2) + 'px, 0px, 0)';
-        planeFgWrap.style.transform =
-          'translate3d(' + (camPan * 16 + st.pointerX * 15).toFixed(2) + 'px, ' + (st.pointerY * 7).toFixed(2) + 'px, 0)';
-      } else {
-        planeBgWrap.style.transform = '';
-        planeMidWrap.style.transform = '';
-        planeFgWrap.style.transform = '';
-      }
+      planeBgWrap.style.transform =
+        'translate3d(' + (-camPan * 10 - st.pointerX * 9).toFixed(2) + 'px, ' + (-st.pointerY * 5).toFixed(2) + 'px, 0)';
+      planeMidWrap.style.transform = 'translate3d(' + (-camPan * 2 + st.pointerX * 3).toFixed(2) + 'px, 0px, 0)';
+      planeFgWrap.style.transform =
+        'translate3d(' + (camPan * 16 + st.pointerX * 15).toFixed(2) + 'px, ' + (st.pointerY * 7).toFixed(2) + 'px, 0)';
 
       var forgeEnv = smooth3(0.01, 0.028, t) * (1 - smooth3(0.16, 0.195, t));
       var hammerCycle = ((t - 0.01) / 0.052) % 1;
@@ -852,38 +530,6 @@
           '"><path d="M0,-13 L3.2,-3.2 L13,0 L3.2,3.2 L0,13 L-3.2,3.2 L-13,0 L-3.2,-3.2 Z" fill="#fff3b0"/></g>';
       }
       fxLayer.innerHTML = fx;
-
-      var activeIdx = 0;
-      if (t < 0.24) {
-        activeIdx = 0;
-        titleEl.textContent = 'Blobster Smith — Hammering Raw Molten Claw Spec';
-        valEl.textContent = '01';
-        unitEl.textContent = 'ANVIL FORGE';
-      } else if (t < 0.69) {
-        activeIdx = 1;
-        titleEl.textContent = 'Overhead Chain & Hook — Carrying Claw Behind Steel Girder';
-        valEl.textContent = '02';
-        unitEl.textContent = 'CHAIN HOIST';
-      } else if (t < 0.88) {
-        activeIdx = 2;
-        titleEl.textContent = 'Blobster Sculptor — Brushing Luminous Cyan Glaze';
-        valEl.textContent = '03';
-        unitEl.textContent = 'GLAZE WHEEL';
-      } else {
-        activeIdx = 3;
-        titleEl.textContent = 'OpenClaw Relic — Despilled & SHA-256 Sealed';
-        valEl.textContent = '04';
-        unitEl.textContent = 'SCAN: CLEAN';
-      }
-
-      stopBtns.forEach(function (btn, idx) {
-        btn.dataset.state = idx === activeIdx ? 'active' : idx < activeIdx ? 'passed' : 'upcoming';
-      });
-
-      var pct = (t * 100).toFixed(2) + '%';
-      fillEl.style.width = pct;
-      playheadEl.style.left = pct;
-      readoutEl.textContent = 'T=' + t.toFixed(2) + ' · ' + (st.explode ? '3D EXPLODED PLANES' : 'COMPOSITED') + ' · STAGE 0' + (activeIdx + 1);
     }
 
     var rafId = 0;
@@ -897,63 +543,10 @@
       rafId = requestAnimationFrame(tick);
     }
 
-    playBtn.addEventListener('click', function () {
-      st.playing = !st.playing;
-      playBtn.textContent = st.playing ? 'Pause' : 'Play';
-      playBtn.setAttribute('aria-pressed', String(st.playing));
-      if (st.playing) {
-        lastTs = performance.now();
-        rafId = requestAnimationFrame(tick);
-      } else {
-        cancelAnimationFrame(rafId);
-      }
-    });
-
-    explodeBtn.addEventListener('click', function () {
-      st.explode = !st.explode;
-      frameEl.dataset.explode = st.explode ? '1' : '0';
-      explodeBtn.setAttribute('aria-pressed', String(st.explode));
-      render();
-    });
-
-    stopBtns.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        st.t = parseFloat(btn.dataset.at) || 0;
-        render();
-      });
-    });
-
-    var scrubber = document.getElementById('mp-scrubber');
-    var dragging = false;
-    function scrubFromEvent(e) {
-      var r = scrubber.getBoundingClientRect();
-      st.t = clamp01((e.clientX - r.left) / r.width);
-      render();
-    }
-    scrubber.addEventListener('pointerdown', function (e) {
-      dragging = true;
-      scrubber.setPointerCapture(e.pointerId);
-      scrubFromEvent(e);
-    });
-    scrubber.addEventListener('pointermove', function (e) {
-      if (dragging) scrubFromEvent(e);
-    });
-    scrubber.addEventListener('pointerup', function () {
-      dragging = false;
-    });
-
     window.__setMotionTime = function (tNorm) {
       st.playing = false;
       cancelAnimationFrame(rafId);
-      playBtn.textContent = 'Play';
-      playBtn.setAttribute('aria-pressed', 'false');
       st.t = clamp01(+tNorm || 0);
-      render();
-    };
-    window.__setExplode = function (flag) {
-      st.explode = !!flag;
-      frameEl.dataset.explode = st.explode ? '1' : '0';
-      explodeBtn.setAttribute('aria-pressed', String(st.explode));
       render();
     };
 

@@ -8,26 +8,31 @@ import { d1, r2, access } from '@emdash-cms/cloudflare';
 import { fileURLToPath } from 'node:url';
 
 const edge = process.env.CATALOG_TARGET === 'cloudflare';
-if (edge && !process.env.CF_ACCESS_TEAM_DOMAIN) {
-  throw new Error('CF_ACCESS_TEAM_DOMAIN is required for the production Cloudflare build');
-}
+const teamDomain = process.env.CF_ACCESS_TEAM_DOMAIN?.trim() || '';
 
 export default defineConfig({
   output: 'server',
-  site: 'https://blobsterfactory.com',
-  adapter: edge ? cloudflare() : node({ mode: 'standalone' }),
+  site: 'https://blobster.dev',
+  adapter: edge
+    ? cloudflare({
+        configPath: './cloudflare/wrangler.jsonc',
+        imageService: 'passthrough',
+      })
+    : node({ mode: 'standalone' }),
   devToolbar: { enabled: false },
   integrations: [
     react(),
     emdash({
-      siteUrl: edge ? 'https://blobsterfactory.com' : undefined,
-      auth: edge
-        ? access({
-            teamDomain: process.env.CF_ACCESS_TEAM_DOMAIN,
-            audienceEnvVar: 'CF_ACCESS_AUDIENCE',
-            defaultRole: 20,
-          })
-        : undefined,
+      siteUrl: edge ? 'https://blobster.dev' : undefined,
+      ...(edge && teamDomain
+        ? {
+            auth: access({
+              teamDomain,
+              audienceEnvVar: 'CF_ACCESS_AUDIENCE',
+              defaultRole: 20,
+            }),
+          }
+        : {}),
       database: edge
         ? d1({ binding: 'DB', session: 'auto' })
         : sqlite({ url: process.env.CATALOG_DATABASE || 'file:./catalog.db' }),
