@@ -3,11 +3,12 @@
   "created_at": "2026-11-09T17:21:08+00:00",
   "current_focus": {
     "cadence": "frontier-batch",
-    "confirmed": false,
+    "confirmed": true,
+    "confirmed_at": "2026-11-09T20:25:55+00:00",
     "domain": "Grill 2 (Round 2): Stitch Homepage Tiebreaker Hybrid + Mode B Multiplane /pipeline Stage",
     "started_at": "2026-11-09T18:33:57+00:00",
-    "status": "grilling",
-    "summary": "Verify and lock R2 Homepage Hybrid (C4 Dual-Chamber + C2 Calibration Hero + Slim C3 Rail + Dialed Header/Footer, centered 390px mobile) and Mode B Multiplane Occlusion depth-plate animation strictly on /pipeline hero."
+    "status": "confirmed",
+    "summary": "Owner approved R2 Dual-Chamber Obsidian & Vellum Hybrid storefront ('I am on board with the website. It looks great.') and explicitly locked the Overhead Chain Hoist & Cast-Iron Hook 3-Plane Multiplane Stage restricted to /pipeline ('just pipeline' + 'lock it looks great')."
   },
   "decisions": [
     {
@@ -439,10 +440,38 @@
           "review_source_identity": null,
           "to": "locked",
           "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T20:25:55+00:00",
+          "choice": "Locked R2 \u00b7 Homepage Hybrid (stitch:11637266979287648165): C4 Dual-Chamber Obsidian/Vellum + C2 Calibration Stage Hero + Slim C3 Left Filter Rail + GitHub/Discord Header Icons + Foundry Pigment/Dither Footer (verified centered 390px mobile).",
+          "from": "locked",
+          "implementation_ref": null,
+          "note": "bounded implementation recorded",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "implemented",
+          "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T20:25:55+00:00",
+          "choice": "Locked R2 \u00b7 Homepage Hybrid (stitch:11637266979287648165): C4 Dual-Chamber Obsidian/Vellum + C2 Calibration Stage Hero + Slim C3 Left Filter Rail + GitHub/Discord Header Icons + Foundry Pigment/Dither Footer (verified centered 390px mobile).",
+          "from": "implemented",
+          "implementation_ref": "git:28adc88",
+          "note": "verification recorded in cumulative context",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "verified",
+          "verification_ref": null
         }
       ],
       "id": "g2-home-layout",
-      "implementation_ref": null,
+      "implementation_ref": "git:28adc88",
       "question": "Which of the 5 Round 1 Google Stitch homepage layout candidates should anchor / (or name top 2 for a tiebreaker hybrid)?",
       "rationale": "Locks homepage layout composition on Stitch project 5620316938785958966 before translating into Astro/EmDash.",
       "repair_required": false,
@@ -453,10 +482,10 @@
       "review_source_identity": null,
       "revisit_when": null,
       "scope": "durable",
-      "status": "locked",
+      "status": "verified",
       "superseded_by": null,
-      "updated_at": "2026-11-09T19:22:36+00:00",
-      "verification_ref": null
+      "updated_at": "2026-11-09T20:25:55+00:00",
+      "verification_ref": "verify:site+typecheck+tests+playwright@28adc88 (.grilltrack/proof/v2-verification.json)"
     },
     {
       "baseline_ref": ".grilltrack/work/g2-motion-multiplane/pipeline-multiplane.html",
@@ -504,10 +533,38 @@
           "review_source_identity": null,
           "to": "locked",
           "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T20:25:55+00:00",
+          "choice": "Overhead chain hoist and cast-iron hook multiplane stage (.grilltrack/work/g2-motion-multiplane/pipeline-multiplane.html) mounted strictly on /pipeline hero.",
+          "from": "locked",
+          "implementation_ref": null,
+          "note": "bounded implementation recorded",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "implemented",
+          "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T20:25:55+00:00",
+          "choice": "Overhead chain hoist and cast-iron hook multiplane stage (.grilltrack/work/g2-motion-multiplane/pipeline-multiplane.html) mounted strictly on /pipeline hero.",
+          "from": "implemented",
+          "implementation_ref": "git:28adc88",
+          "note": "verification recorded in cumulative context",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "verified",
+          "verification_ref": null
         }
       ],
       "id": "g2-motion-framework",
-      "implementation_ref": null,
+      "implementation_ref": "git:28adc88",
       "question": "Which of the 5 bespoke Smith + Sculptor Claw-forging animation stage compositions (01 Shared Turntable, 02 3-Bay Blueprint, 03 Gantry & Chroma Arch, 04 Live CLAW.md Compiler, 05 3D Vinyl Softbox) and placement (/pipeline hero vs / + /pipeline) should we lock for Piece 1?",
       "rationale": "Owner requested chain + hook carry refinement in prior turn and explicitly locked the updated end-to-end multiplane motion ('lock it looks great').",
       "repair_required": false,
@@ -518,10 +575,10 @@
       "review_source_identity": null,
       "revisit_when": null,
       "scope": "durable",
-      "status": "locked",
+      "status": "verified",
       "superseded_by": null,
-      "updated_at": "2026-11-09T20:05:42+00:00",
-      "verification_ref": null
+      "updated_at": "2026-11-09T20:25:55+00:00",
+      "verification_ref": "verify:site+typecheck+tests+playwright@28adc88 (.grilltrack/proof/v2-verification.json)"
     },
     {
       "baseline_ref": null,
@@ -564,10 +621,38 @@
           "review_source_identity": null,
           "to": "locked",
           "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T20:25:55+00:00",
+          "choice": "Strictly /pipeline hero only (\"just pipeline\"); keep / homepage focused on the C2 Calibration Stage specimen bench and verified catalog.",
+          "from": "locked",
+          "implementation_ref": null,
+          "note": "bounded implementation recorded",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "implemented",
+          "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T20:25:55+00:00",
+          "choice": "Strictly /pipeline hero only (\"just pipeline\"); keep / homepage focused on the C2 Calibration Stage specimen bench and verified catalog.",
+          "from": "implemented",
+          "implementation_ref": "git:28adc88",
+          "note": "verification recorded in cumulative context",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "verified",
+          "verification_ref": null
         }
       ],
       "id": "g2-motion-placement",
-      "implementation_ref": null,
+      "implementation_ref": "git:28adc88",
       "question": "Should the Smith + Sculptor Claw-crafting multiplane animation live on /pipeline hero only, or both / and /pipeline?",
       "rationale": "Owner explicitly locked placement with \"just pipeline\".",
       "repair_required": false,
@@ -578,10 +663,10 @@
       "review_source_identity": null,
       "revisit_when": null,
       "scope": "durable",
-      "status": "locked",
+      "status": "verified",
       "superseded_by": null,
-      "updated_at": "2026-11-09T19:10:02+00:00",
-      "verification_ref": null
+      "updated_at": "2026-11-09T20:25:55+00:00",
+      "verification_ref": "verify:site+typecheck+tests+playwright@28adc88 (.grilltrack/proof/v2-verification.json)"
     }
   ],
   "last_activation": {
@@ -595,5 +680,5 @@
   "status": "active",
   "title": "Blobster Factory Website (EmDash + Stitch)",
   "track_id": "gt-20261109172108-8ae778",
-  "updated_at": "2026-11-09T20:05:42+00:00"
+  "updated_at": "2026-11-09T20:25:55+00:00"
 }
