@@ -1,9 +1,10 @@
 {
-  "verifiedAt": "2026-11-09T21:29:39.199Z",
+  "verifiedAt": "2026-11-09T21:59:56.489Z",
   "canonicalOrigin": "https://blobster.dev",
   "redirectOrigin": "https://blobsterfactory.com",
-  "revisionHeader": "df43081",
-  "cfRaySample": "a57fe9b13a120d63-ATL",
+  "discordInvite": "https://discord.com/invite/clawd",
+  "revisionHeader": "30f86a0",
+  "cfRaySample": "a5801601e8da094d-ATL",
   "tarballSha256": "124dc6c1b070662110d66eac14a7198d677037f6389741eb35ddad1ac02dc072",
   "redirects": [
     {
@@ -27,19 +28,9 @@
       "location": "https://blobster.dev/"
     },
     {
-      "url": "https://www.blobsterfactory.com/templates/blobster-smith",
-      "status": 301,
-      "location": "https://blobster.dev/templates/blobster-smith"
-    },
-    {
       "url": "https://www.blobster.dev/",
       "status": 301,
       "location": "https://blobster.dev/"
-    },
-    {
-      "url": "https://www.blobster.dev/pipeline",
-      "status": 301,
-      "location": "https://blobster.dev/pipeline"
     }
   ],
   "securityChecks": [
@@ -66,9 +57,10 @@
       "scrollWidth": 1440,
       "clientWidth": 1440,
       "hudCount": 0,
+      "slopCount": 0,
+      "discordHref": "https://discord.com/invite/clawd",
       "hasMotionSlot": false,
-      "emdashCardsCount": 5,
-      "canonical": "https://blobster.dev/"
+      "emdashCardsCount": 5
     },
     {
       "viewport": "1440x900",
@@ -76,9 +68,10 @@
       "scrollWidth": 1440,
       "clientWidth": 1440,
       "hudCount": 0,
+      "slopCount": 0,
+      "discordHref": "https://discord.com/invite/clawd",
       "hasMotionSlot": true,
-      "emdashCardsCount": 0,
-      "canonical": "https://blobster.dev/pipeline"
+      "emdashCardsCount": 0
     },
     {
       "viewport": "1440x900",
@@ -86,9 +79,10 @@
       "scrollWidth": 1440,
       "clientWidth": 1440,
       "hudCount": 0,
+      "slopCount": 0,
+      "discordHref": "https://discord.com/invite/clawd",
       "hasMotionSlot": false,
-      "emdashCardsCount": 1,
-      "canonical": "https://blobster.dev/templates/blobster-smith"
+      "emdashCardsCount": 1
     },
     {
       "viewport": "1440x900",
@@ -96,9 +90,10 @@
       "scrollWidth": 1440,
       "clientWidth": 1440,
       "hudCount": 0,
+      "slopCount": 0,
+      "discordHref": "https://discord.com/invite/clawd",
       "hasMotionSlot": false,
-      "emdashCardsCount": 0,
-      "canonical": "https://blobster.dev/submit"
+      "emdashCardsCount": 0
     },
     {
       "viewport": "390x844",
@@ -106,9 +101,10 @@
       "scrollWidth": 390,
       "clientWidth": 390,
       "hudCount": 0,
+      "slopCount": 0,
+      "discordHref": "https://discord.com/invite/clawd",
       "hasMotionSlot": false,
-      "emdashCardsCount": 5,
-      "canonical": "https://blobster.dev/"
+      "emdashCardsCount": 5
     },
     {
       "viewport": "390x844",
@@ -116,9 +112,10 @@
       "scrollWidth": 390,
       "clientWidth": 390,
       "hudCount": 0,
+      "slopCount": 0,
+      "discordHref": "https://discord.com/invite/clawd",
       "hasMotionSlot": true,
-      "emdashCardsCount": 0,
-      "canonical": "https://blobster.dev/pipeline"
+      "emdashCardsCount": 0
     },
     {
       "viewport": "390x844",
@@ -126,9 +123,10 @@
       "scrollWidth": 390,
       "clientWidth": 390,
       "hudCount": 0,
+      "slopCount": 0,
+      "discordHref": "https://discord.com/invite/clawd",
       "hasMotionSlot": false,
-      "emdashCardsCount": 1,
-      "canonical": "https://blobster.dev/templates/blobster-smith"
+      "emdashCardsCount": 1
     },
     {
       "viewport": "390x844",
@@ -136,9 +134,10 @@
       "scrollWidth": 390,
       "clientWidth": 390,
       "hudCount": 0,
+      "slopCount": 0,
+      "discordHref": "https://discord.com/invite/clawd",
       "hasMotionSlot": false,
-      "emdashCardsCount": 0,
-      "canonical": "https://blobster.dev/submit"
+      "emdashCardsCount": 0
     }
   ]
 }
