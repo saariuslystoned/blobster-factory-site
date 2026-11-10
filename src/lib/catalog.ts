@@ -59,17 +59,17 @@ export const CURATED_GOOD_FOR: Record<string, CuratedGoodFor> = {
       {
         lead: 'Build a custom agent from a plain request',
         detail:
-          'tell Smith what takes up your time; he asks 2–3 quick questions to lock the job, schedule, and what needs your approval before acting.',
+          'tell Smith what takes up your time; he asks 2–3 quick questions to lock one clear job, hard anti-jobs, schedule, and what needs your approval before acting.',
       },
       {
-        lead: 'Turn something you just did into a repeatable skill',
+        lead: 'Turn past work—or overlapping bots—into a clean skill',
         detail:
-          'point him at a past session or folder so you never have to repeat the same multi-step workflow from scratch.',
+          'point him at a past session to make it repeatable, or consolidate redundant bots into one sharp agent with zero leftover tools.',
       },
       {
         lead: 'Connect the tools and apps you already use',
         detail:
-          'wires up your CLIs, APIs, and schedules so the agent runs quietly in the background and only pings you when something needs attention.',
+          'wires up your CLIs, APIs, and quiet-on-clean schedules that never blind-retry on errors and only ping you when something real needs attention.',
       },
     ],
     starter_prompts: [
