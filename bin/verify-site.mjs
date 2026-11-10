@@ -15,6 +15,10 @@ while (queue.length) {
   if (routePath === '/') {
     assert(html.includes('data-content-source="emdash"'), 'Homepage must render EmDash-backed cards');
   }
+  if (/^\/templates\/[^/]+$/.test(routePath)) {
+    assert(html.includes('data-good-for-dossier'), `${routePath} must render R2-C1 capability dossier`);
+    assert(html.includes('data-copy-starter='), `${routePath} must render clickable starter prompt chips`);
+  }
   for (const match of html.matchAll(/href="([^"]+)"/g)) {
     const rawHref = match[1].replaceAll('&amp;', '&');
     if (rawHref.startsWith('#') || rawHref.startsWith('mailto:')) continue;

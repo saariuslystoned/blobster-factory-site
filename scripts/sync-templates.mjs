@@ -5,7 +5,9 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const SOURCE_REPO = path.resolve(ROOT, '../blobster-factory');
+const SOURCE_REPO =
+  process.env.BLOBSTER_FACTORY_REPO ||
+  '/Users/bobbybones/Developer/repos/saariuslystoned/blobster-factory';
 const TEMPLATES_SOURCE = path.join(SOURCE_REPO, 'templates');
 const PUBLIC_TEMPLATES = path.join(ROOT, 'public', 'templates');
 const PUBLIC_TARBALLS = path.join(ROOT, 'public', 't');
@@ -113,12 +115,23 @@ async function main() {
       'blobster-design.json',
       'cutout-256.png',
       'hero-512.png',
+      'sprite-2x2.png',
       'blobster-idle.gif',
       'blobster-wave.gif',
     ]) {
       await copyIfExists(
         path.join(tplDir, 'workspace', 'avatars', asset),
         path.join(destAssets, asset),
+      );
+    }
+    await copyIfExists(
+      path.join(tplDir, 'assets', 'icon.png'),
+      path.join(destAssets, 'icon.png'),
+    );
+    for (const defAsset of ['blobster.svg', 'blobster-design.json', 'icon.png']) {
+      await copyIfExists(
+        path.join(tplDir, 'workspace', 'defaults', defAsset),
+        path.join(destAssets, 'defaults', defAsset),
       );
     }
 
@@ -130,6 +143,7 @@ async function main() {
 
     const titleMatch = svgContent.match(/<title>([^<]+)<\/title>/);
     const descMatch = svgContent.match(/<desc>([^<]+)<\/desc>/);
+    const clawDescMatch = clawMd.match(/^\s*description:\s*"([^"]+)"/m);
     const displayName = titleMatch ? titleMatch[1] : slug;
 
     seedEntries.push({
@@ -147,6 +161,7 @@ async function main() {
         avatar_tier: meta.tier,
         summary:
           pkg.description ||
+          clawDescMatch?.[1] ||
           descMatch?.[1] ||
           meta.tagline,
         avatar_svg_url: `/templates/${slug}/blobster.svg`,

@@ -433,7 +433,7 @@
         "stitch:14010156567637161529",
         "stitch:11637266979287648165"
       ],
-      "choice": "Locked R2 \u00b7 Homepage Hybrid (stitch:11637266979287648165): C4 Dual-Chamber Obsidian/Vellum + C2 Calibration Stage Hero + Slim C3 Left Filter Rail + GitHub/Discord Header Icons + Foundry Pigment/Dither Footer (verified centered 390px mobile).",
+      "choice": "Locked R2 · Homepage Hybrid (stitch:11637266979287648165): C4 Dual-Chamber Obsidian/Vellum + C2 Calibration Stage Hero + Slim C3 Left Filter Rail + GitHub/Discord Header Icons + Foundry Pigment/Dither Footer (verified centered 390px mobile).",
       "context_ref": null,
       "created_at": "2026-11-09T18:33:57+00:00",
       "deferred_reason": null,
@@ -457,7 +457,7 @@
       "history": [
         {
           "at": "2026-11-09T19:22:36+00:00",
-          "choice": "Locked R2 \u00b7 Homepage Hybrid (stitch:11637266979287648165): C4 Dual-Chamber Obsidian/Vellum + C2 Calibration Stage Hero + Slim C3 Left Filter Rail + GitHub/Discord Header Icons + Foundry Pigment/Dither Footer (verified centered 390px mobile).",
+          "choice": "Locked R2 · Homepage Hybrid (stitch:11637266979287648165): C4 Dual-Chamber Obsidian/Vellum + C2 Calibration Stage Hero + Slim C3 Left Filter Rail + GitHub/Discord Header Icons + Foundry Pigment/Dither Footer (verified centered 390px mobile).",
           "from": "proposed",
           "implementation_ref": null,
           "note": "user locked R2 Homepage Hybrid",
@@ -471,7 +471,7 @@
         },
         {
           "at": "2026-11-09T20:25:55+00:00",
-          "choice": "Locked R2 \u00b7 Homepage Hybrid (stitch:11637266979287648165): C4 Dual-Chamber Obsidian/Vellum + C2 Calibration Stage Hero + Slim C3 Left Filter Rail + GitHub/Discord Header Icons + Foundry Pigment/Dither Footer (verified centered 390px mobile).",
+          "choice": "Locked R2 · Homepage Hybrid (stitch:11637266979287648165): C4 Dual-Chamber Obsidian/Vellum + C2 Calibration Stage Hero + Slim C3 Left Filter Rail + GitHub/Discord Header Icons + Foundry Pigment/Dither Footer (verified centered 390px mobile).",
           "from": "locked",
           "implementation_ref": null,
           "note": "bounded implementation recorded",
@@ -485,7 +485,7 @@
         },
         {
           "at": "2026-11-09T20:25:55+00:00",
-          "choice": "Locked R2 \u00b7 Homepage Hybrid (stitch:11637266979287648165): C4 Dual-Chamber Obsidian/Vellum + C2 Calibration Stage Hero + Slim C3 Left Filter Rail + GitHub/Discord Header Icons + Foundry Pigment/Dither Footer (verified centered 390px mobile).",
+          "choice": "Locked R2 · Homepage Hybrid (stitch:11637266979287648165): C4 Dual-Chamber Obsidian/Vellum + C2 Calibration Stage Hero + Slim C3 Left Filter Rail + GitHub/Discord Header Icons + Foundry Pigment/Dither Footer (verified centered 390px mobile).",
           "from": "implemented",
           "implementation_ref": "git:28adc88",
           "note": "verification recorded in cumulative context",
@@ -869,6 +869,112 @@
       "verification_ref": "live:https://blobster.dev/pipeline@df43081 (.grilltrack/proof/live-deploy-verification.json)"
     },
     {
+      "baseline_ref": "file:src/pages/templates/[slug].astro@bf41be6",
+      "candidate_refs": [
+        "c1-field-brief-cards",
+        "c2-request-outcome-ledger",
+        "c3-good-for-vs-not-for",
+        "c4-hero-strip-scenarios",
+        "c5-foundry-job-ticket"
+      ],
+      "choice": "R2-C1: Compact 3-row dossier card (Best For, Reach For It To bold-lead bullets, and clickable Starter Prompts chips) on /templates/[slug], without a 'What it refuses' block.",
+      "context_ref": null,
+      "created_at": "2026-11-09T23:48:29+00:00",
+      "deferred_reason": null,
+      "delivery_ref": null,
+      "dependencies": [
+        "g1-routes-surfaces"
+      ],
+      "domain": "Grill 4: /templates/[slug] 'What is this agent good for?' section layout & copy",
+      "gate_evaluation": {
+        "confidence": 0.26,
+        "decision_type": "durable",
+        "declared_scope": "durable",
+        "model": "jev-1.13.0",
+        "overlock_risk": "clean",
+        "passed": true,
+        "provider": "jev",
+        "reason": "Gatekeeper (jev:jev-1.13.0) verified scope=durable (type=durable, risk=clean).",
+        "recommended_scope": "durable",
+        "scope_faithful_probability": 0.56
+      },
+      "history": [
+        {
+          "at": "2026-11-10T00:04:13+00:00",
+          "choice": "Candidate 1 · Field Brief & 3 Job Cards (Try-It Prompts) on /templates/[slug] above Add to OpenClaw, plus functional CLAW.md description in the Obsidian hero lede.",
+          "from": "proposed",
+          "implementation_ref": null,
+          "note": "user accepted the scoped decision",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "locked",
+          "verification_ref": null
+        },
+        {
+          "at": "2026-11-10T00:18:55+00:00",
+          "choice": "R2-C1: Compact 3-row dossier card (Best For, Reach For It To bold-lead bullets, and clickable Starter Prompts chips) on /templates/[slug], without a 'What it refuses' block.",
+          "from": "locked",
+          "implementation_ref": null,
+          "note": "bounded implementation recorded",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "implemented",
+          "verification_ref": null
+        },
+        {
+          "at": "2026-11-10T00:18:55+00:00",
+          "choice": "R2-C1: Compact 3-row dossier card (Best For, Reach For It To bold-lead bullets, and clickable Starter Prompts chips) on /templates/[slug], without a 'What it refuses' block.",
+          "from": "implemented",
+          "implementation_ref": "src/lib/catalog.ts, src/pages/templates/[slug].astro, src/styles/site.css, scripts/sync-templates.mjs, seed/seed.json",
+          "note": "verification recorded in cumulative context",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "verified",
+          "verification_ref": null
+        }
+      ],
+      "id": "g4-template-good-for",
+      "implementation_ref": "src/lib/catalog.ts, src/pages/templates/[slug].astro, src/styles/site.css, scripts/sync-templates.mjs, seed/seed.json",
+      "question": "Which of the 5 'What is this agent good for?' layout and wording candidates (C1–C5, or a hybrid of two) should we ship on /templates/[slug]?",
+      "rationale": "Owner preferred R2-C1 after dropping the 'What it refuses' block from Round 1.",
+      "repair_required": false,
+      "review_classifications": [],
+      "review_history": [
+        {
+          "classifications": [],
+          "ref": ".grilltrack/proof/g4-good-for-verification.json",
+          "result": "clean",
+          "reviewed_at": "2026-11-10T00:19:12+00:00",
+          "source_identity": "git:6c0ae3d6b14fc682ce5d2b5fc6fcb02e37dc514a"
+        },
+        {
+          "classifications": [],
+          "ref": ".grilltrack/proof/g4-good-for-verification.json",
+          "result": "clean",
+          "reviewed_at": "2026-11-10T01:02:57+00:00",
+          "source_identity": "git:bb3c0b854b24d9d2dabc81368fba31b30758e7c9"
+        }
+      ],
+      "review_ref": ".grilltrack/proof/g4-good-for-verification.json",
+      "review_result": "clean",
+      "review_source_identity": "git:bb3c0b854b24d9d2dabc81368fba31b30758e7c9",
+      "revisit_when": null,
+      "scope": "durable",
+      "status": "verified",
+      "superseded_by": null,
+      "updated_at": "2026-11-10T01:02:57+00:00",
+      "verification_ref": ".grilltrack/proof/g4-good-for-verification.json"
+    },
+    {
       "baseline_ref": null,
       "candidate_refs": [],
       "choice": "EmDash Playground mode on 127.0.0.1:4332 first and dev.blobster.dev without login, wired to @dinkuskit/openclaw (with native agent-templates support pointing to blobster.dev) and Blobster Smith.",
@@ -965,5 +1071,5 @@
   "status": "active",
   "title": "Blobster Factory Website (EmDash + Stitch)",
   "track_id": "gt-20261109172108-8ae778",
-  "updated_at": "2026-11-10T00:09:07+00:00"
+  "updated_at": "2026-11-10T01:05:00+00:00"
 }
