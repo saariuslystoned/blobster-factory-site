@@ -12,6 +12,7 @@ Every Stitch translation and visual refinement MUST preserve these exact routes,
 ## Required DOM & Data Hooks
 - `[data-content-source="emdash"]` — Present on CMS-backed template cards and detail views
 - `[data-theme-toggle]` & `[data-preset-select]` — Dual-mode (`light`/`dark`) and OpenClaw theme (`knot`/`tide`/`beacon`) controls persisted to `localStorage`
+- `[data-good-for-dossier]` & `[data-copy-starter]` — Compact 3-row "What is this agent good for?" capability dossier (`Best For`, `Reach For It To` bold-lead bullets, and clickable `Starter Prompts` chips with clipboard receipt feedback) on `/templates/[slug]`
 - `[data-copy-prompt]` / `[data-copy-cli]` / `[data-copy-clawhub]` — 3-way Add-to-OpenClaw clipboard actions with thermal receipt feedback
 - `[data-avatar-stage]` — Multi-scale (`24px`, `64px`, `256px`) + surface (`dark` `#0D1117` / `light` `#F8FAFC`) + mode (`svg` / `hero` / `idle-gif` / `wave-gif`) switcher
 - `[data-qa-sheet]` — Interactive `Clean` vs. `Simulate Bad Sheet` `#FF00FF` chroma-key QA contact sheet on `/pipeline`

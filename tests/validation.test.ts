@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { templateSubmissionSchema, publicHttpsLink } from '../src/lib/validation.ts';
+import { CURATED_GOOD_FOR } from '../src/lib/catalog.ts';
 
 test('accepts valid ClawHub-aligned community template submission', () => {
   const result = templateSubmissionSchema.safeParse({
@@ -26,4 +27,13 @@ test('rejects localhost links and missing script-free confirmation', () => {
   assert.equal(publicHttpsLink('http://localhost:4321/repo'), false);
   assert.equal(publicHttpsLink('https://127.0.0.1/repo'), false);
   assert.equal(publicHttpsLink('https://github.com/saariuslystoned/blobster-factory'), true);
+});
+
+test('provides 3 distinct relatable starter prompts and capability bullets per catalog template', () => {
+  for (const [slug, brief] of Object.entries(CURATED_GOOD_FOR)) {
+    assert.ok(brief.best_for.length > 20, `${slug} must have a best_for hook`);
+    assert.equal(brief.good_for_items.length, 3, `${slug} must have 3 good_for_items`);
+    assert.equal(brief.starter_prompts.length, 3, `${slug} must have 3 starter_prompts`);
+    assert.equal(new Set(brief.starter_prompts).size, 3, `${slug} starter prompts must be unique`);
+  }
 });

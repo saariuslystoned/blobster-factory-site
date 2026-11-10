@@ -145,9 +145,63 @@ const origin = canonicalOrigin();
       <!-- 12px BAYER ORDERED DITHER TRANSITION -->
       <div class="bayer-dither-strip" aria-hidden="true"></div>
 
-      <!-- CHAMBER 02: INSTALL BAR & TEMPLATE FILES -->
+      <!-- CHAMBER 02: CAPABILITY DOSSIER, INSTALL BAR & TEMPLATE FILES -->
       <section class="chamber-workbench">
         <div class="container">
+          <section
+            class="good-for-dossier"
+            data-good-for-dossier
+            aria-label="What this agent is good for"
+          >
+            <div class="good-for-head">
+              <h2>What is this agent good for?</h2>
+              <span class="mono good-for-coord">
+                CAPABILITY BRIEF · {tpl.coordinate.startsWith('@') ? tpl.coordinate : `@${tpl.owner_handle}/${tpl.slug}`}
+              </span>
+            </div>
+
+            <div class="good-for-row">
+              <div class="good-for-key">Best For</div>
+              <div class="good-for-val">
+                <strong>{tpl.best_for}</strong>
+              </div>
+            </div>
+
+            <div class="good-for-row">
+              <div class="good-for-key">Reach For It To</div>
+              <div class="good-for-val">
+                <ul class="good-for-bullets">
+                  {tpl.good_for_items.map((item) => (
+                    <li>
+                      <span class="good-for-tick" aria-hidden="true">✓</span>
+                      <span>
+                        <strong>{item.lead}</strong> — {item.detail}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div class="good-for-row">
+              <div class="good-for-key">Starter Prompts</div>
+              <div class="good-for-val">
+                <div class="good-for-chips">
+                  {tpl.starter_prompts.map((promptText) => (
+                    <button
+                      type="button"
+                      class="starter-prompt-chip"
+                      data-copy-starter={promptText}
+                    >
+                      <span class="starter-copy-glyph" aria-hidden="true">⧉</span>
+                      <span>"{promptText}"</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
           <section class="add-gateway-panel" aria-label="Add template to OpenClaw">
             <div style="margin-bottom:12px;">
               <h2 style="font-size:1.5rem;margin:0;">Add to OpenClaw</h2>
@@ -291,6 +345,18 @@ const origin = canonicalOrigin();
       bindCopy('data-copy-prompt', 'Agent prompt');
       bindCopy('data-copy-cli', 'CLI command');
       bindCopy('data-copy-clawhub', 'Coordinate');
+
+      document.querySelectorAll('[data-copy-starter]').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          var val = chip.getAttribute('data-copy-starter') || '';
+          if (navigator.clipboard && val) {
+            navigator.clipboard.writeText(val).then(function () {
+              if (receiptText) receiptText.textContent = '✓ Starter prompt copied to clipboard';
+              if (banner) banner.setAttribute('data-visible', 'true');
+            });
+          }
+        });
+      });
 
       var heroImg = document.querySelector('[data-detail-hero]');
       var heroCap = document.querySelector('[data-detail-cap]');
