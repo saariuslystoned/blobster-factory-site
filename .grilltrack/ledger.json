@@ -4,11 +4,11 @@
   "current_focus": {
     "cadence": "frontier-batch",
     "confirmed": true,
-    "confirmed_at": "2026-11-09T21:31:16+00:00",
-    "domain": "Grill 3: Production Deploy to blobster.dev, blobsterfactory.com 301 Redirect, and HUD-Free /pipeline Motion Artwork",
-    "started_at": "2026-11-09T21:31:15+00:00",
+    "confirmed_at": "2026-11-09T23:49:14+00:00",
+    "domain": "Grill 4: Zero-Login EmDash Durable Object Playground (dev.blobster.dev + :4332) with @dinkuskit/openclaw & Blobster Smith on Super VL",
+    "started_at": "2026-11-09T23:48:01+00:00",
     "status": "confirmed",
-    "summary": "Owner directed live deployment to blobster.dev, 301 redirect from blobsterfactory.com to blobster.dev, and stripping all 1234 stage buttons and dev HUD machinery from /pipeline."
+    "summary": "Stand up local 127.0.0.1:4332 EmDash Playground with @dinkuskit/openclaw (Agent Templates + Playground lock) and Blobster Smith on Spark-1 Super VL; pause before live dev.blobster.dev deploy."
   },
   "decisions": [
     {
@@ -304,6 +304,20 @@
           "review_source_identity": null,
           "to": "deferred",
           "verification_ref": null
+        },
+        {
+          "at": "2026-11-09T23:49:14+00:00",
+          "choice": "Defer bundling live @dinkuskit/openclaw gateway execution in v1 while documenting dinkus-openclaw on /pipeline.",
+          "from": "deferred",
+          "implementation_ref": null,
+          "note": "Owner confirmed testing @dinkuskit/openclaw right now in the EmDash Playground build after v1 shipped.",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "superseded",
+          "verification_ref": null
         }
       ],
       "id": "g1-defer-openclaw-plugin",
@@ -318,9 +332,9 @@
       "review_source_identity": null,
       "revisit_when": "after v1 catalog and submission queue verification",
       "scope": "deferral",
-      "status": "deferred",
-      "superseded_by": null,
-      "updated_at": "2026-11-09T17:31:54+00:00",
+      "status": "superseded",
+      "superseded_by": "g4-emdash-playground-openclaw",
+      "updated_at": "2026-11-09T23:49:14+00:00",
       "verification_ref": null
     },
     {
@@ -853,6 +867,91 @@
       "superseded_by": null,
       "updated_at": "2026-11-09T21:31:16+00:00",
       "verification_ref": "live:https://blobster.dev/pipeline@df43081 (.grilltrack/proof/live-deploy-verification.json)"
+    },
+    {
+      "baseline_ref": null,
+      "candidate_refs": [],
+      "choice": "EmDash Playground mode on 127.0.0.1:4332 first and dev.blobster.dev without login, wired to @dinkuskit/openclaw (with native agent-templates support pointing to blobster.dev) and Blobster Smith.",
+      "context_ref": null,
+      "created_at": "2026-11-09T23:48:01+00:00",
+      "deferred_reason": null,
+      "delivery_ref": null,
+      "dependencies": [
+        "g1-routes-surfaces"
+      ],
+      "domain": "Grill 4: Zero-Login EmDash Durable Object Playground (dev.blobster.dev + :4332) with @dinkuskit/openclaw & Blobster Smith on Super VL",
+      "gate_evaluation": {
+        "confidence": 0.41,
+        "decision_type": "slice",
+        "declared_scope": "slice",
+        "model": "jev-1.13.0",
+        "overlock_risk": "bundled_extra_invariants",
+        "passed": true,
+        "provider": "jev",
+        "reason": "Gatekeeper (jev:jev-1.13.0) verified scope=slice (type=slice, risk=bundled_extra_invariants).",
+        "recommended_scope": "slice",
+        "scope_faithful_probability": 0.76
+      },
+      "history": [
+        {
+          "at": "2026-11-09T23:49:14+00:00",
+          "choice": "Dedicated EmDash Durable Object Playground Worker (EmDashPreviewDB per-visitor SQLite DOs, Cloudflare Rate Limiters + optional Turnstile, noindex) mounting @dinkuskit/openclaw/native (<openclaw-emdash-chat> + Agent Templates UI) locked to a shell-disabled, zsh Super VL Blobster Smith gateway, verified locally on 127.0.0.1:4332 first before any live deploy.",
+          "from": "proposed",
+          "implementation_ref": null,
+          "note": "user accepted the scoped decision",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "locked",
+          "verification_ref": null
+        },
+        {
+          "at": "2026-11-10T00:09:07+00:00",
+          "choice": "EmDash Playground mode on 127.0.0.1:4332 first and dev.blobster.dev without login, wired to @dinkuskit/openclaw (with native agent-templates support pointing to blobster.dev) and Blobster Smith.",
+          "from": "locked",
+          "implementation_ref": null,
+          "note": "bounded implementation recorded",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "implemented",
+          "verification_ref": null
+        },
+        {
+          "at": "2026-11-10T00:09:07+00:00",
+          "choice": "EmDash Playground mode on 127.0.0.1:4332 first and dev.blobster.dev without login, wired to @dinkuskit/openclaw (with native agent-templates support pointing to blobster.dev) and Blobster Smith.",
+          "from": "implemented",
+          "implementation_ref": "file:astro.playground.config.mjs,cloudflare/playground-worker.ts,src/playground-middleware.ts,cloudflare/wrangler.playground.jsonc",
+          "note": "verification recorded in cumulative context",
+          "repair_required": false,
+          "review_classifications": [],
+          "review_ref": null,
+          "review_result": null,
+          "review_source_identity": null,
+          "to": "verified",
+          "verification_ref": null
+        }
+      ],
+      "id": "g4-emdash-playground-openclaw",
+      "implementation_ref": "file:astro.playground.config.mjs,cloudflare/playground-worker.ts,src/playground-middleware.ts,cloudflare/wrangler.playground.jsonc",
+      "question": "Host dev.blobster.dev (and local 127.0.0.1:4332 preview first) as a zero-login EmDash Durable Object Playground wired to @dinkuskit/openclaw and a tool-locked Blobster Smith profile on Spark-1 Super VL?",
+      "rationale": "Owner explicitly requested EmDash playground mode (same as template-store), zero-login hosting for 20+ contributors, native agent-templates in @dinkuskit/openclaw, and immediate testing.",
+      "repair_required": false,
+      "review_classifications": [],
+      "review_history": [],
+      "review_ref": null,
+      "review_result": null,
+      "review_source_identity": null,
+      "revisit_when": null,
+      "scope": "slice",
+      "status": "verified",
+      "superseded_by": null,
+      "updated_at": "2026-11-10T00:09:07+00:00",
+      "verification_ref": "local:http://127.0.0.1:4332+dinkuskit/openclaw#6@1b658a7+spark1-super-vl"
     }
   ],
   "last_activation": {
@@ -866,5 +965,5 @@
   "status": "active",
   "title": "Blobster Factory Website (EmDash + Stitch)",
   "track_id": "gt-20261109172108-8ae778",
-  "updated_at": "2026-11-09T21:31:16+00:00"
+  "updated_at": "2026-11-10T00:09:07+00:00"
 }

@@ -32,3 +32,15 @@ REV=$(git rev-parse --short HEAD)
 ./node_modules/.bin/wrangler deploy --profile ryan --config cloudflare/redirect/wrangler.jsonc
 SITE_ORIGIN=https://blobster.dev node bin/verify-site.mjs https://blobster.dev
 ```
+
+## Zero-Login Maintainer Playground — `dev.blobster.dev`
+
+`dev.blobster.dev` runs as a completely separate Cloudflare Worker (`blobster-factory-playground` in `cloudflare/wrangler.playground.jsonc`) using EmDash's per-visitor SQLite Durable Object Playground (`EmDashPreviewDB`), isolated from production `blobster.dev` D1/R2/KV:
+
+1. **Per-Visitor CMS Sandbox**: Every visitor gets a disposable 1-hour SQLite Durable Object (`emdash_playground` cookie), auto-signed-in Playground Admin UI (`/_emdash/admin`), live visual editing toolbar, and `noindex, nofollow` headers.
+2. **Abuse & Bot Hardening (Zero Login for 20+ Contributors)**:
+   - Cloudflare Edge Rate Limiters: `PLAYGROUND_CREATION_LIMITER` (`5/min/IP`), `PLAYGROUND_GLOBAL_LIMITER` (`100/min`), and `PLAYGROUND_CHAT_LIMITER` (`12/min/IP` + `32 KiB` body cap).
+   - Optional Cloudflare Turnstile (`TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY`) verified fail-closed on `POST /_playground/init`.
+3. **Locked `Blobster Smith` ("Forge") Bridge (`cloudflare-account-split.md`)**:
+   - `OPENCLAW_PLAYGROUND_LOCK=1` locks `@dinkuskit/openclaw` settings, disables `/pair` and host exec approvals, hashes `emdash_playground` per visitor into isolated OpenClaw `sessionKey`s, and connects over a Cloudflare Access Service-Token–protected tunnel (`sm0ky.dev` in the Agent account) to `spark-1`'s tool-locked `Blobster Smith` profile backed by `$0` `nemotron-3.5-super-vl`.
+   - Local preview (`http://127.0.0.1:4332`): `npm run build:playground && npm run dev:playground`.
