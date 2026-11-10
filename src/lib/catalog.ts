@@ -52,30 +52,35 @@ interface CuratedGoodFor {
 export const CURATED_GOOD_FOR: Record<string, CuratedGoodFor> = {
   'blobster-smith': {
     functionalSummary:
-      'Anvil Forgemaster who forges solo-ready, schema-verified OpenClaw Agent Templates from a fresh idea, a past working session, or an API/CLI tool—complete with trust gates and zero-exclusion linting.',
+      'Anvil Forgemaster who creates, evolves, splits, and retires solo-ready, schema-verified OpenClaw Agent Templates across four lifecycle modes—from a fresh idea, a past working session, an API/CLI tool, or an existing bot ready to consolidate.',
     best_for:
-      "Turning a plain-English idea, a recurring chore you're tired of doing by hand, or a tool you already use into your own custom OpenClaw agent.",
+      'Creating a new OpenClaw agent from a plain-English idea or tool—and evolving, splitting, or retiring your existing agents as your day-to-day workflow changes.',
     good_for_items: [
       {
-        lead: 'Build a custom agent from a plain request',
+        lead: 'Create a focused agent from a plain request',
         detail:
           'tell Smith what takes up your time; he asks 2–3 quick questions to lock one clear job, hard anti-jobs, schedule, and what needs your approval before acting.',
       },
       {
-        lead: 'Turn past work—or overlapping bots—into a clean skill',
+        lead: 'Evolve an existing agent or turn past work into a skill',
         detail:
-          'point him at a past session to make it repeatable, or consolidate redundant bots into one sharp agent with zero leftover tools.',
+          'point him at a recent session or a bot whose scope is drifting so he can tighten its rules and extract what worked into a repeatable skill.',
       },
       {
         lead: 'Connect the tools and apps you already use',
         detail:
           'wires up your CLIs, APIs, and quiet-on-clean schedules that never blind-retry on errors and only ping you when something real needs attention.',
       },
+      {
+        lead: 'Split overloaded bots or retire old ones cleanly',
+        detail:
+          'break a bloated "do-everything" bot into focused specialists, or consolidate overlapping bots while salvaging their best skills and listing keys/schedules to turn off.',
+      },
     ],
     starter_prompts: [
       'I want an agent to help me manage my website and handle the day-to-day tasks that I spend time on.',
       'Build me an agent that tracks unpaid invoices and client threads, and drafts follow-ups for my sign-off.',
-      'Make me a morning research scout that watches competitors and industry feeds and only alerts me when something big drops.',
+      'My current research bot is doing too many things at once—help me tighten it up, save what works as a skill, and split off the rest.',
     ],
   },
   'blobster-sculptor': {
