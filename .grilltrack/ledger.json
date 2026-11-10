@@ -934,15 +934,23 @@
       "rationale": "Owner preferred R2-C1 after dropping the 'What it refuses' block from Round 1.",
       "repair_required": false,
       "review_classifications": [],
-      "review_history": [],
-      "review_ref": null,
-      "review_result": null,
-      "review_source_identity": null,
+      "review_history": [
+        {
+          "classifications": [],
+          "ref": ".grilltrack/proof/g4-good-for-verification.json",
+          "result": "clean",
+          "reviewed_at": "2026-11-10T00:19:12+00:00",
+          "source_identity": "git:6c0ae3d6b14fc682ce5d2b5fc6fcb02e37dc514a"
+        }
+      ],
+      "review_ref": ".grilltrack/proof/g4-good-for-verification.json",
+      "review_result": "clean",
+      "review_source_identity": "git:6c0ae3d6b14fc682ce5d2b5fc6fcb02e37dc514a",
       "revisit_when": null,
       "scope": "durable",
       "status": "verified",
       "superseded_by": null,
-      "updated_at": "2026-11-10T00:18:55+00:00",
+      "updated_at": "2026-11-10T00:19:12+00:00",
       "verification_ref": ".grilltrack/proof/g4-good-for-verification.json"
     }
   ],
@@ -957,5 +965,5 @@
   "status": "active",
   "title": "Blobster Factory Website (EmDash + Stitch)",
   "track_id": "gt-20261109172108-8ae778",
-  "updated_at": "2026-11-10T00:18:55+00:00"
+  "updated_at": "2026-11-10T00:19:12+00:00"
 }
