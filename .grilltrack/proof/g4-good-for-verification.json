@@ -1,0 +1,41 @@
+{
+  "timestamp": "2026-11-10T00:17:32.688Z",
+  "routes": [
+    {
+      "slug": "blobster-smith",
+      "viewport": "desktop",
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "hasDossier": true,
+      "starterCount": 3,
+      "heroSummary": ""
+    },
+    {
+      "slug": "blobster-smith",
+      "viewport": "mobile",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "hasDossier": true,
+      "starterCount": 3,
+      "heroSummary": ""
+    },
+    {
+      "slug": "blobster-sculptor",
+      "viewport": "desktop",
+      "scrollWidth": 1440,
+      "innerWidth": 1440,
+      "hasDossier": true,
+      "starterCount": 3,
+      "heroSummary": ""
+    },
+    {
+      "slug": "blobster-sculptor",
+      "viewport": "mobile",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "hasDossier": true,
+      "starterCount": 3,
+      "heroSummary": ""
+    }
+  ]
+}
