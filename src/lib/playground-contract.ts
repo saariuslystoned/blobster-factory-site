@@ -7,10 +7,10 @@ export const PLAYGROUND_CHAT_IP_LIMITER_BINDING = 'PLAYGROUND_CHAT_IP_LIMITER';
 
 /** Every limiter the playground must have; a missing one fails closed. */
 export const PLAYGROUND_LIMITER_BINDINGS = [
-  'PLAYGROUND_CREATION_LIMITER',
-  'PLAYGROUND_GLOBAL_LIMITER',
-  'PLAYGROUND_CHAT_LIMITER',
-  'PLAYGROUND_CHAT_IP_LIMITER',
+  PLAYGROUND_CREATION_LIMITER_BINDING,
+  PLAYGROUND_GLOBAL_LIMITER_BINDING,
+  PLAYGROUND_CHAT_LIMITER_BINDING,
+  PLAYGROUND_CHAT_IP_LIMITER_BINDING,
 ] as const;
 
 export function missingPlaygroundLimiters(env: Record<string, unknown>): string[] {
@@ -44,6 +44,9 @@ export function extractClientIp(request: Request): string {
 export function clientRateKey(request: Request): string {
   const ip = extractClientIp(request);
   if (!ip.includes(':')) return ip;
+  // IPv4-mapped or -embedded IPv6 (::ffff:203.0.113.9): key on the IPv4 address.
+  const dotted = /(\d{1,3}(?:\.\d{1,3}){3})$/.exec(ip);
+  if (dotted) return dotted[1];
   const [head, tail = ''] = ip.toLowerCase().split('::');
   const headParts = head ? head.split(':') : [];
   const tailParts = ip.includes('::') && tail ? tail.split(':') : [];
@@ -104,25 +107,46 @@ export const PLAYGROUND_CHAT_MAX_BYTES = 32_768;
  * fast path only; a missing or chunked length is measured by reading a clone
  * of the stream, stopping as soon as the cap is passed.
  */
-export async function exceedsBodyLimit(request: Request, maxBytes: number): Promise<boolean> {
+/**
+ * Reads a clone of the body up to `maxBytes`. `tooLarge` is true as soon as
+ * the cap is passed (a declared Content-Length over the cap is refused
+ * without reading); otherwise `bytes` holds the whole body.
+ */
+export async function readCappedBody(
+  request: Request,
+  maxBytes: number,
+): Promise<{ tooLarge: boolean; bytes: Uint8Array }> {
   const declared = request.headers.get('content-length');
-  if (declared !== null && /^\d+$/.test(declared.trim())) {
-    // The runtime holds the body to its declared length, so this is exact.
-    return Number(declared) > maxBytes;
+  if (declared !== null && /^\d+$/.test(declared.trim()) && Number(declared) > maxBytes) {
+    return { tooLarge: true, bytes: new Uint8Array() };
   }
-  if (!request.body) return false;
+  if (!request.body) return { tooLarge: false, bytes: new Uint8Array() };
   const reader = request.clone().body!.getReader();
+  const chunks: Uint8Array[] = [];
   let total = 0;
   try {
     for (;;) {
       const { done, value } = await reader.read();
-      if (done) return false;
+      if (done) break;
       total += value.byteLength;
-      if (total > maxBytes) return true;
+      if (total > maxBytes) return { tooLarge: true, bytes: new Uint8Array() };
+      chunks.push(value);
     }
   } finally {
     reader.cancel().catch(() => {});
   }
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return { tooLarge: false, bytes };
+}
+
+/** True when the request body is larger than `maxBytes` (see readCappedBody). */
+export async function exceedsBodyLimit(request: Request, maxBytes: number): Promise<boolean> {
+  return (await readCappedBody(request, maxBytes)).tooLarge;
 }
 
 const OPENCLAW_PLUGIN_API_PREFIX = '/_emdash/api/plugins/dinkus-openclaw/';
@@ -148,29 +172,44 @@ export function isOpenclawPluginPost(method: string, normalizedPath: string): bo
   return method === 'POST' && `${normalizedPath}/`.startsWith(OPENCLAW_PLUGIN_API_PREFIX);
 }
 
-/** OpenClaw chat actions that run a model turn on the Forge gateway. */
-export const PLAYGROUND_COSTLY_CHAT_ACTIONS = new Set([
-  'send_message',
-  'steer_turn',
-  'revise_proposal',
-  'probe_gateway',
+/**
+ * OpenClaw chat actions that never reach the model (UI bookkeeping). Every
+ * other action, including unknown or unreadable ones, counts as a Forge turn.
+ * Actions are compared after trimming, the way OpenClaw reads them.
+ */
+export const PLAYGROUND_FREE_CHAT_ACTIONS = new Set([
+  'get_workspace',
+  'create_thread',
+  'toggle_thread_visibility',
+  'stamp_proposal_rev',
+  'begin_apply_proposal',
+  'record_proposal_receipt',
+  'reconcile_proposal',
+  'stop_turn',
 ]);
 
-async function readChatAction(request: Request): Promise<string | undefined> {
+function readChatAction(bytes: Uint8Array): string | undefined {
   try {
-    const body = (await request.clone().json()) as { action?: unknown };
-    return typeof body?.action === 'string' ? body.action : undefined;
+    const body = JSON.parse(new TextDecoder().decode(bytes)) as { action?: unknown };
+    return typeof body?.action === 'string' ? body.action.trim() : undefined;
   } catch {
     return undefined;
   }
 }
 
+function tooManyTurns(message: string): Response {
+  return Response.json(
+    { ok: false, error: message },
+    { status: 429, headers: { 'Retry-After': '60', 'Cache-Control': 'no-store' } },
+  );
+}
+
 /**
  * 32 KiB cap on every OpenClaw plugin POST, plus the Forge turn limiters on
- * the actions that reach the model. UI bookkeeping (get_workspace, receipts,
- * create_thread...) is not counted. `limiter` is keyed on the playground
- * session, so people behind one office IP each get their own budget;
- * `ipLimiter` caps the address (IPv6 /64) across all its sessions.
+ * every action that may reach the model. UI bookkeeping
+ * (PLAYGROUND_FREE_CHAT_ACTIONS) is not counted. `limiter` is keyed on the
+ * playground session, so people behind one office IP each get their own
+ * budget; `ipLimiter` caps the address (IPv6 /64) across all its sessions.
  */
 export async function checkPlaygroundChatLimit(
   request: Request,
@@ -178,7 +217,8 @@ export async function checkPlaygroundChatLimit(
   sessionToken?: string,
   ipLimiter?: RateLimiterBinding,
 ): Promise<Response | undefined> {
-  if (await exceedsBodyLimit(request, PLAYGROUND_CHAT_MAX_BYTES)) {
+  const body = await readCappedBody(request, PLAYGROUND_CHAT_MAX_BYTES);
+  if (body.tooLarge) {
     return Response.json(
       {
         ok: false,
@@ -189,26 +229,16 @@ export async function checkPlaygroundChatLimit(
   }
 
   if (!limiter && !ipLimiter) return undefined;
-  const action = await readChatAction(request);
-  // Unknown or unreadable actions count, so nothing reaches the model uncounted.
-  if (action !== undefined && !PLAYGROUND_COSTLY_CHAT_ACTIONS.has(action)) return undefined;
+  const action = readChatAction(body.bytes);
+  if (action !== undefined && PLAYGROUND_FREE_CHAT_ACTIONS.has(action)) return undefined;
   const ipKey = `blobster-playground:chat:ip:${clientRateKey(request)}`;
   const sessionKey = sessionToken ? `blobster-playground:chat:session:${sessionToken}` : ipKey;
-  // Per session (12/min), plus a looser per-address cap (60/min) so one
-  // address cannot multiply its budget by opening many sessions.
-  const sessionAllowed = limiter ? (await limiter.limit({ key: sessionKey })).success : true;
-  const ipAllowed =
-    sessionAllowed && ipLimiter ? (await ipLimiter.limit({ key: ipKey })).success : sessionAllowed;
-  if (!ipAllowed) {
-    return Response.json(
-      {
-        ok: false,
-        error: 'Playground Forge rate limit reached (12 turns/min). Wait a moment and try again.',
-      },
-      {
-        status: 429,
-        headers: { 'Retry-After': '60', 'Cache-Control': 'no-store' },
-      },
+  if (limiter && !(await limiter.limit({ key: sessionKey })).success) {
+    return tooManyTurns('Playground Forge rate limit reached (12 turns/min). Wait a moment and try again.');
+  }
+  if (ipLimiter && !(await ipLimiter.limit({ key: ipKey })).success) {
+    return tooManyTurns(
+      'Too many Forge turns from your network right now (60/min shared across sessions). Wait a moment and try again.',
     );
   }
   return undefined;

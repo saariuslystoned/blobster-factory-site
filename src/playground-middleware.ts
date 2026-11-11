@@ -18,7 +18,6 @@ import {
   PLAYGROUND_CREATION_LIMITER_BINDING,
   PLAYGROUND_GLOBAL_LIMITER_BINDING,
   playgroundAdmissionKey,
-  readCookie,
   signPlaygroundAdmission,
   verifyTurnstileIfConfigured,
   type RateLimiterBinding,
@@ -80,7 +79,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     // path. Only sessions that passed the init gate above may reach it.
     const admitted = await isAdmittedPlaygroundSession(
       token,
-      readCookie(request, PLAYGROUND_ADMIT_COOKIE_NAME),
+      context.cookies.get(PLAYGROUND_ADMIT_COOKIE_NAME)?.value || undefined,
       runtimeEnv,
     );
     if (!admitted) {

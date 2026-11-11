@@ -39,7 +39,11 @@ export default {
 
     const url = new URL(request.url);
     const requestOrigin = url.origin;
-    process.env.EMDASH_SITE_URL ||= requestOrigin;
+    // Public origin from config, not from whichever request reached the
+    // isolate first; the request origin is only a last resort.
+    const configuredSiteUrl =
+      typeof env.PLAYGROUND_SITE_URL === 'string' ? env.PLAYGROUND_SITE_URL.trim() : '';
+    process.env.EMDASH_SITE_URL ||= configuredSiteUrl || requestOrigin;
     if (!process.env.EMDASH_ENCRYPTION_KEY) {
       try {
         process.env.EMDASH_ENCRYPTION_KEY = await derivePlaygroundEncryptionKey(env);

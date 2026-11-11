@@ -37,6 +37,7 @@ writeFileSync(
     `OPENCLAW_PLAYGROUND_ENABLED_COLLECTIONS=templates`,
     `OPENCLAW_PLAYGROUND_LOCK=1`,
     `PLAYGROUND_SETTINGS_SEED=${settingsSeed}`,
+    `PLAYGROUND_SITE_URL=http://127.0.0.1:${port}`,
   ].join('\n') + '\n',
   { mode: 0o600 },
 );

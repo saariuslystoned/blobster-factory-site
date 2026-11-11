@@ -199,9 +199,14 @@ describe('Blobster Factory EmDash Playground Contract', () => {
     await checkPlaygroundChatLimit(post({ action: 'send_message', prompt: 'hi' }), limiter, 'tok');
     await checkPlaygroundChatLimit(post({ action: 'steer_turn' }), limiter);
     await checkPlaygroundChatLimit(post({ nonsense: true }), limiter, 'tok');
+    await checkPlaygroundChatLimit(post({ action: ' send_message\n' }), limiter, 'tok');
+    await checkPlaygroundChatLimit(post({ action: 'some_new_action' }), limiter, 'tok');
+    assert.equal(await checkPlaygroundChatLimit(post({ action: ' get_workspace ' }), limiter, 'tok'), undefined);
     assert.deepEqual(keys, [
       'blobster-playground:chat:session:tok',
       'blobster-playground:chat:ip:198.51.100.7',
+      'blobster-playground:chat:session:tok',
+      'blobster-playground:chat:session:tok',
       'blobster-playground:chat:session:tok',
     ]);
   });
@@ -212,6 +217,7 @@ describe('Blobster Factory EmDash Playground Contract', () => {
     assert.equal(clientRateKey(req('2001:db8:1:2:ffff:ffff:ffff:ffff')), '2001:db8:1:2::/64');
     assert.equal(clientRateKey(req('2001:db8::1')), '2001:db8:0:0::/64');
     assert.equal(clientRateKey(req('203.0.113.9')), '203.0.113.9');
+    assert.equal(clientRateKey(req('::ffff:203.0.113.9')), '203.0.113.9');
   });
 
   it('signs admissions with EMDASH_ENCRYPTION_KEY when no seed is set, and refuses with neither', async () => {
@@ -250,7 +256,9 @@ describe('Blobster Factory EmDash Playground Contract', () => {
     const ipKeys: string[] = [];
     const ok = { limit: async () => ({ success: true }) };
     const ipFull = { limit: async ({ key }: { key: string }) => (ipKeys.push(key), { success: false }) };
-    assert.equal((await checkPlaygroundChatLimit(send(), ok, 'fresh-session', ipFull))?.status, 429);
+    const ipRefusal = await checkPlaygroundChatLimit(send(), ok, 'fresh-session', ipFull);
+    assert.equal(ipRefusal?.status, 429);
+    assert.match(((await ipRefusal!.json()) as { error: string }).error, /60\/min/);
     assert.deepEqual(ipKeys, ['blobster-playground:chat:ip:2001:db8:9:9::/64']);
 
     assert.deepEqual(missingPlaygroundLimiters({ PLAYGROUND_CREATION_LIMITER: ok, PLAYGROUND_GLOBAL_LIMITER: ok }), [

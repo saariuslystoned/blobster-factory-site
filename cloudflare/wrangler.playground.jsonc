@@ -19,6 +19,7 @@
   ],
   "vars": {
     "CATALOG_ORIGIN": "https://blobster.dev",
+    "PLAYGROUND_SITE_URL": "https://dev.blobster.dev",
     "BLOBSTER_REVISION": "playground",
     "OPENCLAW_PLAYGROUND_AGENT_ID": "blobster-smith",
     "OPENCLAW_PLAYGROUND_ENABLED_COLLECTIONS": "templates",
