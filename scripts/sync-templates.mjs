@@ -129,7 +129,20 @@ async function main() {
     execFileSync('tar', ['-czf', tarballPath, '--exclude=.DS_Store', '-C', TEMPLATES_SOURCE, slug]);
     const tgzBuf = await fs.readFile(tarballPath);
     const sha256 = createHash('sha256').update(tgzBuf).digest('hex');
-    workshopTarballs[slug] = { sha256, bytes: String(tgzBuf.byteLength) };
+    workshopTarballs[slug] = {
+      sha256,
+      bytes: String(tgzBuf.byteLength),
+      files: {
+        claw_md: clawMd,
+        soul_md: soulMd,
+        agents_md: agentsMd,
+        identity_md: identityMd,
+        tools_md: toolsMd,
+        skill_name: skill.name,
+        skill_md: skill.content,
+        design_json: designJson,
+      },
+    };
     const meta = workshopMeta[slug];
 
     const titleMatch = svgContent.match(/<title>([^<]+)<\/title>/);
@@ -366,8 +379,8 @@ async function main() {
   };
 
   await fs.writeFile(SEED_PATH, JSON.stringify(seed, null, 2) + '\n', 'utf8');
-  // The site reads these at build time so the install checksum always matches the
-  // deployed public/t/*.tgz, even when the CMS row was seeded from an older sync.
+  // The site reads these at build time so the install checksum and file panels always
+  // match the deployed public/t/*.tgz, even when the CMS row was seeded from an older sync.
   await fs.writeFile(WORKSHOP_TARBALLS_PATH, JSON.stringify(workshopTarballs, null, 2) + '\n', 'utf8');
   console.log(
     JSON.stringify(
