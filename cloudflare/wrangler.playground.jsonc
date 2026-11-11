@@ -1,0 +1,81 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "blobster-factory-playground",
+  "main": "./playground-worker.ts",
+  "account_id": "cddb32366789cab1bdf4c25584dc1920",
+  "compatibility_date": "2026-09-30",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "routes": [
+    {
+      "pattern": "dev.blobster.dev",
+      "custom_domain": true
+    }
+  ],
+  "vars": {
+    "CATALOG_ORIGIN": "https://blobster.dev",
+    "PLAYGROUND_SITE_URL": "https://dev.blobster.dev",
+    "BLOBSTER_REVISION": "playground",
+    "OPENCLAW_PLAYGROUND_AGENT_ID": "blobster-smith",
+    "OPENCLAW_PLAYGROUND_ENABLED_COLLECTIONS": "templates",
+    "OPENCLAW_PLAYGROUND_LOCK": "1"
+  },
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "../dist-playground/client",
+    "run_worker_first": true
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "PLAYGROUND_DB",
+        "class_name": "EmDashPreviewDB"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["EmDashPreviewDB"]
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "PLAYGROUND_CREATION_LIMITER",
+      "namespace_id": "2026110901",
+      "simple": {
+        "limit": 5,
+        "period": 60
+      }
+    },
+    {
+      "name": "PLAYGROUND_GLOBAL_LIMITER",
+      "namespace_id": "2026110902",
+      "simple": {
+        "limit": 100,
+        "period": 60
+      }
+    },
+    {
+      "name": "PLAYGROUND_CHAT_LIMITER",
+      "namespace_id": "2026110903",
+      "simple": {
+        "limit": 12,
+        "period": 60
+      }
+    },
+    {
+      "name": "PLAYGROUND_CHAT_IP_LIMITER",
+      "namespace_id": "2026110904",
+      "simple": {
+        "limit": 60,
+        "period": 60
+      }
+    }
+  ]
+}

@@ -116,12 +116,23 @@ async function main() {
       'blobster-design.json',
       'cutout-256.png',
       'hero-512.png',
+      'sprite-2x2.png',
       'blobster-idle.gif',
       'blobster-wave.gif',
     ]) {
       await copyIfExists(
         path.join(tplDir, 'workspace', 'avatars', asset),
         path.join(destAssets, asset),
+      );
+    }
+    await copyIfExists(
+      path.join(tplDir, 'assets', 'icon.png'),
+      path.join(destAssets, 'icon.png'),
+    );
+    for (const defAsset of ['blobster.svg', 'blobster-design.json', 'icon.png']) {
+      await copyIfExists(
+        path.join(tplDir, 'workspace', 'defaults', defAsset),
+        path.join(destAssets, 'defaults', defAsset),
       );
     }
 

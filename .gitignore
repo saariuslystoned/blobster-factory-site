@@ -1,9 +1,12 @@
 node_modules/
 dist/
+dist-playground/
 .astro/
 catalog.db*
 uploads/
 .wrangler/
+.dev.vars
+.dev.vars.*
 .env
 .env.*
 .DS_Store
