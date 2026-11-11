@@ -67,6 +67,14 @@
         "limit": 12,
         "period": 60
       }
+    },
+    {
+      "name": "PLAYGROUND_CHAT_IP_LIMITER",
+      "namespace_id": "2026110904",
+      "simple": {
+        "limit": 60,
+        "period": 60
+      }
     }
   ]
 }

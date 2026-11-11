@@ -40,7 +40,17 @@ export default {
     const url = new URL(request.url);
     const requestOrigin = url.origin;
     process.env.EMDASH_SITE_URL ||= requestOrigin;
-    process.env.EMDASH_ENCRYPTION_KEY ||= await derivePlaygroundEncryptionKey(env);
+    if (!process.env.EMDASH_ENCRYPTION_KEY) {
+      try {
+        process.env.EMDASH_ENCRYPTION_KEY = await derivePlaygroundEncryptionKey(env);
+      } catch (error) {
+        console.error('[blobster-playground]', error);
+        return Response.json(
+          { error: { code: 'PLAYGROUND_MISCONFIGURED', message: 'The playground is not configured yet.' } },
+          { status: 503, headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' } },
+        );
+      }
+    }
 
     let response = await (
       astroHandler as {

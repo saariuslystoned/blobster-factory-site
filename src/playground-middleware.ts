@@ -8,9 +8,11 @@ import {
   checkPlaygroundInitLimit,
   isAdmittedPlaygroundSession,
   isOpenclawPluginPost,
+  missingPlaygroundLimiters,
   normalizeGatePath,
   openclawPlaygroundEnv,
   PLAYGROUND_ADMIT_COOKIE_NAME,
+  PLAYGROUND_CHAT_IP_LIMITER_BINDING,
   PLAYGROUND_CHAT_LIMITER_BINDING,
   PLAYGROUND_COOKIE_NAME,
   PLAYGROUND_CREATION_LIMITER_BINDING,
@@ -33,10 +35,7 @@ function refuse(status: number, code: string, message: string): Response {
 }
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const runtimeEnv: Record<string, unknown> = {
-    ...(typeof process !== 'undefined' && process.env ? process.env : {}),
-    ...((env as Record<string, unknown>) ?? {}),
-  };
+  const runtimeEnv = (env as Record<string, unknown>) ?? {};
 
   const g = globalThis as { __openclawPlaygroundEnv?: Record<string, unknown> };
   g.__openclawPlaygroundEnv ??= openclawPlaygroundEnv(runtimeEnv);
@@ -46,6 +45,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
     await playgroundAdmissionKey(runtimeEnv);
   } catch (error) {
     console.error('[blobster-playground]', error);
+    return refuse(503, 'PLAYGROUND_MISCONFIGURED', 'The playground is not configured yet.');
+  }
+  const missingLimiters = missingPlaygroundLimiters(runtimeEnv);
+  if (missingLimiters.length > 0) {
+    console.error('[blobster-playground] missing rate limiter bindings:', missingLimiters.join(', '));
     return refuse(503, 'PLAYGROUND_MISCONFIGURED', 'The playground is not configured yet.');
   }
 
@@ -90,6 +94,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       request,
       runtimeEnv[PLAYGROUND_CHAT_LIMITER_BINDING] as RateLimiterBinding | undefined,
       token,
+      runtimeEnv[PLAYGROUND_CHAT_IP_LIMITER_BINDING] as RateLimiterBinding | undefined,
     );
     if (chatLimited) return chatLimited;
   }

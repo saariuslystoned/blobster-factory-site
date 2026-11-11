@@ -3,6 +3,22 @@ export const PLAYGROUND_TTL_SECONDS = 60 * 60;
 export const PLAYGROUND_CREATION_LIMITER_BINDING = 'PLAYGROUND_CREATION_LIMITER';
 export const PLAYGROUND_GLOBAL_LIMITER_BINDING = 'PLAYGROUND_GLOBAL_LIMITER';
 export const PLAYGROUND_CHAT_LIMITER_BINDING = 'PLAYGROUND_CHAT_LIMITER';
+export const PLAYGROUND_CHAT_IP_LIMITER_BINDING = 'PLAYGROUND_CHAT_IP_LIMITER';
+
+/** Every limiter the playground must have; a missing one fails closed. */
+export const PLAYGROUND_LIMITER_BINDINGS = [
+  'PLAYGROUND_CREATION_LIMITER',
+  'PLAYGROUND_GLOBAL_LIMITER',
+  'PLAYGROUND_CHAT_LIMITER',
+  'PLAYGROUND_CHAT_IP_LIMITER',
+] as const;
+
+export function missingPlaygroundLimiters(env: Record<string, unknown>): string[] {
+  return PLAYGROUND_LIMITER_BINDINGS.filter((name) => {
+    const binding = env[name] as { limit?: unknown } | undefined;
+    return typeof binding?.limit !== 'function';
+  });
+}
 
 export interface RateLimiterBinding {
   limit(options: { key: string }): Promise<{ success: boolean }>;
@@ -150,16 +166,17 @@ async function readChatAction(request: Request): Promise<string | undefined> {
 }
 
 /**
- * 32 KiB cap on every OpenClaw plugin POST, plus the Forge turn limiter on
+ * 32 KiB cap on every OpenClaw plugin POST, plus the Forge turn limiters on
  * the actions that reach the model. UI bookkeeping (get_workspace, receipts,
- * create_thread...) is not counted. The limiter is keyed on the playground
- * session when there is one, so people behind one office IP each get their
- * own budget; requests without a session fall back to the client address.
+ * create_thread...) is not counted. `limiter` is keyed on the playground
+ * session, so people behind one office IP each get their own budget;
+ * `ipLimiter` caps the address (IPv6 /64) across all its sessions.
  */
 export async function checkPlaygroundChatLimit(
   request: Request,
   limiter?: RateLimiterBinding,
   sessionToken?: string,
+  ipLimiter?: RateLimiterBinding,
 ): Promise<Response | undefined> {
   if (await exceedsBodyLimit(request, PLAYGROUND_CHAT_MAX_BYTES)) {
     return Response.json(
@@ -171,15 +188,18 @@ export async function checkPlaygroundChatLimit(
     );
   }
 
-  if (!limiter) return undefined;
+  if (!limiter && !ipLimiter) return undefined;
   const action = await readChatAction(request);
   // Unknown or unreadable actions count, so nothing reaches the model uncounted.
   if (action !== undefined && !PLAYGROUND_COSTLY_CHAT_ACTIONS.has(action)) return undefined;
-  const key = sessionToken
-    ? `blobster-playground:chat:session:${sessionToken}`
-    : `blobster-playground:chat:ip:${clientRateKey(request)}`;
-  const allowed = await limiter.limit({ key });
-  if (!allowed.success) {
+  const ipKey = `blobster-playground:chat:ip:${clientRateKey(request)}`;
+  const sessionKey = sessionToken ? `blobster-playground:chat:session:${sessionToken}` : ipKey;
+  // Per session (12/min), plus a looser per-address cap (60/min) so one
+  // address cannot multiply its budget by opening many sessions.
+  const sessionAllowed = limiter ? (await limiter.limit({ key: sessionKey })).success : true;
+  const ipAllowed =
+    sessionAllowed && ipLimiter ? (await ipLimiter.limit({ key: ipKey })).success : sessionAllowed;
+  if (!ipAllowed) {
     return Response.json(
       {
         ok: false,
@@ -341,8 +361,9 @@ export function canRewriteBody(request: Request, response: Response): boolean {
 
 /**
  * Only the OpenClaw playground settings, for @dinkuskit/openclaw's
- * `globalThis.__openclawPlaygroundEnv`. Other secrets (Turnstile, the settings
- * seed) stay out of reach of code that reads that global.
+ * `globalThis.__openclawPlaygroundEnv`, so that global does not also carry
+ * the Turnstile secret or the settings seed. This narrows one global only:
+ * with nodejs_compat, process.env still holds every Worker secret.
  */
 export function openclawPlaygroundEnv(env: Record<string, unknown>): Record<string, string> {
   const out: Record<string, string> = {};
@@ -408,16 +429,7 @@ export function isUsablePlaygroundSession(token: string, now = Date.now()): bool
 }
 
 export function readPlaygroundSession(request: Request): string | undefined {
-  const header = request.headers.get('cookie');
-  if (!header) return undefined;
-  for (const part of header.split(';')) {
-    const index = part.indexOf('=');
-    if (index === -1) continue;
-    if (part.slice(0, index).trim() === PLAYGROUND_COOKIE_NAME) {
-      return part.slice(index + 1).trim();
-    }
-  }
-  return undefined;
+  return readCookie(request, PLAYGROUND_COOKIE_NAME);
 }
 
 export function withoutPlaygroundSession(request: Request): Request {
@@ -585,7 +597,15 @@ export function readCookie(request: Request, name: string): string | undefined {
   for (const part of header.split(';')) {
     const eq = part.indexOf('=');
     if (eq === -1) continue;
-    if (part.slice(0, eq).trim() === name) return part.slice(eq + 1).trim() || undefined;
+    if (part.slice(0, eq).trim() !== name) continue;
+    const raw = part.slice(eq + 1).trim();
+    if (!raw) return undefined;
+    // Decode like Astro's cookies.get, which EmDash uses for the same cookie.
+    try {
+      return decodeURIComponent(raw);
+    } catch {
+      return raw;
+    }
   }
   return undefined;
 }

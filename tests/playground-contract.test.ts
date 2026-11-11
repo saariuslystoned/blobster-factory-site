@@ -8,6 +8,7 @@ import {
   canRewriteBody,
   clientRateKey,
   derivePlaygroundEncryptionKey,
+  missingPlaygroundLimiters,
   openclawPlaygroundEnv,
   exceedsBodyLimit,
   isAdmittedPlaygroundSession,
@@ -237,5 +238,24 @@ describe('Blobster Factory EmDash Playground Contract', () => {
       }),
       { OPENCLAW_PLAYGROUND_AGENT_ID: 'blobster-smith', OPENCLAW_PLAYGROUND_GATEWAY_TOKEN: 'gw' },
     );
+  });
+
+  it('caps model turns per address across sessions, and fails closed without limiter bindings', async () => {
+    const send = () =>
+      new Request('https://dev.blobster.dev/_emdash/api/plugins/dinkus-openclaw/chat', {
+        method: 'POST',
+        headers: { 'cf-connecting-ip': '2001:db8:9:9::5' },
+        body: JSON.stringify({ action: 'send_message' }),
+      });
+    const ipKeys: string[] = [];
+    const ok = { limit: async () => ({ success: true }) };
+    const ipFull = { limit: async ({ key }: { key: string }) => (ipKeys.push(key), { success: false }) };
+    assert.equal((await checkPlaygroundChatLimit(send(), ok, 'fresh-session', ipFull))?.status, 429);
+    assert.deepEqual(ipKeys, ['blobster-playground:chat:ip:2001:db8:9:9::/64']);
+
+    assert.deepEqual(missingPlaygroundLimiters({ PLAYGROUND_CREATION_LIMITER: ok, PLAYGROUND_GLOBAL_LIMITER: ok }), [
+      'PLAYGROUND_CHAT_LIMITER',
+      'PLAYGROUND_CHAT_IP_LIMITER',
+    ]);
   });
 });
