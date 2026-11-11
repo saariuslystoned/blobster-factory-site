@@ -3,6 +3,7 @@ import { EmDashPreviewDB } from '@emdash-cms/cloudflare/db/playground';
 import { PluginBridge } from '@emdash-cms/cloudflare/worker';
 import {
   applyPlaygroundNoIndex,
+  canRewriteBody,
   CLEAR_PLAYGROUND_COOKIE,
   derivePlaygroundEncryptionKey,
   dropRewrittenBodyHeaders,
@@ -66,7 +67,7 @@ export default {
       headers.append('Set-Cookie', CLEAR_PLAYGROUND_COOKIE);
     }
 
-    if (!headers.get('content-type')?.includes('text/html')) {
+    if (!headers.get('content-type')?.includes('text/html') || !canRewriteBody(request, response)) {
       return new Response(response.body, {
         status: response.status,
         statusText: response.statusText,

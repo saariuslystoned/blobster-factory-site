@@ -9,11 +9,13 @@ import {
   isAdmittedPlaygroundSession,
   isOpenclawPluginPost,
   normalizeGatePath,
+  openclawPlaygroundEnv,
   PLAYGROUND_ADMIT_COOKIE_NAME,
   PLAYGROUND_CHAT_LIMITER_BINDING,
   PLAYGROUND_COOKIE_NAME,
   PLAYGROUND_CREATION_LIMITER_BINDING,
   PLAYGROUND_GLOBAL_LIMITER_BINDING,
+  playgroundAdmissionKey,
   readCookie,
   signPlaygroundAdmission,
   verifyTurnstileIfConfigured,
@@ -36,8 +38,16 @@ export const onRequest = defineMiddleware(async (context, next) => {
     ...((env as Record<string, unknown>) ?? {}),
   };
 
-  (globalThis as { __openclawPlaygroundEnv?: Record<string, unknown> }).__openclawPlaygroundEnv =
-    runtimeEnv;
+  const g = globalThis as { __openclawPlaygroundEnv?: Record<string, unknown> };
+  g.__openclawPlaygroundEnv ??= openclawPlaygroundEnv(runtimeEnv);
+
+  // Fail before EmDash can create a sandbox if no admission secret is set.
+  try {
+    await playgroundAdmissionKey(runtimeEnv);
+  } catch (error) {
+    console.error('[blobster-playground]', error);
+    return refuse(503, 'PLAYGROUND_MISCONFIGURED', 'The playground is not configured yet.');
+  }
 
   const request = context.request;
   const method = request.method.toUpperCase();
@@ -47,7 +57,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
   // EmDash matches its own playground paths on the raw pathname, so gate on
   // the raw form too: "/Playground" must not count as the ungated page.
   const rawPath = context.url.pathname;
-  const token = readCookie(request, PLAYGROUND_COOKIE_NAME);
+  // Read the session the same way EmDash does (Astro cookies, URI-decoded).
+  const token = context.cookies.get(PLAYGROUND_COOKIE_NAME)?.value || undefined;
   const isInit = rawPath === INIT_PATH && method === 'POST';
 
   if (isInit) {
@@ -78,6 +89,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     const chatLimited = await checkPlaygroundChatLimit(
       request,
       runtimeEnv[PLAYGROUND_CHAT_LIMITER_BINDING] as RateLimiterBinding | undefined,
+      token,
     );
     if (chatLimited) return chatLimited;
   }

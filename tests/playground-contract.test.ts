@@ -5,7 +5,10 @@ import {
   applyPlaygroundNoIndex,
   checkPlaygroundChatLimit,
   checkPlaygroundInitLimit,
+  canRewriteBody,
+  clientRateKey,
   derivePlaygroundEncryptionKey,
+  openclawPlaygroundEnv,
   exceedsBodyLimit,
   isAdmittedPlaygroundSession,
   isOpenclawPluginPost,
@@ -178,5 +181,61 @@ describe('Blobster Factory EmDash Playground Contract', () => {
     assert.equal(res.status, 302);
     assert.equal(res.headers.get('Location'), '/playground');
     assert.match(res.headers.get('Set-Cookie') || '', /Max-Age=0/);
+  });
+
+  it('counts only model turns, per playground session', async () => {
+    const keys: string[] = [];
+    const limiter = { limit: async ({ key }: { key: string }) => (keys.push(key), { success: true }) };
+    const post = (body: unknown) =>
+      new Request('https://dev.blobster.dev/_emdash/api/plugins/dinkus-openclaw/chat', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'cf-connecting-ip': '198.51.100.7' },
+        body: JSON.stringify(body),
+      });
+    assert.equal(await checkPlaygroundChatLimit(post({ action: 'get_workspace' }), limiter, 'tok'), undefined);
+    assert.equal(await checkPlaygroundChatLimit(post({ action: 'record_proposal_receipt' }), limiter, 'tok'), undefined);
+    assert.deepEqual(keys, []);
+    await checkPlaygroundChatLimit(post({ action: 'send_message', prompt: 'hi' }), limiter, 'tok');
+    await checkPlaygroundChatLimit(post({ action: 'steer_turn' }), limiter);
+    await checkPlaygroundChatLimit(post({ nonsense: true }), limiter, 'tok');
+    assert.deepEqual(keys, [
+      'blobster-playground:chat:session:tok',
+      'blobster-playground:chat:ip:198.51.100.7',
+      'blobster-playground:chat:session:tok',
+    ]);
+  });
+
+  it('keys IPv6 clients on their /64', () => {
+    const req = (ip: string) => new Request('https://dev.blobster.dev/', { headers: { 'cf-connecting-ip': ip } });
+    assert.equal(clientRateKey(req('2001:db8:1:2:aaaa::1')), '2001:db8:1:2::/64');
+    assert.equal(clientRateKey(req('2001:db8:1:2:ffff:ffff:ffff:ffff')), '2001:db8:1:2::/64');
+    assert.equal(clientRateKey(req('2001:db8::1')), '2001:db8:0:0::/64');
+    assert.equal(clientRateKey(req('203.0.113.9')), '203.0.113.9');
+  });
+
+  it('signs admissions with EMDASH_ENCRYPTION_KEY when no seed is set, and refuses with neither', async () => {
+    const env = { EMDASH_ENCRYPTION_KEY: 'emdash_enc_v1_explicit' };
+    const token = ulid();
+    const sig = await signPlaygroundAdmission(token, env);
+    assert.equal(await isAdmittedPlaygroundSession(token, sig, env), true);
+    assert.equal(await isAdmittedPlaygroundSession(token, 'not*base64', env), false);
+    await assert.rejects(signPlaygroundAdmission(token, {}), /PLAYGROUND_SETTINGS_SEED/);
+  });
+
+  it('leaves body-less responses alone and exposes only OpenClaw playground settings', () => {
+    const get = new Request('https://dev.blobster.dev/');
+    assert.equal(canRewriteBody(get, new Response(null, { status: 304 })), false);
+    assert.equal(canRewriteBody(new Request('https://dev.blobster.dev/', { method: 'HEAD' }), new Response('x')), false);
+    assert.equal(canRewriteBody(get, new Response('<html></html>')), true);
+    assert.deepEqual(
+      openclawPlaygroundEnv({
+        OPENCLAW_PLAYGROUND_AGENT_ID: 'blobster-smith',
+        OPENCLAW_PLAYGROUND_GATEWAY_TOKEN: 'gw',
+        TURNSTILE_SECRET_KEY: 'secret',
+        PLAYGROUND_SETTINGS_SEED: 'seed',
+        PLAYGROUND_DB: {},
+      }),
+      { OPENCLAW_PLAYGROUND_AGENT_ID: 'blobster-smith', OPENCLAW_PLAYGROUND_GATEWAY_TOKEN: 'gw' },
+    );
   });
 });

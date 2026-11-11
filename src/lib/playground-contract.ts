@@ -21,15 +21,30 @@ export function extractClientIp(request: Request): string {
   );
 }
 
+/**
+ * Rate-limit key for the client address. IPv6 clients are keyed on their /64,
+ * since one subscriber usually holds a whole /64 and could rotate addresses.
+ */
+export function clientRateKey(request: Request): string {
+  const ip = extractClientIp(request);
+  if (!ip.includes(':')) return ip;
+  const [head, tail = ''] = ip.toLowerCase().split('::');
+  const headParts = head ? head.split(':') : [];
+  const tailParts = ip.includes('::') && tail ? tail.split(':') : [];
+  const fill = ip.includes('::') ? Array(Math.max(0, 8 - headParts.length - tailParts.length)).fill('0') : [];
+  const groups = [...headParts, ...fill, ...tailParts].map((g) => g.replace(/^0+(?=.)/, ''));
+  return `${groups.slice(0, 4).join(':')}::/64`;
+}
+
 export async function checkPlaygroundInitLimit(
   request: Request,
   limiters: PlaygroundInitLimiters,
 ): Promise<Response | undefined> {
-  const clientIp = extractClientIp(request);
+  const clientKey = clientRateKey(request);
 
   if (
     limiters.perIp &&
-    !(await limiters.perIp.limit({ key: `blobster-playground:init:ip:${clientIp}` })).success
+    !(await limiters.perIp.limit({ key: `blobster-playground:init:ip:${clientKey}` })).success
   ) {
     return Response.json(
       {
@@ -76,7 +91,8 @@ export const PLAYGROUND_CHAT_MAX_BYTES = 32_768;
 export async function exceedsBodyLimit(request: Request, maxBytes: number): Promise<boolean> {
   const declared = request.headers.get('content-length');
   if (declared !== null && /^\d+$/.test(declared.trim())) {
-    if (Number(declared) > maxBytes) return true;
+    // The runtime holds the body to its declared length, so this is exact.
+    return Number(declared) > maxBytes;
   }
   if (!request.body) return false;
   const reader = request.clone().body!.getReader();
@@ -116,9 +132,34 @@ export function isOpenclawPluginPost(method: string, normalizedPath: string): bo
   return method === 'POST' && `${normalizedPath}/`.startsWith(OPENCLAW_PLUGIN_API_PREFIX);
 }
 
+/** OpenClaw chat actions that run a model turn on the Forge gateway. */
+export const PLAYGROUND_COSTLY_CHAT_ACTIONS = new Set([
+  'send_message',
+  'steer_turn',
+  'revise_proposal',
+  'probe_gateway',
+]);
+
+async function readChatAction(request: Request): Promise<string | undefined> {
+  try {
+    const body = (await request.clone().json()) as { action?: unknown };
+    return typeof body?.action === 'string' ? body.action : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * 32 KiB cap on every OpenClaw plugin POST, plus the Forge turn limiter on
+ * the actions that reach the model. UI bookkeeping (get_workspace, receipts,
+ * create_thread...) is not counted. The limiter is keyed on the playground
+ * session when there is one, so people behind one office IP each get their
+ * own budget; requests without a session fall back to the client address.
+ */
 export async function checkPlaygroundChatLimit(
   request: Request,
   limiter?: RateLimiterBinding,
+  sessionToken?: string,
 ): Promise<Response | undefined> {
   if (await exceedsBodyLimit(request, PLAYGROUND_CHAT_MAX_BYTES)) {
     return Response.json(
@@ -131,8 +172,13 @@ export async function checkPlaygroundChatLimit(
   }
 
   if (!limiter) return undefined;
-  const clientIp = extractClientIp(request);
-  const allowed = await limiter.limit({ key: `blobster-playground:chat:ip:${clientIp}` });
+  const action = await readChatAction(request);
+  // Unknown or unreadable actions count, so nothing reaches the model uncounted.
+  if (action !== undefined && !PLAYGROUND_COSTLY_CHAT_ACTIONS.has(action)) return undefined;
+  const key = sessionToken
+    ? `blobster-playground:chat:session:${sessionToken}`
+    : `blobster-playground:chat:ip:${clientRateKey(request)}`;
+  const allowed = await limiter.limit({ key });
   if (!allowed.success) {
     return Response.json(
       {
@@ -287,6 +333,25 @@ export function injectTurnstileIntoLoadingPage(html: string, siteKey: string): s
   return `${snippet}${html}`;
 }
 
+/** True when the response may carry an HTML body that is safe to rewrite. */
+export function canRewriteBody(request: Request, response: Response): boolean {
+  if (request.method === 'HEAD' || response.body === null) return false;
+  return ![101, 204, 205, 304].includes(response.status);
+}
+
+/**
+ * Only the OpenClaw playground settings, for @dinkuskit/openclaw's
+ * `globalThis.__openclawPlaygroundEnv`. Other secrets (Turnstile, the settings
+ * seed) stay out of reach of code that reads that global.
+ */
+export function openclawPlaygroundEnv(env: Record<string, unknown>): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const [key, value] of Object.entries(env)) {
+    if (key.startsWith('OPENCLAW_PLAYGROUND_') && typeof value === 'string') out[key] = value;
+  }
+  return out;
+}
+
 export function applyPlaygroundNoIndex(headers: Headers): void {
   headers.set('X-Robots-Tag', 'noindex, nofollow');
 }
@@ -424,6 +489,8 @@ function settingsSeed(env: Record<string, unknown>): string {
  * `emdash_enc_v1_<43 base64url chars>` format. Uses EMDASH_ENCRYPTION_KEY when
  * set, otherwise derives one from the secret PLAYGROUND_SETTINGS_SEED. There is
  * no built-in fallback seed: a seed in public source would be a public key.
+ * Admission cookies are signed with the seed, or with EMDASH_ENCRYPTION_KEY
+ * when only that is set (see playgroundAdmissionKey).
  */
 export async function derivePlaygroundEncryptionKey(
   env: Record<string, unknown>,
@@ -442,14 +509,48 @@ export async function derivePlaygroundEncryptionKey(
 
 export const PLAYGROUND_ADMIT_COOKIE_NAME = 'blobster_playground_admit';
 
-async function admitKey(env: Record<string, unknown>): Promise<CryptoKey> {
-  return crypto.subtle.importKey(
-    'raw',
-    new TextEncoder().encode(`blobster-playground:admit:${settingsSeed(env)}`),
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign', 'verify'],
+function admissionSecret(env: Record<string, unknown>): string {
+  const seed =
+    typeof env.PLAYGROUND_SETTINGS_SEED === 'string' ? env.PLAYGROUND_SETTINGS_SEED.trim() : '';
+  if (seed) return `seed:${seed}`;
+  const explicit =
+    typeof env.EMDASH_ENCRYPTION_KEY === 'string' ? env.EMDASH_ENCRYPTION_KEY.trim() : '';
+  if (explicit) return `key:${explicit}`;
+  throw new Error(
+    'Set PLAYGROUND_SETTINGS_SEED (or EMDASH_ENCRYPTION_KEY) as a Worker secret before serving the playground.',
   );
+}
+
+const admitKeys = new Map<string, Promise<CryptoKey>>();
+
+/**
+ * HMAC key for admission cookies. Throws when no secret is configured, so the
+ * middleware checks it before EmDash can create any sandbox.
+ */
+export function playgroundAdmissionKey(env: Record<string, unknown>): Promise<CryptoKey> {
+  const secret = admissionSecret(env);
+  let key = admitKeys.get(secret);
+  if (!key) {
+    key = crypto.subtle.importKey(
+      'raw',
+      new TextEncoder().encode(`blobster-playground:admit:${secret}`),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign', 'verify'],
+    );
+    admitKeys.set(secret, key);
+  }
+  return key;
+}
+
+function fromBase64Url(value: string): Uint8Array<ArrayBuffer> | undefined {
+  if (!/^[A-Za-z0-9_-]+$/.test(value)) return undefined;
+  try {
+    const binary = atob(value.replace(/-/g, '+').replace(/_/g, '/'));
+    return Uint8Array.from(binary, (c) => c.charCodeAt(0));
+  } catch {
+    return undefined;
+  }
 }
 
 /** Signature binding a playground session token to a passed init gate. */
@@ -457,7 +558,8 @@ export async function signPlaygroundAdmission(
   token: string,
   env: Record<string, unknown>,
 ): Promise<string> {
-  const sig = await crypto.subtle.sign('HMAC', await admitKey(env), new TextEncoder().encode(token));
+  const key = await playgroundAdmissionKey(env);
+  const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(token));
   return toBase64Url(new Uint8Array(sig));
 }
 
@@ -467,11 +569,10 @@ export async function isAdmittedPlaygroundSession(
   env: Record<string, unknown>,
 ): Promise<boolean> {
   if (!admission) return false;
-  const expected = await signPlaygroundAdmission(token, env);
-  if (expected.length !== admission.length) return false;
-  let diff = 0;
-  for (let i = 0; i < expected.length; i += 1) diff |= expected.charCodeAt(i) ^ admission.charCodeAt(i);
-  return diff === 0;
+  const sig = fromBase64Url(admission);
+  if (!sig) return false;
+  const key = await playgroundAdmissionKey(env);
+  return crypto.subtle.verify('HMAC', key, sig, new TextEncoder().encode(token));
 }
 
 export function admissionCookie(value: string, secure: boolean): string {
