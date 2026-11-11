@@ -92,18 +92,7 @@ import { TEMPLATE_CATEGORIES } from '../lib/validation';
             id="f-claw"
             name="claw_md"
             required
-            placeholder={`---\nschemaVersion: 1\nname: Incident Scribe\n---\n\nProduces post-incident timelines without paging or closing tickets.`}
-          ></textarea>
-        </div>
-
-        <div class="field">
-          <label for="f-profile">profiles/openclaw.yml</label>
-          <textarea
-            id="f-profile"
-            name="openclaw_yml"
-            required
-            placeholder={`profileVersion: 1\nsandbox:\n  workspaceOnly: true`}
-            style="min-height:84px;"
+            placeholder={`---\nschemaVersion: 1\nagent:\n  id: incident-scribe\n  name: Incident Scribe\n  tools:\n    profile: coding\n    allow: [read, write]\n    fs: { workspaceOnly: true }\n---\n\nProduces post-incident timelines without paging or closing tickets.`}
           ></textarea>
         </div>
 
@@ -167,7 +156,6 @@ import { TEMPLATE_CATEGORIES } from '../lib/validation';
           avatar_tier: String(fd.get('avatar_tier') || 'Tier 1 Fast Pack (SVG + 512px Vinyl + 2 GIFs)'),
           summary: String(fd.get('summary') || ''),
           claw_md: String(fd.get('claw_md') || ''),
-          openclaw_yml: String(fd.get('openclaw_yml') || ''),
           skill_name: String(fd.get('skill_name') || ''),
           cron_summary: String(fd.get('cron_summary') || ''),
           links: linksRaw

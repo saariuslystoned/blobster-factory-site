@@ -101,7 +101,6 @@ export function createPlugin() {
               avatar_tier: cleanData.avatar_tier,
               summary: cleanData.summary,
               claw_md: cleanData.claw_md,
-              openclaw_yml: cleanData.openclaw_yml,
               skill_name: cleanData.skill_name,
               cron_summary: cleanData.cron_summary,
               links: cleanData.links.join('\n'),
@@ -226,11 +225,10 @@ export function createPlugin() {
             blocks.push(
               {
                 type: 'accordion',
-                label: 'Inspect CLAW.md & profiles/openclaw.yml',
+                label: 'Inspect CLAW.md',
                 default_open: false,
                 blocks: [
                   { type: 'code', language: 'markdown', code: d.claw_md },
-                  { type: 'code', language: 'yaml', code: d.openclaw_yml },
                 ],
               },
               sectionBlock(`Source & Package Links\n${d.links.join('\n')}`),

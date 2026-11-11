@@ -1,5 +1,6 @@
 import { getEmDashCollection, getEmDashEntry } from 'emdash';
 import { publicHttpsLink } from './validation';
+import workshopTarballs from './workshop-tarballs.json';
 
 export interface GoodForBullet {
   lead: string;
@@ -30,7 +31,6 @@ export interface TemplateRecord {
   tarball_sha256: string;
   tarball_bytes: string;
   claw_md: string;
-  openclaw_yml: string;
   soul_md: string;
   agents_md: string;
   identity_md: string;
@@ -276,6 +276,11 @@ function normalizeEntry(raw: { id: string; data: Record<string, unknown> }): Tem
   const skillName = str(d.skill_name);
   const cronSummary = str(d.cron_summary, 'On-demand');
   const rawSummary = str(d.summary);
+  // The tarball is a build asset, so its checksum comes from the same build, not the CMS row.
+  const workshopTarball =
+    str(d.tarball_url) === `/t/${slug}.tgz`
+      ? (workshopTarballs as Record<string, { sha256: string; bytes: string }>)[slug]
+      : undefined;
 
   const defaults = defaultGoodForForTemplate(
     slug,
@@ -316,10 +321,9 @@ function normalizeEntry(raw: { id: string; data: Record<string, unknown> }): Tem
     idle_gif_url: str(d.idle_gif_url),
     wave_gif_url: str(d.wave_gif_url),
     tarball_url: str(d.tarball_url),
-    tarball_sha256: str(d.tarball_sha256),
-    tarball_bytes: str(d.tarball_bytes),
+    tarball_sha256: workshopTarball?.sha256 ?? str(d.tarball_sha256),
+    tarball_bytes: workshopTarball?.bytes ?? str(d.tarball_bytes),
     claw_md: str(d.claw_md),
-    openclaw_yml: str(d.openclaw_yml),
     soul_md: str(d.soul_md),
     agents_md: str(d.agents_md),
     identity_md: str(d.identity_md),

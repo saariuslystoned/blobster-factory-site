@@ -62,12 +62,11 @@ export const templateSubmissionSchema = z.object({
     .string()
     .trim()
     .min(24, 'Paste the CLAW.md frontmatter + summary.')
-    .max(12000),
-  openclaw_yml: z
-    .string()
-    .trim()
-    .min(10, 'Paste profiles/openclaw.yml (workspaceOnly: true recommended).')
-    .max(8000),
+    .max(12000)
+    .refine(
+      (value) => !/^(profiles|packages|cronJobs):/m.test(value),
+      'Use the single-file CLAW.md format: put settings under agent, use automations instead of cronJobs, and drop profiles/packages.',
+    ),
   skill_name: z.string().trim().max(80).default(''),
   cron_summary: z.string().trim().max(160).default('On-demand · No scheduled cron jobs'),
   links: z
