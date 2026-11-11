@@ -66,12 +66,61 @@ export async function checkPlaygroundInitLimit(
   return undefined;
 }
 
+export const PLAYGROUND_CHAT_MAX_BYTES = 32_768;
+
+/**
+ * True when the request body is larger than `maxBytes`. Content-Length is a
+ * fast path only; a missing or chunked length is measured by reading a clone
+ * of the stream, stopping as soon as the cap is passed.
+ */
+export async function exceedsBodyLimit(request: Request, maxBytes: number): Promise<boolean> {
+  const declared = request.headers.get('content-length');
+  if (declared !== null && /^\d+$/.test(declared.trim())) {
+    if (Number(declared) > maxBytes) return true;
+  }
+  if (!request.body) return false;
+  const reader = request.clone().body!.getReader();
+  let total = 0;
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) return false;
+      total += value.byteLength;
+      if (total > maxBytes) return true;
+    }
+  } finally {
+    reader.cancel().catch(() => {});
+  }
+}
+
+const OPENCLAW_PLUGIN_API_PREFIX = '/_emdash/api/plugins/dinkus-openclaw/';
+
+/**
+ * Canonical form of a request path for gate matching: percent-decoded,
+ * repeated slashes collapsed, lowercased, trailing slash dropped. Returns
+ * undefined when the path cannot be decoded, which callers must refuse.
+ */
+export function normalizeGatePath(pathname: string): string | undefined {
+  let decoded: string;
+  try {
+    decoded = decodeURIComponent(pathname);
+  } catch {
+    return undefined;
+  }
+  const collapsed = decoded.replace(/\/+/g, '/').toLowerCase();
+  return collapsed.length > 1 ? collapsed.replace(/\/$/, '') : collapsed;
+}
+
+/** Any POST into the OpenClaw plugin's routes (chat, pair, approvals...). */
+export function isOpenclawPluginPost(method: string, normalizedPath: string): boolean {
+  return method === 'POST' && `${normalizedPath}/`.startsWith(OPENCLAW_PLUGIN_API_PREFIX);
+}
+
 export async function checkPlaygroundChatLimit(
   request: Request,
   limiter?: RateLimiterBinding,
 ): Promise<Response | undefined> {
-  const contentLength = Number(request.headers.get('content-length') || '0');
-  if (Number.isFinite(contentLength) && contentLength > 32_768) {
+  if (await exceedsBodyLimit(request, PLAYGROUND_CHAT_MAX_BYTES)) {
     return Response.json(
       {
         ok: false,
@@ -184,15 +233,25 @@ export async function verifyTurnstileIfConfigured(
 export function injectTurnstileIntoLoadingPage(html: string, siteKey: string): string {
   const cleanKey = siteKey.trim().replace(/[^A-Za-z0-9_-]/g, '');
   if (!cleanKey) return html;
+  if (html.includes('id="bf-turnstile-init"')) return html;
 
-  const headSnippet = `<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>`;
-  const containerSnippet = `<div id="bf-turnstile-mount" style="min-height:1px"></div>`;
-  const fetchTarget = `fetch("/_playground/init", { method: "POST", credentials: "same-origin" })`;
-  const fetchReplacement = `new Promise(function(resolveToken, rejectToken) {
+  // Wrap window.fetch so the init POST carries a Turnstile token, whatever
+  // markup EmDash's loading page uses. It must run before the page's own script.
+  const snippet = `<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script><script id="bf-turnstile-init">(function(){
+  var originalFetch = window.fetch.bind(window);
+  function getToken() {
+    return new Promise(function(resolveToken, rejectToken) {
+      var mount = document.getElementById("bf-turnstile-mount");
+      if (!mount) {
+        mount = document.createElement("div");
+        mount.id = "bf-turnstile-mount";
+        mount.style.minHeight = "1px";
+        (document.body || document.documentElement).appendChild(mount);
+      }
       var waited = 0;
-      function mountWidget() {
+      (function mountWidget() {
         if (window.turnstile && typeof window.turnstile.render === "function") {
-          window.turnstile.render("#bf-turnstile-mount", {
+          window.turnstile.render(mount, {
             sitekey: "${cleanKey}",
             appearance: "interaction-only",
             callback: function(tok) { resolveToken(tok); },
@@ -201,26 +260,31 @@ export function injectTurnstileIntoLoadingPage(html: string, siteKey: string): s
           return;
         }
         waited += 100;
-        if (waited > 8000) {
-          rejectToken(new Error("Verification script timed out. Check content blockers and retry."));
-          return;
-        }
+        if (waited > 8000) { rejectToken(new Error("Verification script timed out. Check content blockers and retry.")); return; }
         setTimeout(mountWidget, 100);
-      }
-      mountWidget();
-    }).then(function(turnstileToken) {
-      return fetch("/_playground/init", {
-        method: "POST",
-        credentials: "same-origin",
-        headers: { "x-turnstile-token": turnstileToken }
-      });
-    })`;
+      })();
+    });
+  }
+  window.fetch = function(input, init) {
+    var url = typeof input === "string" ? input : (input && input.url) || "";
+    var path = url;
+    try { path = new URL(url, location.href).pathname; } catch (e) {}
+    var method = ((init && init.method) || (input && input.method) || "GET").toUpperCase();
+    if (path !== "/_playground/init" || method !== "POST") return originalFetch(input, init);
+    return getToken().then(function(token) {
+      var next = Object.assign({}, init || {});
+      var headers = new Headers((init && init.headers) || (input && input.headers) || undefined);
+      headers.set("x-turnstile-token", token);
+      next.headers = headers;
+      return originalFetch(input, next);
+    });
+  };
+})();</script>`;
 
-  if (!html.includes(fetchTarget)) return html;
-  return html
-    .replace('</head>', `${headSnippet}</head>`)
-    .replace('<div class="pg-error"', `${containerSnippet}<div class="pg-error"`)
-    .replace(fetchTarget, fetchReplacement);
+  if (/<head(\s[^>]*)?>/i.test(html)) {
+    return html.replace(/<head(\s[^>]*)?>/i, (head) => `${head}${snippet}`);
+  }
+  return `${snippet}${html}`;
 }
 
 export function applyPlaygroundNoIndex(headers: Headers): void {
@@ -317,30 +381,16 @@ export async function isPlaygroundInitFailure(response: Response): Promise<boole
   }
 }
 
-const PLAYGROUND_INIT_FAILED_HTML = `<!doctype html>
-<html lang="en"><head><meta charset="utf-8" /><meta name="robots" content="noindex, nofollow" /><title>Playground unavailable</title></head>
-<body><h1>The playground couldn't start</h1><p><a href="/playground">Try again</a></p></body></html>`;
-
 export function recoverFromPlaygroundInitFailure(
   request: Request,
   failure: Response,
 ): Response {
   if (request.method === 'GET' || request.method === 'HEAD') {
-    if (new URL(request.url).searchParams.get('retry') === '1') {
-      return new Response(PLAYGROUND_INIT_FAILED_HTML, {
-        status: 503,
-        headers: {
-          'Content-Type': 'text/html; charset=utf-8',
-          'Set-Cookie': CLEAR_PLAYGROUND_COOKIE,
-          'Cache-Control': 'no-store',
-          'X-Robots-Tag': 'noindex, nofollow',
-        },
-      });
-    }
+    // Drop the broken session and start over on EmDash's loading page.
     return new Response(null, {
       status: 302,
       headers: {
-        Location: '/playground?retry=1',
+        Location: '/playground',
         'Set-Cookie': CLEAR_PLAYGROUND_COOKIE,
         'Cache-Control': 'no-store',
       },
@@ -352,28 +402,89 @@ export function recoverFromPlaygroundInitFailure(
   return new Response(failure.body, { status: failure.status, headers });
 }
 
-let cachedFallbackKey: string | undefined;
+function toBase64Url(bytes: Uint8Array): string {
+  let binary = '';
+  for (const b of bytes) binary += String.fromCharCode(b);
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
 
+function settingsSeed(env: Record<string, unknown>): string {
+  const seed =
+    typeof env.PLAYGROUND_SETTINGS_SEED === 'string' ? env.PLAYGROUND_SETTINGS_SEED.trim() : '';
+  if (!seed) {
+    throw new Error(
+      'PLAYGROUND_SETTINGS_SEED is not set. Set it as a Worker secret (or in dist-playground/server/.dev.vars locally).',
+    );
+  }
+  return seed;
+}
+
+/**
+ * EmDash encryption key for the playground, in EmDash's
+ * `emdash_enc_v1_<43 base64url chars>` format. Uses EMDASH_ENCRYPTION_KEY when
+ * set, otherwise derives one from the secret PLAYGROUND_SETTINGS_SEED. There is
+ * no built-in fallback seed: a seed in public source would be a public key.
+ */
 export async function derivePlaygroundEncryptionKey(
   env: Record<string, unknown>,
 ): Promise<string> {
   const explicit =
     typeof env.EMDASH_ENCRYPTION_KEY === 'string' ? env.EMDASH_ENCRYPTION_KEY.trim() : '';
   if (explicit) return explicit;
-  const seed =
-    typeof env.PLAYGROUND_SETTINGS_SEED === 'string' && env.PLAYGROUND_SETTINGS_SEED.trim()
-      ? env.PLAYGROUND_SETTINGS_SEED.trim()
-      : 'blobster-factory-disposable-playground-v1';
-  if (cachedFallbackKey && seed === 'blobster-factory-disposable-playground-v1') {
-    return cachedFallbackKey;
+  const digest = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(`blobster-playground:encryption:${settingsSeed(env)}`),
+  );
+  return `emdash_enc_v1_${toBase64Url(new Uint8Array(digest))}`;
+}
+
+// --- Admission: every sandbox must be created through the gated init POST ---
+
+export const PLAYGROUND_ADMIT_COOKIE_NAME = 'blobster_playground_admit';
+
+async function admitKey(env: Record<string, unknown>): Promise<CryptoKey> {
+  return crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(`blobster-playground:admit:${settingsSeed(env)}`),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign', 'verify'],
+  );
+}
+
+/** Signature binding a playground session token to a passed init gate. */
+export async function signPlaygroundAdmission(
+  token: string,
+  env: Record<string, unknown>,
+): Promise<string> {
+  const sig = await crypto.subtle.sign('HMAC', await admitKey(env), new TextEncoder().encode(token));
+  return toBase64Url(new Uint8Array(sig));
+}
+
+export async function isAdmittedPlaygroundSession(
+  token: string,
+  admission: string | undefined,
+  env: Record<string, unknown>,
+): Promise<boolean> {
+  if (!admission) return false;
+  const expected = await signPlaygroundAdmission(token, env);
+  if (expected.length !== admission.length) return false;
+  let diff = 0;
+  for (let i = 0; i < expected.length; i += 1) diff |= expected.charCodeAt(i) ^ admission.charCodeAt(i);
+  return diff === 0;
+}
+
+export function admissionCookie(value: string, secure: boolean): string {
+  return `${PLAYGROUND_ADMIT_COOKIE_NAME}=${value}; Max-Age=${PLAYGROUND_TTL_SECONDS}; Path=/; HttpOnly; SameSite=Lax${secure ? '; Secure' : ''}`;
+}
+
+export function readCookie(request: Request, name: string): string | undefined {
+  const header = request.headers.get('cookie');
+  if (!header) return undefined;
+  for (const part of header.split(';')) {
+    const eq = part.indexOf('=');
+    if (eq === -1) continue;
+    if (part.slice(0, eq).trim() === name) return part.slice(eq + 1).trim() || undefined;
   }
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(seed));
-  const bytes = new Uint8Array(digest);
-  let binary = '';
-  for (const b of bytes) binary += String.fromCharCode(b);
-  const encoded = btoa(binary);
-  if (seed === 'blobster-factory-disposable-playground-v1') {
-    cachedFallbackKey = encoded;
-  }
-  return encoded;
+  return undefined;
 }

@@ -40,10 +40,6 @@ export default {
     const requestOrigin = url.origin;
     process.env.EMDASH_SITE_URL ||= requestOrigin;
     process.env.EMDASH_ENCRYPTION_KEY ||= await derivePlaygroundEncryptionKey(env);
-    (globalThis as { __openclawPlaygroundEnv?: Record<string, unknown> }).__openclawPlaygroundEnv = {
-      ...(typeof process !== 'undefined' && process.env ? process.env : {}),
-      ...env,
-    };
 
     let response = await (
       astroHandler as {

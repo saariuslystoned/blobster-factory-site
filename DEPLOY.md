@@ -40,7 +40,9 @@ SITE_ORIGIN=https://blobster.dev node bin/verify-site.mjs https://blobster.dev
 1. **Per-Visitor CMS Sandbox**: Every visitor gets a disposable 1-hour SQLite Durable Object (`emdash_playground` cookie), auto-signed-in Playground Admin UI (`/_emdash/admin`), live visual editing toolbar, and `noindex, nofollow` headers.
 2. **Abuse & Bot Hardening (Zero Login for 20+ Contributors)**:
    - Cloudflare Edge Rate Limiters: `PLAYGROUND_CREATION_LIMITER` (`5/min/IP`), `PLAYGROUND_GLOBAL_LIMITER` (`100/min`), and `PLAYGROUND_CHAT_LIMITER` (`12/min/IP` + `32 KiB` body cap).
-   - Optional Cloudflare Turnstile (`TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY`) verified fail-closed on `POST /_playground/init`.
+   - Optional Cloudflare Turnstile (`TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY`) verified fail-closed on `POST /_playground/init`, after the rate limiters.
+   - Every sandbox is created through that gated `POST /_playground/init`: it sets a signed `blobster_playground_admit` cookie, and any other request carrying a session cookie without a valid admission is sent back to `/_playground/reset` (or refused with 403), so a made-up session cookie cannot create a sandbox.
+   - Required secret `PLAYGROUND_SETTINGS_SEED` (32+ random bytes, e.g. `openssl rand -base64 32`): derives EmDash's `EMDASH_ENCRYPTION_KEY` (unless that is set) and signs admission cookies. The Worker refuses to start sandboxes without it. `npm run dev:playground` creates a local one in `.wrangler/local-playground/settings-seed`.
 3. **Locked `Blobster Smith` ("Forge") Bridge (`cloudflare-account-split.md`)**:
    - `OPENCLAW_PLAYGROUND_LOCK=1` locks `@dinkuskit/openclaw` settings, disables `/pair` and host exec approvals, hashes `emdash_playground` per visitor into isolated OpenClaw `sessionKey`s, and connects over a Cloudflare Access Service-Token–protected tunnel (`sm0ky.dev` in the Agent account) to `spark-1`'s tool-locked `Blobster Smith` profile backed by `$0` `nemotron-3.5-super-vl`.
-   - Local preview (`http://127.0.0.1:4332`): `npm run build:playground && npm run dev:playground`.
+   - Local preview (`http://127.0.0.1:4332`): `npm run build:playground && npm run dev:playground`. The playground builds into `dist-playground/`, never `dist/`, so `npm run deploy` only ever ships the production site.

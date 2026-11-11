@@ -1,5 +1,6 @@
 import { homedir } from 'node:os';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { randomBytes } from 'node:crypto';
 import { resolve } from 'node:path';
 import { spawn } from 'node:child_process';
 
@@ -17,8 +18,14 @@ const gatewayToken =
 const runtimeDir = resolve(root, '.wrangler/local-playground');
 mkdirSync(runtimeDir, { recursive: true });
 
-// Write git-ignored .dev.vars inside dist/server so workerd receives the local Forge gateway credentials
-const distServerDir = resolve(root, 'dist/server');
+// Local-only settings seed (encryption key + admission cookie signing), kept
+// stable across restarts so open sandboxes stay readable.
+const seedFile = resolve(runtimeDir, 'settings-seed');
+if (!existsSync(seedFile)) writeFileSync(seedFile, randomBytes(32).toString('base64url'), { mode: 0o600 });
+const settingsSeed = process.env.PLAYGROUND_SETTINGS_SEED?.trim() || readFileSync(seedFile, 'utf8').trim();
+
+// Write git-ignored .dev.vars inside dist-playground/server so workerd receives the local Forge gateway credentials
+const distServerDir = resolve(root, 'dist-playground/server');
 mkdirSync(distServerDir, { recursive: true });
 const devVarsPath = resolve(distServerDir, '.dev.vars');
 writeFileSync(
@@ -29,6 +36,7 @@ writeFileSync(
     `OPENCLAW_PLAYGROUND_AGENT_ID=blobster-smith`,
     `OPENCLAW_PLAYGROUND_ENABLED_COLLECTIONS=templates`,
     `OPENCLAW_PLAYGROUND_LOCK=1`,
+    `PLAYGROUND_SETTINGS_SEED=${settingsSeed}`,
   ].join('\n') + '\n',
   { mode: 0o600 },
 );

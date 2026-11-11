@@ -9,6 +9,8 @@ import { fileURLToPath } from 'node:url';
 
 export default defineConfig({
   output: 'server',
+  // Separate from dist/ so `npm run deploy` can never ship the playground build.
+  outDir: './dist-playground',
   site: 'https://dev.blobster.dev',
   session: {
     driver: 'memory',

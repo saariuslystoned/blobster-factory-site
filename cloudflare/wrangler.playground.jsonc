@@ -26,7 +26,7 @@
   },
   "assets": {
     "binding": "ASSETS",
-    "directory": "../dist/client",
+    "directory": "../dist-playground/client",
     "run_worker_first": true
   },
   "durable_objects": {

@@ -6,6 +6,12 @@ import {
   checkPlaygroundChatLimit,
   checkPlaygroundInitLimit,
   derivePlaygroundEncryptionKey,
+  exceedsBodyLimit,
+  isAdmittedPlaygroundSession,
+  isOpenclawPluginPost,
+  normalizeGatePath,
+  recoverFromPlaygroundInitFailure,
+  signPlaygroundAdmission,
   injectPlaygroundNoIndex,
   injectTurnstileIntoLoadingPage,
   isUsablePlaygroundSession,
@@ -102,7 +108,75 @@ describe('Blobster Factory EmDash Playground Contract', () => {
     assert.match(rewritten, /Open live Blobster Factory/);
     assert.match(rewritten, /challenges\.cloudflare\.com\/turnstile/);
 
-    const key = await derivePlaygroundEncryptionKey({});
-    assert.equal(Buffer.from(key, 'base64').byteLength, 32);
+    const key = await derivePlaygroundEncryptionKey({ PLAYGROUND_SETTINGS_SEED: 'test-seed' });
+    assert.match(key, /^emdash_enc_v1_[A-Za-z0-9_-]{43}$/);
+    assert.equal(Buffer.from(key.slice('emdash_enc_v1_'.length), 'base64url').byteLength, 32);
+    await assert.rejects(derivePlaygroundEncryptionKey({}), /PLAYGROUND_SETTINGS_SEED/);
+    assert.equal(
+      await derivePlaygroundEncryptionKey({ EMDASH_ENCRYPTION_KEY: 'emdash_enc_v1_explicit' }),
+      'emdash_enc_v1_explicit',
+    );
+  });
+
+  it('adds the Turnstile token even when EmDash changes its loading-page markup', () => {
+    const html = '<!doctype html><html><head><title>x</title></head><body><script>doInit()</script></body></html>';
+    const out = injectTurnstileIntoLoadingPage(html, '0x4AAAAAA_site');
+    assert.match(out, /<head><script src="https:\/\/challenges\.cloudflare\.com/);
+    assert.match(out, /x-turnstile-token/);
+    assert.equal(injectTurnstileIntoLoadingPage(out, '0x4AAAAAA_site'), out);
+  });
+
+  it('measures chunked chat bodies that carry no Content-Length', async () => {
+    const big = new Uint8Array(40_000);
+    const chunked = new Request('https://dev.blobster.dev/x', {
+      method: 'POST',
+      body: new ReadableStream({
+        start(controller) {
+          controller.enqueue(big);
+          controller.close();
+        },
+      }),
+      // @ts-expect-error Node requires duplex for stream bodies.
+      duplex: 'half',
+    });
+    assert.equal(chunked.headers.get('content-length'), null);
+    assert.equal(await exceedsBodyLimit(chunked, 32_768), true);
+    assert.equal((await checkPlaygroundChatLimit(chunked))?.status, 413);
+    const small = new Request('https://dev.blobster.dev/x', { method: 'POST', body: 'hi' });
+    assert.equal(await exceedsBodyLimit(small, 32_768), false);
+    assert.equal(await small.text(), 'hi');
+  });
+
+  it('matches OpenClaw plugin POSTs however the path is spelled', () => {
+    for (const raw of [
+      '/_emdash/api/plugins/dinkus-openclaw/chat',
+      '/_emdash/api/plugins/dinkus-openclaw/chat/',
+      '/_emdash/api/plugins/dinkus-openclaw/%63hat',
+      '//_emdash//api/plugins/DINKUS-OPENCLAW/chat',
+    ]) {
+      const path = normalizeGatePath(raw);
+      assert.ok(path && isOpenclawPluginPost('POST', path), raw);
+    }
+    assert.equal(isOpenclawPluginPost('GET', '/_emdash/api/plugins/dinkus-openclaw/chat'), false);
+    assert.equal(isOpenclawPluginPost('POST', '/_emdash/api/plugins/dinkus-openclawx/chat'), false);
+    assert.equal(normalizeGatePath('/%E0%A4%A'), undefined);
+  });
+
+  it('admits only session tokens signed by the init gate', async () => {
+    const env = { PLAYGROUND_SETTINGS_SEED: 'test-seed' };
+    const token = ulid();
+    const sig = await signPlaygroundAdmission(token, env);
+    assert.equal(await isAdmittedPlaygroundSession(token, sig, env), true);
+    assert.equal(await isAdmittedPlaygroundSession(ulid(), sig, env), false);
+    assert.equal(await isAdmittedPlaygroundSession(token, undefined, env), false);
+    assert.equal(await isAdmittedPlaygroundSession(token, sig, { PLAYGROUND_SETTINGS_SEED: 'other' }), false);
+  });
+
+  it('sends a failed GET back to a fresh playground session', () => {
+    const failure = Response.json({ error: { code: 'PLAYGROUND_INIT_ERROR' } }, { status: 500 });
+    const res = recoverFromPlaygroundInitFailure(new Request('https://dev.blobster.dev/'), failure);
+    assert.equal(res.status, 302);
+    assert.equal(res.headers.get('Location'), '/playground');
+    assert.match(res.headers.get('Set-Cookie') || '', /Max-Age=0/);
   });
 });
