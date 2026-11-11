@@ -65,15 +65,24 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const isInit = rawPath === INIT_PATH && method === 'POST';
 
   if (isInit) {
-    // Cheap limiters first, so junk tokens cannot drive unlimited siteverify calls.
-    const initLimited = await checkPlaygroundInitLimit(request, {
+    // Order matters: refuse what EmDash would refuse anyway, then the
+    // per-address limiter (so junk tokens cannot drive unlimited siteverify
+    // calls), then Turnstile, and only then the shared global budget, so
+    // requests that fail earlier checks never use it up.
+    if (!token) return refuse(400, 'NO_SESSION', 'No playground session');
+
+    const ipLimited = await checkPlaygroundInitLimit(request, {
       perIp: runtimeEnv[PLAYGROUND_CREATION_LIMITER_BINDING] as RateLimiterBinding | undefined,
-      global: runtimeEnv[PLAYGROUND_GLOBAL_LIMITER_BINDING] as RateLimiterBinding | undefined,
     });
-    if (initLimited) return initLimited;
+    if (ipLimited) return ipLimited;
 
     const turnstileBlocked = await verifyTurnstileIfConfigured(request, runtimeEnv);
     if (turnstileBlocked) return turnstileBlocked;
+
+    const globalLimited = await checkPlaygroundInitLimit(request, {
+      global: runtimeEnv[PLAYGROUND_GLOBAL_LIMITER_BINDING] as RateLimiterBinding | undefined,
+    });
+    if (globalLimited) return globalLimited;
   } else if (token && !UNGATED_PATHS.has(rawPath)) {
     // EmDash creates and seeds a sandbox for any unseen session cookie on any
     // path. Only sessions that passed the init gate above may reach it.
