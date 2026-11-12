@@ -1,5 +1,6 @@
 import { getEmDashCollection, getEmDashEntry } from 'emdash';
 import { publicHttpsLink } from './validation';
+import workshopTarballs from './workshop-tarballs.json';
 
 export interface GoodForBullet {
   lead: string;
@@ -30,7 +31,6 @@ export interface TemplateRecord {
   tarball_sha256: string;
   tarball_bytes: string;
   claw_md: string;
-  openclaw_yml: string;
   soul_md: string;
   agents_md: string;
   identity_md: string;
@@ -268,14 +268,30 @@ function defaultGoodForForTemplate(
   };
 }
 
+interface WorkshopBuild {
+  sha256: string;
+  bytes: string;
+  files: Record<
+    'claw_md' | 'soul_md' | 'agents_md' | 'identity_md' | 'tools_md' | 'skill_name' | 'skill_md' | 'design_json',
+    string
+  >;
+}
+
 function normalizeEntry(raw: { id: string; data: Record<string, unknown> }): TemplateRecord {
   const d = raw.data;
   const slug = str(d.slug, raw.id.replace(/^(workshop|official)-/, ''));
   const title = str(d.title, slug);
   const category = str(d.category, 'Engineering');
-  const skillName = str(d.skill_name);
   const cronSummary = str(d.cron_summary, 'On-demand');
   const rawSummary = str(d.summary);
+  // Workshop tarballs are build assets synced from blobster-factory, so their checksum and
+  // file panels come from the same build, not the CMS row (which is seeded only once).
+  const workshopTarball =
+    str(d.tarball_url) === `/t/${slug}.tgz`
+      ? (workshopTarballs as Record<string, WorkshopBuild>)[slug]
+      : undefined;
+  const file = (key: keyof WorkshopBuild['files']) => workshopTarball?.files[key] || str(d[key]);
+  const skillName = file('skill_name');
 
   const defaults = defaultGoodForForTemplate(
     slug,
@@ -316,17 +332,16 @@ function normalizeEntry(raw: { id: string; data: Record<string, unknown> }): Tem
     idle_gif_url: str(d.idle_gif_url),
     wave_gif_url: str(d.wave_gif_url),
     tarball_url: str(d.tarball_url),
-    tarball_sha256: str(d.tarball_sha256),
-    tarball_bytes: str(d.tarball_bytes),
-    claw_md: str(d.claw_md),
-    openclaw_yml: str(d.openclaw_yml),
-    soul_md: str(d.soul_md),
-    agents_md: str(d.agents_md),
-    identity_md: str(d.identity_md),
-    tools_md: str(d.tools_md),
+    tarball_sha256: workshopTarball?.sha256 ?? str(d.tarball_sha256),
+    tarball_bytes: workshopTarball?.bytes ?? str(d.tarball_bytes),
+    claw_md: file('claw_md'),
+    soul_md: file('soul_md'),
+    agents_md: file('agents_md'),
+    identity_md: file('identity_md'),
+    tools_md: file('tools_md'),
     skill_name: skillName,
-    skill_md: str(d.skill_md),
-    design_json: str(d.design_json),
+    skill_md: file('skill_md'),
+    design_json: file('design_json'),
     cron_summary: cronSummary,
     links: parsePublicLinks(d.links),
   };

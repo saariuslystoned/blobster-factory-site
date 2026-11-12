@@ -28,7 +28,7 @@ Tactile Foundry & Precision Agent Workbench. Blends archival vellum drafting tab
 ## 5. Component & Surface Vocabulary
 - **Header:** Compact ruled bar (`1px solid`), monospace `[b/f]` inverted foundry mark, 4 crisp nav links (`Catalog`, `Forge Pipeline`, `Submit Template`, `GitHub`), OpenClaw preset switcher (`Knot · Tide · Beacon`), and Light/Dark switch.
 - **Catalog Cards:** Sharp `2px`–`4px` corners, `1px` solid border, subtle `3px 3px 0` hard offset shadow on hover, `64px` crisp Blobster cutout stage, `@ownerHandle` monospace coordinate, `Official` vs. `Workshop` / `Community` badge, `scanStatus: clean` pill, OpenClaw category tag, and 1-click `Add / Copy Prompt` action.
-- **Collapsible Disclosure Blocks:** Native EmDash `<details>` / `<summary>` ruled accordion blocks for `Workspace files` (`CLAW.md`, `SOUL.md`, `AGENTS.md`, `profiles/openclaw.yml`), `Skills` (`SKILL.md`), and `Automations`.
+- **Collapsible Disclosure Blocks:** Native EmDash `<details>` / `<summary>` ruled accordion blocks for `Workspace files` (`CLAW.md`, `SOUL.md`, `AGENTS.md`), `Skills` (`SKILL.md`), and `Automations`.
 - **3-Way Add-to-Gateway Bar:** Tabbed/segmented terminal strip offering (1) `Copy OpenClaw Prompt`, (2) `curl blobster.dev/t/<slug>.tgz + openclaw templates add`, and (3) `@saariuslystoned/<slug>` ClawHub coordinate + `.tgz` receipt.
 
 ## 6. Signature Visual Motifs

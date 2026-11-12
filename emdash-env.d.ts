@@ -27,7 +27,6 @@ export interface Template {
   tarball_sha256?: string;
   tarball_bytes?: string;
   claw_md?: string;
-  openclaw_yml?: string;
   soul_md?: string;
   agents_md?: string;
   identity_md?: string;

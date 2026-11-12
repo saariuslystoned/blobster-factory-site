@@ -13,6 +13,7 @@ const PUBLIC_TEMPLATES = path.join(ROOT, 'public', 'templates');
 const PUBLIC_TARBALLS = path.join(ROOT, 'public', 't');
 const PUBLIC_BRAND = path.join(ROOT, 'public', 'brand');
 const SEED_PATH = path.join(ROOT, 'seed', 'seed.json');
+const WORKSHOP_TARBALLS_PATH = path.join(ROOT, 'src', 'lib', 'workshop-tarballs.json');
 
 async function readIfExists(filePath) {
   try {
@@ -93,13 +94,13 @@ async function main() {
   };
 
   const seedEntries = [];
+  const workshopTarballs = {};
 
   for (const slug of workshopSlugs) {
     const tplDir = path.join(TEMPLATES_SOURCE, slug);
     const pkgRaw = await readIfExists(path.join(tplDir, 'package.json'));
     const pkg = pkgRaw ? JSON.parse(pkgRaw) : { name: `@saariuslystoned/${slug}`, version: '0.1.0', description: '' };
     const clawMd = await readIfExists(path.join(tplDir, 'CLAW.md'));
-    const openclawYml = await readIfExists(path.join(tplDir, 'profiles', 'openclaw.yml'));
     const soulMd = await readIfExists(path.join(tplDir, 'workspace', 'SOUL.md'));
     const agentsMd = await readIfExists(path.join(tplDir, 'workspace', 'AGENTS.md'));
     const identityMd = await readIfExists(path.join(tplDir, 'workspace', 'IDENTITY.md'));
@@ -139,6 +140,20 @@ async function main() {
     execFileSync('tar', ['-czf', tarballPath, '--exclude=.DS_Store', '-C', TEMPLATES_SOURCE, slug]);
     const tgzBuf = await fs.readFile(tarballPath);
     const sha256 = createHash('sha256').update(tgzBuf).digest('hex');
+    workshopTarballs[slug] = {
+      sha256,
+      bytes: String(tgzBuf.byteLength),
+      files: {
+        claw_md: clawMd,
+        soul_md: soulMd,
+        agents_md: agentsMd,
+        identity_md: identityMd,
+        tools_md: toolsMd,
+        skill_name: skill.name,
+        skill_md: skill.content,
+        design_json: designJson,
+      },
+    };
     const meta = workshopMeta[slug];
 
     const titleMatch = svgContent.match(/<title>([^<]+)<\/title>/);
@@ -173,7 +188,6 @@ async function main() {
         tarball_sha256: sha256,
         tarball_bytes: String(tgzBuf.byteLength),
         claw_md: clawMd,
-        openclaw_yml: openclawYml,
         soul_md: soulMd,
         agents_md: agentsMd,
         identity_md: identityMd,
@@ -281,7 +295,6 @@ async function main() {
         tarball_sha256: 'verified-on-clawhub-registry',
         tarball_bytes: '91935',
         claw_md: `---\nschemaVersion: 1\nname: ${ref.title}\nid: ${ref.slug.replace(/^openclaw-/, '')}\nchannel: official\n---\n\n${ref.summary}\n`,
-        openclaw_yml: `profileVersion: 1\nsandbox:\n  workspaceOnly: true\napprovals:\n  externalSideEffects: required\n`,
         soul_md: `# ${ref.title}\n\n${ref.summary}\n\nOperates strictly on verified evidence without assuming unapproved authority.\n`,
         agents_md: `# Operating Contract\n\n- Workspace files: AGENTS.md, SOUL.md\n- ClawHub channel: official (@openclaw)\n- Security scan: clean\n`,
         identity_md: `Name: ${ref.title}\nPublisher: @openclaw\nCoordinate: ${ref.coordinate}\n`,
@@ -355,7 +368,6 @@ async function main() {
           { slug: 'tarball_sha256', label: 'Tarball SHA-256', type: 'string', searchable: false },
           { slug: 'tarball_bytes', label: 'Tarball Bytes', type: 'string', searchable: false },
           { slug: 'claw_md', label: 'CLAW.md', type: 'text', searchable: true },
-          { slug: 'openclaw_yml', label: 'profiles/openclaw.yml', type: 'text', searchable: false },
           { slug: 'soul_md', label: 'SOUL.md', type: 'text', searchable: true },
           { slug: 'agents_md', label: 'AGENTS.md', type: 'text', searchable: false },
           { slug: 'identity_md', label: 'IDENTITY.md', type: 'text', searchable: false },
@@ -378,6 +390,9 @@ async function main() {
   };
 
   await fs.writeFile(SEED_PATH, JSON.stringify(seed, null, 2) + '\n', 'utf8');
+  // The site reads these at build time so the install checksum and file panels always
+  // match the deployed public/t/*.tgz, even when the CMS row was seeded from an older sync.
+  await fs.writeFile(WORKSHOP_TARBALLS_PATH, JSON.stringify(workshopTarballs, null, 2) + '\n', 'utf8');
   console.log(
     JSON.stringify(
       {
