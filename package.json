@@ -23,7 +23,7 @@
     "@astrojs/cloudflare": "^14.4.3",
     "@astrojs/node": "11.1.9",
     "@astrojs/react": "7.1.2",
-    "@dinkuskit/openclaw": "github:dinkuskit/openclaw#b802c533b13782847d04b63d29cf40a98172559f",
+    "@dinkuskit/openclaw": "github:dinkuskit/openclaw#60332c252abd03b31f5608432e2e70ebf22290b2",
     "@emdash-cms/cloudflare": "^1.4.0",
     "astro": "7.4.4",
     "emdash": "1.4.0",
